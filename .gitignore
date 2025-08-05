@@ -9,7 +9,9 @@ venv/
 env/
 .env
 .config.json
+slide-builder/.config.json
 config.json
+slide-builder/.env
 
 # Python cache files
 __pycache__/

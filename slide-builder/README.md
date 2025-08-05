@@ -1,5 +1,9 @@
 # Zume Slide Full Builder
 
+NOTE
+
+```This builder has been modified to build the 3circles version of the course. This means the order of the slides is different than the non-3circles version. This will result in a different video insert process.```
+
 A collection of Python scripts for downloading and processing Vimeo videos and slides from the Zume Training platform.
 
 ## Prerequisites
