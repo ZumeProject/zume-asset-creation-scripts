@@ -20,7 +20,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 def load_config():
     """Load configuration from .config.json file"""
-    config_file = Path('.config.json')
+    config_file = Path('../.config.json')
     if not config_file.exists():
         print("❌ Configuration file .config.json not found!")
         print("Please run 1-setup.py first to create the configuration.")
@@ -47,7 +47,7 @@ def load_config():
 
 def load_vimeo_folders():
     """Load vimeo-folders.json file"""
-    folders_file = Path('vimeo-folders.json')
+    folders_file = Path('../vimeo-folders.json')
     if not folders_file.exists():
         print("❌ vimeo-folders.json file not found!")
         print("This file should contain the mapping between language codes and Vimeo folder IDs.")
@@ -105,7 +105,7 @@ def get_videos_output_dir(config):
 
 def create_env_file():
     """Create a .env file if it doesn't exist"""
-    env_path = Path('.env')
+    env_path = Path('../.env')
     
     if env_path.exists():
         return
@@ -117,7 +117,7 @@ def create_env_file():
     client_secret = input("Vimeo Client Secret: ")
     access_token = input("Vimeo Access Token: ")
     
-    with open('.env', 'w') as f:
+    with open('../.env', 'w') as f:
         f.write(f"VIMEO_CLIENT_ID={client_id}\n")
         f.write(f"VIMEO_CLIENT_SECRET={client_secret}\n")
         f.write(f"VIMEO_ACCESS_TOKEN={access_token}\n")

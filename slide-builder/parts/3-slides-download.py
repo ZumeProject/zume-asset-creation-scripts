@@ -13,7 +13,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 def load_config():
     """Load configuration from .config.json file"""
-    config_file = Path('.config.json')
+    config_file = Path('../.config.json')
     if not config_file.exists():
         print("❌ Configuration file .config.json not found!")
         print("Please run 1-setup.py first to create the configuration.")

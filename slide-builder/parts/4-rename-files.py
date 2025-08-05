@@ -26,7 +26,7 @@ import argparse
 
 def load_config() -> dict:
     """Load configuration from .config.json file"""
-    config_file = Path('.config.json')
+    config_file = Path('../.config.json')
     if config_file.exists():
         with open(config_file, 'r') as f:
             return json.load(f)
@@ -439,9 +439,9 @@ def main():
     print("Starting PNG file deletion based on JSON configuration...")
     
     json_configs = [
-        ("10.json", "10"),
-        ("20.json", "20"),
-        ("intensive.json", "intensive")
+        ("../10.json", "10"),
+        ("../20.json", "20"),
+        ("../intensive.json", "intensive")
     ]
     
     for json_file, folder_name in json_configs:

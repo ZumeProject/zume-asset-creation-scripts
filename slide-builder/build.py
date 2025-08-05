@@ -169,8 +169,8 @@ class BuildRunner:
         print("\n📹 Video Download Configuration")
         
         # Check if vimeo-folders.json exists
-        if not os.path.exists('vimeo-folders.json'):
-            print("❌ vimeo-folders.json not found. Please ensure this file exists.")
+        if not os.path.exists('parts/vimeo-folders.json'):
+            print("❌ vimeo-folders.json not found. Please ensure this file exists in the parts folder.")
             while True:
                 folder_id = input("Please enter the Vimeo folder ID manually: ").strip()
                 if folder_id:
@@ -181,7 +181,7 @@ class BuildRunner:
         
         try:
             # Load the vimeo-folders.json file
-            with open('vimeo-folders.json', 'r', encoding='utf-8') as f:
+            with open('parts/vimeo-folders.json', 'r', encoding='utf-8') as f:
                 folders_data = json.load(f)
             
             # Find the language entry
@@ -212,7 +212,7 @@ class BuildRunner:
                     print("❌ Please enter a valid Vimeo folder ID")
                     
         except (json.JSONDecodeError, KeyError) as e:
-            print(f"❌ Error reading vimeo-folders.json: {e}")
+            print(f"❌ Error reading parts/vimeo-folders.json: {e}")
             while True:
                 folder_id = input("Please enter the Vimeo folder ID manually: ").strip()
                 if folder_id:
@@ -269,7 +269,7 @@ class BuildRunner:
         
         # Prepare arguments for setup script
         args = [
-            sys.executable, '1-setup.py',
+            sys.executable, 'parts/1-setup.py',
             '--language', self.config['language_code'],
             '--folder', self.config['folder_location']
         ]
@@ -278,7 +278,7 @@ class BuildRunner:
         if not credentials_exist:
             args.append('--force-interactive')
         
-        print(f"\n🔄 Running 1-setup.py - Project Setup")
+        print(f"\n🔄 Running parts/1-setup.py - Project Setup")
         print("-" * 50)
         
         try:
@@ -365,39 +365,39 @@ class BuildRunner:
         self.save_temp_config()
         
         # Video download script requires folder_id as --folder-id argument
-        print(f"\n🔄 Running 2-video-download.py - Video Download")
+        print(f"\n🔄 Running parts/2-video-download.py - Video Download")
         print("-" * 50)
         
         try:
             # Run the script with folder_id as named argument
             result = subprocess.run(
-                [sys.executable, '2-video-download.py', '--folder-id', self.config['vimeo_folder_id']],
+                [sys.executable, 'parts/2-video-download.py', '--folder-id', self.config['vimeo_folder_id']],
                 capture_output=False,
                 text=True,
                 cwd=os.getcwd()
             )
             
             if result.returncode == 0:
-                print(f"✅ 2-video-download.py completed successfully")
+                print(f"✅ parts/2-video-download.py completed successfully")
                 return True
             else:
-                print(f"❌ 2-video-download.py failed with return code {result.returncode}")
+                print(f"❌ parts/2-video-download.py failed with return code {result.returncode}")
                 return False
                 
         except Exception as e:
-            print(f"❌ Error running 2-video-download.py: {e}")
+            print(f"❌ Error running parts/2-video-download.py: {e}")
             return False
     
     def run_slides_download(self):
         """Run the slides download script"""
         # Slides download script accepts command-line arguments
-        print(f"\n🔄 Running 3-slides-download.py - Slides Download")
+        print(f"\n🔄 Running parts/3-slides-download.py - Slides Download")
         print("-" * 50)
         
         try:
             # Run the script with optimal arguments
             result = subprocess.run(
-                [sys.executable, '3-slides-download.py', 
+                [sys.executable, 'parts/3-slides-download.py', 
                  '--curriculum', 'all',  # Process all curricula
                  '--missing-only',       # Only process missing screenshots
                  '--width', '3000',      # High-resolution screenshots
@@ -409,20 +409,20 @@ class BuildRunner:
             )
             
             if result.returncode == 0:
-                print(f"✅ 3-slides-download.py completed successfully")
+                print(f"✅ parts/3-slides-download.py completed successfully")
                 return True
             else:
-                print(f"❌ 3-slides-download.py failed with return code {result.returncode}")
+                print(f"❌ parts/3-slides-download.py failed with return code {result.returncode}")
                 return False
                 
         except Exception as e:
-            print(f"❌ Error running 3-slides-download.py: {e}")
+            print(f"❌ Error running parts/3-slides-download.py: {e}")
             return False
     
     def run_rename_files(self):
         """Run the file rename script"""
         # Check if required JSON files exist
-        json_files = ['10.json', '20.json', 'intensive.json']
+        json_files = ['parts/10.json', 'parts/20.json', 'parts/intensive.json']
         missing_files = []
         
         for json_file in json_files:
@@ -438,7 +438,7 @@ class BuildRunner:
                 return False
         
         # Rename files script uses the config file automatically
-        return self.run_script('4-rename-files.py', 'File Rename and Organization')
+        return self.run_script('parts/4-rename-files.py', 'File Rename and Organization')
     
     def display_build_summary(self):
         """Display a summary of the build process"""
@@ -478,7 +478,7 @@ class BuildRunner:
             self.collect_vimeo_info()
             
             # Step 3: Run setup script
-            setup_action = self.confirm_continue("Project Setup (1-setup.py)")
+            setup_action = self.confirm_continue("Project Setup (parts/1-setup.py)")
             if setup_action == 'cancel':
                 print("Build cancelled by user.")
                 return
@@ -495,7 +495,7 @@ class BuildRunner:
                     return
             
             # Step 4: Collect Vimeo folder ID and run video download
-            video_action = self.confirm_continue("Video Download (2-video-download.py)")
+            video_action = self.confirm_continue("Video Download (parts/2-video-download.py)")
             if video_action == 'cancel':
                 print("Build cancelled by user.")
                 return
@@ -509,7 +509,7 @@ class BuildRunner:
                     return
             
             # Step 5: Run slides download
-            slides_action = self.confirm_continue("Slides Download (3-slides-download.py)")
+            slides_action = self.confirm_continue("Slides Download (parts/3-slides-download.py)")
             if slides_action == 'cancel':
                 print("Build cancelled by user.")
                 return
@@ -521,7 +521,7 @@ class BuildRunner:
                     return
             
             # Step 6: Run file rename and organization
-            rename_action = self.confirm_continue("File Rename and Organization (4-rename-files.py)")
+            rename_action = self.confirm_continue("File Rename and Organization (parts/4-rename-files.py)")
             if rename_action == 'cancel':
                 print("Build cancelled by user.")
                 return
@@ -553,17 +553,17 @@ def main():
     print("to allow concurrent builds of multiple languages.")
     print()
     print("Build steps:")
-    print("  1. Project Setup (1-setup.py)")
-    print("  2. Video Download (2-video-download.py)")
-    print("  3. Slides Download (3-slides-download.py)")
-    print("  4. File Rename and Organization (4-rename-files.py)")
+    print("  1. Project Setup (parts/1-setup.py)")
+    print("  2. Video Download (parts/2-video-download.py)")
+    print("  3. Slides Download (parts/3-slides-download.py)")
+    print("  4. File Rename and Organization (parts/4-rename-files.py)")
     print()
     print("For concurrent builds, run this script in separate terminals/directories.")
     print("=" * 60)
     print()
     
     # Check if all required scripts exist
-    required_scripts = ['1-setup.py', '2-video-download.py', '3-slides-download.py', '4-rename-files.py']
+    required_scripts = ['parts/1-setup.py', 'parts/2-video-download.py', 'parts/3-slides-download.py', 'parts/4-rename-files.py']
     missing_scripts = []
     
     for script in required_scripts:
@@ -576,7 +576,7 @@ def main():
         sys.exit(1)
     
     # Check if required JSON files exist
-    json_files = ['10.json', '20.json', 'intensive.json']
+    json_files = ['parts/10.json', 'parts/20.json', 'parts/intensive.json']
     missing_json = []
     
     for json_file in json_files:
@@ -589,8 +589,8 @@ def main():
         print()
     
     # Check if vimeo-folders.json exists
-    if not os.path.exists('vimeo-folders.json'):
-        print("⚠️  Warning: vimeo-folders.json not found.")
+    if not os.path.exists('parts/vimeo-folders.json'):
+        print("⚠️  Warning: parts/vimeo-folders.json not found.")
         print("The build process will prompt for Vimeo folder ID manually.")
         print()
     
