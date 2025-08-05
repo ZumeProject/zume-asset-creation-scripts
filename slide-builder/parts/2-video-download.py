@@ -130,8 +130,8 @@ def load_env_variables():
     # Check if .env file exists, create it if it doesn't
     create_env_file()
     
-    # Load environment variables
-    load_dotenv()
+    # Load environment variables from the parent directory
+    load_dotenv('../.env')
     client_id = os.getenv("VIMEO_CLIENT_ID")
     client_secret = os.getenv("VIMEO_CLIENT_SECRET")
     access_token = os.getenv("VIMEO_ACCESS_TOKEN")
