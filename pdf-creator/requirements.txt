@@ -1,0 +1,14 @@
+# Zume PDF Book Creator Requirements
+
+# Core dependencies
+playwright>=1.40.0
+
+# Optional: For better logging and CLI experience
+colorama>=0.4.6
+rich>=13.0.0
+
+# Development dependencies (optional)
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+black>=23.0.0
+flake8>=6.0.0 

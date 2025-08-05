@@ -1,0 +1,241 @@
+{
+  "languages": [
+    {
+      "name": "amharic",
+      "folder_id": "420513",
+      "language_code": "am"
+    },
+    {
+      "name": "arabic",
+      "folder_id": "171370",
+      "language_code": "ar"
+    },
+    {
+      "name": "armenian",
+      "folder_id": "24008602",
+      "language_code": "hy"
+    },
+    {
+      "name": "ASL (American Sign Language)",
+      "folder_id": "5198953",
+      "language_code": "asl"
+    },
+    {
+      "name": "bengali",
+      "folder_id": "269501",
+      "language_code": "bn"
+    },
+    {
+      "name": "bhojpuri",
+      "folder_id": "269502",
+      "language_code": "bho"
+    },
+    {
+      "name": "Bosnian",
+      "folder_id": "4029393",
+      "language_code": "bs"
+    },
+    {
+      "name": "burmese",
+      "folder_id": "269503",
+      "language_code": "my"
+    },
+    {
+      "name": "chinese (cantonese)",
+      "folder_id": "269506",
+      "language_code": "zhhk"
+    },
+    {
+      "name": "Croatian(hr)",
+      "folder_id": "4037745",
+      "language_code": "hr"
+    },
+    {
+      "name": "english",
+      "folder_id": "21862752",
+      "language_code": "en"
+    },
+    {
+      "name": "persian/farsi",
+      "folder_id": "188973",
+      "language_code": "fa"
+    },
+    {
+      "name": "French",
+      "folder_id": "709009",
+      "language_code": "fr"
+    },
+    {
+      "name": "german",
+      "folder_id": "269507",
+      "language_code": "de"
+    },
+    {
+      "name": "gujarati",
+      "folder_id": "269508",
+      "language_code": "gu"
+    },
+    {
+      "name": "hausa",
+      "folder_id": "269509",
+      "language_code": "ha"
+    },
+    {
+      "name": "hindi",
+      "folder_id": "269510",
+      "language_code": "hi"
+    },
+    {
+      "name": "indonesian",
+      "folder_id": "269511",
+      "language_code": "id"
+    },
+    {
+      "name": "italian",
+      "folder_id": "269512",
+      "language_code": "it"
+    },
+    {
+      "name": "japanese",
+      "folder_id": "269513",
+      "language_code": "ja"
+    },
+    {
+      "name": "kannada",
+      "folder_id": "269514",
+      "language_code": "kn"
+    },
+    {
+      "name": "korean",
+      "folder_id": "269515",
+      "language_code": "ko"
+    },
+    {
+      "name": "Kurdish",
+      "folder_id": "8436425",
+      "language_code": "ku"
+    },
+    {
+      "name": "Lao",
+      "folder_id": "1719737",
+      "language_code": "lo"
+    },
+    {
+      "name": "maithili",
+      "folder_id": "269516",
+      "language_code": "mai"
+    },
+    {
+      "name": "malayalam",
+      "folder_id": "269517",
+      "language_code": "ml"
+    },
+    {
+      "name": "Mandarin (Simplified)",
+      "folder_id": "269504",
+      "language_code": "zhcn"
+    },
+    {
+      "name": "Mandarin Traditional",
+      "folder_id": "647989",
+      "language_code": "zhtw"
+    },
+    {
+      "name": "marathi",
+      "folder_id": "269518",
+      "language_code": "mr"
+    },
+    {
+      "name": "Nepali",
+      "folder_id": "14421184",
+      "language_code": "ne"
+    },
+    {
+      "name": "oriya",
+      "folder_id": "269519",
+      "language_code": "or"
+    },
+    {
+      "name": "panjabi (eastern)",
+      "folder_id": "269520",
+      "language_code": "pa_pk"
+    },
+    {
+      "name": "panjabi (western)",
+      "folder_id": "269521",
+      "language_code": "pa"
+    },
+    {
+      "name": "Polish",
+      "folder_id": "19871551",
+      "language_code": "pl"
+    },
+    {
+      "name": "portuguese",
+      "folder_id": "269523",
+      "language_code": "pt"
+    },
+    
+    {
+      "name": "Romanian",
+      "folder_id": "4101621",
+      "language_code": "ro"
+    },
+    {
+      "name": "russian",
+      "folder_id": "269524",
+      "language_code": "ru"
+    },
+    {
+      "name": "somali",
+      "folder_id": "420514",
+      "language_code": "so"
+    },
+    {
+      "name": "spanish",
+      "folder_id": "269525",
+      "language_code": "es"
+    },
+    {
+      "name": "swahili",
+      "folder_id": "269526",
+      "language_code": "sw"
+    },
+    {
+      "name": "tamil",
+      "folder_id": "269527",
+      "language_code": "ta"
+    },
+    {
+      "name": "telugu",
+      "folder_id": "269528",
+      "language_code": "te"
+    },
+  
+    {
+      "name": "Tunisian",
+      "folder_id": "20642858",
+      "language_code": "ar_tn"
+    },
+    {
+      "name": "turkish",
+      "folder_id": "269530",
+      "language_code": "tr"
+    },
+    {
+      "name": "urdu",
+      "folder_id": "269531",
+      "language_code": "ur"
+    },
+    {
+      "name": "vietnamese",
+      "folder_id": "269532",
+      "language_code": "vi"
+    },
+    {
+      "name": "yoruba",
+      "folder_id": "269533",
+      "language_code": "yo"
+    }
+  ]
+}
