@@ -1,10 +1,15 @@
 # Ignore output directory where downloaded videos are stored
-output/
+slide-builder/output/
+pdf-numbering/unnumbered/
+pdf-numbering/numbered/
+pdf-creator/output/
 
 # Python virtual environments
 venv/
 env/
 .env
+.config.json
+config.json
 
 # Python cache files
 __pycache__/
@@ -25,3 +30,4 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo 
+.config.json
