@@ -236,6 +236,11 @@
       "name": "yoruba",
       "folder_id": "269533",
       "language_code": "yo"
+    },
+    {
+      "name": "Thai",
+      "folder_id": "269529",
+      "language_code": "th"
     }
   ]
 }

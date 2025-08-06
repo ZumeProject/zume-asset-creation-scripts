@@ -92,8 +92,8 @@ def setup_output_directory(project_path: Path):
 
 def rename_video_files(project_path: Path):
     """
-    Copy .mp4 files from {project_path}/videos to {project_path}/output/videos and rename them to 1.mp4, 2.mp4, etc.
-    based on the numeric order in their filenames.
+    Copy .mp4 files from {project_path}/videos to {project_path}/output/videos and rename them 
+    using the video numbers from the JSON configuration files as the new filenames.
     """
     source_dir = project_path / "videos"
     output_dir = project_path / "output" / "videos"
@@ -111,6 +111,31 @@ def rename_video_files(project_path: Path):
     # Create output directory if it doesn't exist
     output_path.mkdir(parents=True, exist_ok=True)
     
+    # Load JSON configuration files to get required video numbers
+    json_files = ["10.json", "20.json", "intensive.json"]
+    required_video_numbers = set()
+    
+    for json_file in json_files:
+        json_path = Path(json_file)
+        if json_path.exists():
+            try:
+                with open(json_path, 'r') as f:
+                    video_mapping = json.load(f)
+                # Extract video numbers (keys) from the JSON
+                for video_num in video_mapping.keys():
+                    required_video_numbers.add(int(video_num))
+                print(f"  Loaded video numbers from {json_file}: {sorted(video_mapping.keys())}")
+            except Exception as e:
+                print(f"  Warning: Could not load {json_file}: {e}")
+        else:
+            print(f"  Warning: JSON file {json_file} not found")
+    
+    if not required_video_numbers:
+        print("No video numbers found in JSON files!")
+        return
+    
+    print(f"Required video numbers: {sorted(required_video_numbers)}")
+    
     # Find all .mp4 files
     mp4_files = []
     for file in videos_path.glob("*.mp4"):
@@ -121,7 +146,7 @@ def rename_video_files(project_path: Path):
         print("No .mp4 files found in the videos directory.")
         return
     
-    # Extract numbers from filenames and sort
+    # Extract numbers from filenames and match with required numbers
     files_with_numbers = []
     for file in mp4_files:
         # Try multiple regex patterns to extract numbers from different filename formats
@@ -143,19 +168,22 @@ def rename_video_files(project_path: Path):
                     number = int(match.group(1))
         
         if number is not None:
-            files_with_numbers.append((number, file))
-            print(f"  Found number {number} in: {file.name}")
+            if number in required_video_numbers:
+                files_with_numbers.append((number, file))
+                print(f"  Found required video {number} in: {file.name}")
+            else:
+                print(f"  Skipping video {number} (not in required list): {file.name}")
         else:
             print(f"Warning: Could not extract number from {file.name}")
     
     # Sort by the extracted number
     files_with_numbers.sort(key=lambda x: x[0])
     
-    print(f"Found {len(files_with_numbers)} .mp4 files to copy and rename:")
+    print(f"Found {len(files_with_numbers)} required .mp4 files to copy and rename:")
     
-    # Copy and rename files
-    for i, (original_num, file) in enumerate(files_with_numbers, 1):
-        new_name = f"{i}.mp4"
+    # Copy and rename files using the JSON key numbers as filenames
+    for original_num, file in files_with_numbers:
+        new_name = f"{original_num}.mp4"
         new_path = output_path / new_name
         
         print(f"  {file.name} -> {new_name}")
@@ -165,6 +193,13 @@ def rename_video_files(project_path: Path):
             print(f"    ✓ Copied and renamed successfully")
         except Exception as e:
             print(f"    ✗ Error copying file: {e}")
+    
+    # Check for missing videos
+    found_numbers = {num for num, _ in files_with_numbers}
+    missing_numbers = required_video_numbers - found_numbers
+    if missing_numbers:
+        print(f"\n⚠️  Missing videos: {sorted(missing_numbers)}")
+        print("These videos were not found in the downloaded videos directory.")
 
 
 def rename_png_files(project_path: Path, folder_name: str):
@@ -439,9 +474,9 @@ def main():
     print("Starting PNG file deletion based on JSON configuration...")
     
     json_configs = [
-        ("../10.json", "10"),
-        ("../20.json", "20"),
-        ("../intensive.json", "intensive")
+        ("10.json", "10"),
+        ("20.json", "20"),
+        ("intensive.json", "intensive")
     ]
     
     for json_file, folder_name in json_configs:
