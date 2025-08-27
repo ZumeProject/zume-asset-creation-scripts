@@ -1,0 +1,207 @@
+2025-08-15 09:29:06,485 - INFO - Starting PDF generation for type=10, lang=os
+2025-08-15 09:29:06,485 - INFO - Will generate 10 PDFs starting from session 1
+2025-08-15 09:29:07,901 - INFO - Loading URL: https://zume.training/os/book/generator?type=10&session=1&lang=os
+2025-08-15 09:29:19,417 - ERROR - ❌ Unexpected error: Browser.close: Connection closed while reading from the driver
+2025-08-15 09:29:19,419 - ERROR - Future exception was never retrieved
+future: <Future finished exception=TargetClosedError('Target page, context or browser has been closed\nCall log:\n  - navigating to "https://zume.training/os/book/generator?type=10&session=1&lang=os", waiting until "networkidle"\n')>
+playwright._impl._errors.TargetClosedError: Target page, context or browser has been closed
+Call log:
+  - navigating to "https://zume.training/os/book/generator?type=10&session=1&lang=os", waiting until "networkidle"
+
+2025-08-15 09:29:26,256 - INFO - Starting PDF generation for type=10, lang=so
+2025-08-15 09:29:26,256 - INFO - Will generate 10 PDFs starting from session 1
+2025-08-15 09:29:26,467 - INFO - Loading URL: https://zume.training/so/book/generator?type=10&session=1&lang=so
+2025-08-15 09:30:26,473 - WARNING - ⚠️ Attempt 1 failed for session 1: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  - navigating to "https://zume.training/so/book/generator?type=10&session=1&lang=so", waiting until "networkidle"
+
+2025-08-15 09:30:29,475 - INFO - 🔄 Retry attempt 2/2 for session 1
+2025-08-15 09:30:29,475 - INFO - Loading URL: https://zume.training/so/book/generator?type=10&session=1&lang=so
+2025-08-15 09:30:33,158 - INFO - Generating PDF: 10_1_so.pdf
+2025-08-15 09:30:33,571 - INFO - ✅ Successfully generated: 10_1_so.pdf
+2025-08-15 09:30:34,572 - INFO - Loading URL: https://zume.training/so/book/generator?type=10&session=2&lang=so
+2025-08-15 09:30:37,671 - INFO - Generating PDF: 10_2_so.pdf
+2025-08-15 09:30:37,991 - INFO - ✅ Successfully generated: 10_2_so.pdf
+2025-08-15 09:30:38,992 - INFO - Loading URL: https://zume.training/so/book/generator?type=10&session=3&lang=so
+2025-08-15 09:30:42,246 - INFO - Generating PDF: 10_3_so.pdf
+2025-08-15 09:30:42,570 - INFO - ✅ Successfully generated: 10_3_so.pdf
+2025-08-15 09:30:43,571 - INFO - Loading URL: https://zume.training/so/book/generator?type=10&session=4&lang=so
+2025-08-15 09:30:46,860 - INFO - Generating PDF: 10_4_so.pdf
+2025-08-15 09:30:47,275 - INFO - ✅ Successfully generated: 10_4_so.pdf
+2025-08-15 09:30:48,277 - INFO - Loading URL: https://zume.training/so/book/generator?type=10&session=5&lang=so
+2025-08-15 09:30:51,359 - INFO - Generating PDF: 10_5_so.pdf
+2025-08-15 09:30:51,632 - INFO - ✅ Successfully generated: 10_5_so.pdf
+2025-08-15 09:30:52,633 - INFO - Loading URL: https://zume.training/so/book/generator?type=10&session=6&lang=so
+2025-08-15 09:30:55,188 - INFO - Generating PDF: 10_6_so.pdf
+2025-08-15 09:30:55,371 - INFO - ✅ Successfully generated: 10_6_so.pdf
+2025-08-15 09:30:56,373 - INFO - Loading URL: https://zume.training/so/book/generator?type=10&session=7&lang=so
+2025-08-15 09:30:59,282 - INFO - Generating PDF: 10_7_so.pdf
+2025-08-15 09:30:59,463 - INFO - ✅ Successfully generated: 10_7_so.pdf
+2025-08-15 09:31:00,464 - INFO - Loading URL: https://zume.training/so/book/generator?type=10&session=8&lang=so
+2025-08-15 09:31:03,327 - INFO - Generating PDF: 10_8_so.pdf
+2025-08-15 09:31:03,505 - INFO - ✅ Successfully generated: 10_8_so.pdf
+2025-08-15 09:31:04,507 - INFO - Loading URL: https://zume.training/so/book/generator?type=10&session=9&lang=so
+2025-08-15 09:31:05,496 - INFO - Starting PDF generation for type=20, lang=so
+2025-08-15 09:31:05,496 - INFO - Will generate 20 PDFs starting from session 1
+2025-08-15 09:31:05,708 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=1&lang=so
+2025-08-15 09:31:08,563 - INFO - Generating PDF: 10_9_so.pdf
+2025-08-15 09:31:09,158 - INFO - ✅ Successfully generated: 10_9_so.pdf
+2025-08-15 09:31:10,160 - INFO - Loading URL: https://zume.training/so/book/generator?type=10&session=10&lang=so
+2025-08-15 09:31:13,107 - INFO - Generating PDF: 10_10_so.pdf
+2025-08-15 09:31:13,451 - INFO - ✅ Successfully generated: 10_10_so.pdf
+2025-08-15 09:31:14,490 - INFO - 
+==================================================
+2025-08-15 09:31:14,490 - INFO - PDF GENERATION SUMMARY
+2025-08-15 09:31:14,490 - INFO - ==================================================
+2025-08-15 09:31:14,490 - INFO - Total processed: 10
+2025-08-15 09:31:14,490 - INFO - Successful: 10
+2025-08-15 09:31:14,490 - INFO - Failed: 0
+2025-08-15 09:31:14,490 - INFO - Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output/so
+2025-08-15 09:31:14,490 - INFO - 
+Generated files:
+2025-08-15 09:31:14,490 - INFO -   • 10_1_so.pdf
+2025-08-15 09:31:14,490 - INFO -   • 10_2_so.pdf
+2025-08-15 09:31:14,490 - INFO -   • 10_3_so.pdf
+2025-08-15 09:31:14,490 - INFO -   • 10_4_so.pdf
+2025-08-15 09:31:14,490 - INFO -   • 10_5_so.pdf
+2025-08-15 09:31:14,490 - INFO -   • 10_6_so.pdf
+2025-08-15 09:31:14,490 - INFO -   • 10_7_so.pdf
+2025-08-15 09:31:14,490 - INFO -   • 10_8_so.pdf
+2025-08-15 09:31:14,490 - INFO -   • 10_9_so.pdf
+2025-08-15 09:31:14,490 - INFO -   • 10_10_so.pdf
+2025-08-15 09:31:14,490 - INFO - Total time: 0:01:48.233706
+2025-08-15 09:31:38,503 - INFO - Starting PDF generation for type=intensive, lang=so
+2025-08-15 09:31:38,503 - INFO - Will generate 5 PDFs starting from session 1
+2025-08-15 09:31:38,705 - INFO - Loading URL: https://zume.training/so/book/generator?type=intensive&session=1&lang=so
+2025-08-15 09:32:05,713 - WARNING - ⚠️ Attempt 1 failed for session 1: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  - navigating to "https://zume.training/so/book/generator?type=20&session=1&lang=so", waiting until "networkidle"
+
+2025-08-15 09:32:08,715 - INFO - 🔄 Retry attempt 2/2 for session 1
+2025-08-15 09:32:08,715 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=1&lang=so
+2025-08-15 09:32:12,090 - INFO - Generating PDF: 20_1_so.pdf
+2025-08-15 09:32:12,317 - INFO - ✅ Successfully generated: 20_1_so.pdf
+2025-08-15 09:32:13,319 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=2&lang=so
+2025-08-15 09:32:16,182 - INFO - Generating PDF: 20_2_so.pdf
+2025-08-15 09:32:16,361 - INFO - ✅ Successfully generated: 20_2_so.pdf
+2025-08-15 09:32:17,362 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=3&lang=so
+2025-08-15 09:32:20,169 - INFO - Generating PDF: 20_3_so.pdf
+2025-08-15 09:32:20,346 - INFO - ✅ Successfully generated: 20_3_so.pdf
+2025-08-15 09:32:21,348 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=4&lang=so
+2025-08-15 09:32:24,371 - INFO - Generating PDF: 20_4_so.pdf
+2025-08-15 09:32:24,596 - INFO - ✅ Successfully generated: 20_4_so.pdf
+2025-08-15 09:32:25,598 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=5&lang=so
+2025-08-15 09:32:28,308 - INFO - Generating PDF: 20_5_so.pdf
+2025-08-15 09:32:28,486 - INFO - ✅ Successfully generated: 20_5_so.pdf
+2025-08-15 09:32:29,488 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=6&lang=so
+2025-08-15 09:32:32,612 - INFO - Generating PDF: 20_6_so.pdf
+2025-08-15 09:32:32,889 - INFO - ✅ Successfully generated: 20_6_so.pdf
+2025-08-15 09:32:33,889 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=7&lang=so
+2025-08-15 09:32:36,327 - INFO - Generating PDF: 20_7_so.pdf
+2025-08-15 09:32:36,453 - INFO - ✅ Successfully generated: 20_7_so.pdf
+2025-08-15 09:32:37,455 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=8&lang=so
+2025-08-15 09:32:38,710 - WARNING - ⚠️ Attempt 1 failed for session 1: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  - navigating to "https://zume.training/so/book/generator?type=intensive&session=1&lang=so", waiting until "networkidle"
+
+2025-08-15 09:32:40,310 - INFO - Generating PDF: 20_8_so.pdf
+2025-08-15 09:32:40,529 - INFO - ✅ Successfully generated: 20_8_so.pdf
+2025-08-15 09:32:41,531 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=9&lang=so
+2025-08-15 09:32:41,712 - INFO - 🔄 Retry attempt 2/2 for session 1
+2025-08-15 09:32:41,713 - INFO - Loading URL: https://zume.training/so/book/generator?type=intensive&session=1&lang=so
+2025-08-15 09:32:43,970 - INFO - Generating PDF: 20_9_so.pdf
+2025-08-15 09:32:44,053 - INFO - ✅ Successfully generated: 20_9_so.pdf
+2025-08-15 09:32:45,055 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=10&lang=so
+2025-08-15 09:32:46,404 - INFO - Generating PDF: intensive_1_so.pdf
+2025-08-15 09:32:47,048 - INFO - ✅ Successfully generated: intensive_1_so.pdf
+2025-08-15 09:32:47,832 - INFO - Generating PDF: 20_10_so.pdf
+2025-08-15 09:32:48,050 - INFO - Loading URL: https://zume.training/so/book/generator?type=intensive&session=2&lang=so
+2025-08-15 09:32:48,103 - INFO - ✅ Successfully generated: 20_10_so.pdf
+2025-08-15 09:32:49,105 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=11&lang=so
+2025-08-15 09:32:52,484 - INFO - Generating PDF: intensive_2_so.pdf
+2025-08-15 09:32:52,971 - INFO - Generating PDF: 20_11_so.pdf
+2025-08-15 09:32:53,120 - INFO - ✅ Successfully generated: 20_11_so.pdf
+2025-08-15 09:32:53,133 - INFO - ✅ Successfully generated: intensive_2_so.pdf
+2025-08-15 09:32:54,122 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=12&lang=so
+2025-08-15 09:32:54,134 - INFO - Loading URL: https://zume.training/so/book/generator?type=intensive&session=3&lang=so
+2025-08-15 09:32:56,711 - INFO - Generating PDF: 20_12_so.pdf
+2025-08-15 09:32:56,892 - INFO - ✅ Successfully generated: 20_12_so.pdf
+2025-08-15 09:32:57,729 - INFO - Generating PDF: intensive_3_so.pdf
+2025-08-15 09:32:57,893 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=13&lang=so
+2025-08-15 09:32:58,095 - INFO - ✅ Successfully generated: intensive_3_so.pdf
+2025-08-15 09:32:59,097 - INFO - Loading URL: https://zume.training/so/book/generator?type=intensive&session=4&lang=so
+2025-08-15 09:33:00,353 - INFO - Generating PDF: 20_13_so.pdf
+2025-08-15 09:33:00,536 - INFO - ✅ Successfully generated: 20_13_so.pdf
+2025-08-15 09:33:01,538 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=14&lang=so
+2025-08-15 09:33:02,162 - INFO - Generating PDF: intensive_4_so.pdf
+2025-08-15 09:33:02,395 - INFO - ✅ Successfully generated: intensive_4_so.pdf
+2025-08-15 09:33:03,397 - INFO - Loading URL: https://zume.training/so/book/generator?type=intensive&session=5&lang=so
+2025-08-15 09:33:04,254 - INFO - Generating PDF: 20_14_so.pdf
+2025-08-15 09:33:04,386 - INFO - ✅ Successfully generated: 20_14_so.pdf
+2025-08-15 09:33:05,388 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=15&lang=so
+2025-08-15 09:33:08,403 - INFO - Generating PDF: intensive_5_so.pdf
+2025-08-15 09:33:09,011 - INFO - Generating PDF: 20_15_so.pdf
+2025-08-15 09:33:09,160 - INFO - ✅ Successfully generated: 20_15_so.pdf
+2025-08-15 09:33:09,260 - INFO - ✅ Successfully generated: intensive_5_so.pdf
+2025-08-15 09:33:10,162 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=16&lang=so
+2025-08-15 09:33:10,297 - INFO - 
+==================================================
+2025-08-15 09:33:10,298 - INFO - PDF GENERATION SUMMARY
+2025-08-15 09:33:10,298 - INFO - ==================================================
+2025-08-15 09:33:10,298 - INFO - Total processed: 5
+2025-08-15 09:33:10,298 - INFO - Successful: 5
+2025-08-15 09:33:10,298 - INFO - Failed: 0
+2025-08-15 09:33:10,298 - INFO - Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output/so
+2025-08-15 09:33:10,298 - INFO - 
+Generated files:
+2025-08-15 09:33:10,298 - INFO -   • intensive_1_so.pdf
+2025-08-15 09:33:10,298 - INFO -   • intensive_2_so.pdf
+2025-08-15 09:33:10,298 - INFO -   • intensive_3_so.pdf
+2025-08-15 09:33:10,298 - INFO -   • intensive_4_so.pdf
+2025-08-15 09:33:10,298 - INFO -   • intensive_5_so.pdf
+2025-08-15 09:33:10,298 - INFO - Total time: 0:01:31.794145
+2025-08-15 09:33:13,328 - INFO - Generating PDF: 20_16_so.pdf
+2025-08-15 09:33:13,555 - INFO - ✅ Successfully generated: 20_16_so.pdf
+2025-08-15 09:33:14,557 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=17&lang=so
+2025-08-15 09:33:18,013 - INFO - Generating PDF: 20_17_so.pdf
+2025-08-15 09:33:18,305 - INFO - ✅ Successfully generated: 20_17_so.pdf
+2025-08-15 09:33:19,306 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=18&lang=so
+2025-08-15 09:33:21,929 - INFO - Generating PDF: 20_18_so.pdf
+2025-08-15 09:33:22,216 - INFO - ✅ Successfully generated: 20_18_so.pdf
+2025-08-15 09:33:23,217 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=19&lang=so
+2025-08-15 09:33:25,649 - INFO - Generating PDF: 20_19_so.pdf
+2025-08-15 09:33:25,828 - INFO - ✅ Successfully generated: 20_19_so.pdf
+2025-08-15 09:33:26,830 - INFO - Loading URL: https://zume.training/so/book/generator?type=20&session=20&lang=so
+2025-08-15 09:33:29,359 - INFO - Generating PDF: 20_20_so.pdf
+2025-08-15 09:33:29,561 - INFO - ✅ Successfully generated: 20_20_so.pdf
+2025-08-15 09:33:30,602 - INFO - 
+==================================================
+2025-08-15 09:33:30,602 - INFO - PDF GENERATION SUMMARY
+2025-08-15 09:33:30,602 - INFO - ==================================================
+2025-08-15 09:33:30,602 - INFO - Total processed: 20
+2025-08-15 09:33:30,602 - INFO - Successful: 20
+2025-08-15 09:33:30,602 - INFO - Failed: 0
+2025-08-15 09:33:30,603 - INFO - Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output/so
+2025-08-15 09:33:30,603 - INFO - 
+Generated files:
+2025-08-15 09:33:30,603 - INFO -   • 20_1_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_2_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_3_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_4_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_5_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_6_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_7_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_8_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_9_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_10_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_11_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_12_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_13_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_14_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_15_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_16_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_17_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_18_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_19_so.pdf
+2025-08-15 09:33:30,603 - INFO -   • 20_20_so.pdf
+2025-08-15 09:33:30,603 - INFO - Total time: 0:02:25.106468

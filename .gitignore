@@ -8,6 +8,7 @@ pdf-creator/output/
 venv/
 env/
 .env
+.env.backup
 .config.json
 slide-builder/.config.json
 config.json
