@@ -205,3 +205,220 @@ Generated files:
 2025-08-15 09:33:30,603 - INFO -   • 20_19_so.pdf
 2025-08-15 09:33:30,603 - INFO -   • 20_20_so.pdf
 2025-08-15 09:33:30,603 - INFO - Total time: 0:02:25.106468
+2025-08-27 10:53:47,025 - INFO - Starting PDF generation for type=10, lang=en
+2025-08-27 10:53:47,028 - INFO - Will generate 10 PDFs starting from session 1
+2025-08-27 10:53:47,257 - INFO - Loading URL: https://zume.training/en/book/generator?type=10&session=1&lang=en
+2025-08-27 10:54:47,261 - WARNING - ⚠️ Attempt 1 failed for session 1: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  - navigating to "https://zume.training/en/book/generator?type=10&session=1&lang=en", waiting until "networkidle"
+
+2025-08-27 10:54:50,262 - INFO - 🔄 Retry attempt 2/2 for session 1
+2025-08-27 10:54:50,263 - INFO - Loading URL: https://zume.training/en/book/generator?type=10&session=1&lang=en
+2025-08-27 10:54:54,502 - INFO - Generating PDF: 10_1_en.pdf
+2025-08-27 10:54:54,920 - INFO - ✅ Successfully generated: 10_1_en.pdf
+2025-08-27 10:54:55,923 - INFO - Loading URL: https://zume.training/en/book/generator?type=10&session=2&lang=en
+2025-08-27 10:54:59,049 - INFO - Generating PDF: 10_2_en.pdf
+2025-08-27 10:54:59,377 - INFO - ✅ Successfully generated: 10_2_en.pdf
+2025-08-27 10:55:00,378 - INFO - Loading URL: https://zume.training/en/book/generator?type=10&session=3&lang=en
+2025-08-27 10:55:05,965 - INFO - Generating PDF: 10_3_en.pdf
+2025-08-27 10:55:06,280 - INFO - ✅ Successfully generated: 10_3_en.pdf
+2025-08-27 10:55:07,282 - INFO - Loading URL: https://zume.training/en/book/generator?type=10&session=4&lang=en
+2025-08-27 10:55:11,367 - INFO - Generating PDF: 10_4_en.pdf
+2025-08-27 10:55:11,781 - INFO - ✅ Successfully generated: 10_4_en.pdf
+2025-08-27 10:55:12,783 - INFO - Loading URL: https://zume.training/en/book/generator?type=10&session=5&lang=en
+2025-08-27 10:55:15,900 - INFO - Generating PDF: 10_5_en.pdf
+2025-08-27 10:55:16,170 - INFO - ✅ Successfully generated: 10_5_en.pdf
+2025-08-27 10:55:17,171 - INFO - Loading URL: https://zume.training/en/book/generator?type=10&session=6&lang=en
+2025-08-27 10:55:20,013 - INFO - Generating PDF: 10_6_en.pdf
+2025-08-27 10:55:20,192 - INFO - ✅ Successfully generated: 10_6_en.pdf
+2025-08-27 10:55:21,194 - INFO - Loading URL: https://zume.training/en/book/generator?type=10&session=7&lang=en
+2025-08-27 10:55:24,443 - INFO - Generating PDF: 10_7_en.pdf
+2025-08-27 10:55:24,621 - INFO - ✅ Successfully generated: 10_7_en.pdf
+2025-08-27 10:55:25,623 - INFO - Loading URL: https://zume.training/en/book/generator?type=10&session=8&lang=en
+2025-08-27 10:55:28,424 - INFO - Generating PDF: 10_8_en.pdf
+2025-08-27 10:55:28,600 - INFO - ✅ Successfully generated: 10_8_en.pdf
+2025-08-27 10:55:29,601 - INFO - Loading URL: https://zume.training/en/book/generator?type=10&session=9&lang=en
+2025-08-27 10:55:34,218 - INFO - Generating PDF: 10_9_en.pdf
+2025-08-27 10:55:34,731 - INFO - ✅ Successfully generated: 10_9_en.pdf
+2025-08-27 10:55:35,732 - INFO - Loading URL: https://zume.training/en/book/generator?type=10&session=10&lang=en
+2025-08-27 10:55:38,885 - INFO - Generating PDF: 10_10_en.pdf
+2025-08-27 10:55:39,234 - INFO - ✅ Successfully generated: 10_10_en.pdf
+2025-08-27 10:55:40,264 - INFO - 
+==================================================
+2025-08-27 10:55:40,264 - INFO - PDF GENERATION SUMMARY
+2025-08-27 10:55:40,264 - INFO - ==================================================
+2025-08-27 10:55:40,264 - INFO - Total processed: 10
+2025-08-27 10:55:40,264 - INFO - Successful: 10
+2025-08-27 10:55:40,264 - INFO - Failed: 0
+2025-08-27 10:55:40,264 - INFO - Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output/en
+2025-08-27 10:55:40,264 - INFO - 
+Generated files:
+2025-08-27 10:55:40,264 - INFO -   • 10_1_en.pdf
+2025-08-27 10:55:40,264 - INFO -   • 10_2_en.pdf
+2025-08-27 10:55:40,264 - INFO -   • 10_3_en.pdf
+2025-08-27 10:55:40,264 - INFO -   • 10_4_en.pdf
+2025-08-27 10:55:40,264 - INFO -   • 10_5_en.pdf
+2025-08-27 10:55:40,264 - INFO -   • 10_6_en.pdf
+2025-08-27 10:55:40,264 - INFO -   • 10_7_en.pdf
+2025-08-27 10:55:40,264 - INFO -   • 10_8_en.pdf
+2025-08-27 10:55:40,264 - INFO -   • 10_9_en.pdf
+2025-08-27 10:55:40,264 - INFO -   • 10_10_en.pdf
+2025-08-27 10:55:40,264 - INFO - Total time: 0:01:53.238249
+2025-09-16 07:34:05,993 - INFO - Starting PDF generation for type=10, lang=zhhk
+2025-09-16 07:34:05,993 - INFO - Will generate 10 PDFs starting from session 1
+2025-09-16 07:34:06,211 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=10&session=1&lang=zhhk
+2025-09-16 07:35:06,217 - WARNING - ⚠️ Attempt 1 failed for session 1: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  - navigating to "https://zume.training/zhhk/book/generator?type=10&session=1&lang=zhhk", waiting until "networkidle"
+
+2025-09-16 07:35:09,218 - INFO - 🔄 Retry attempt 2/2 for session 1
+2025-09-16 07:35:09,220 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=10&session=1&lang=zhhk
+2025-09-16 07:35:12,705 - INFO - Generating PDF: 10_1_zhhk.pdf
+2025-09-16 07:35:13,178 - INFO - ✅ Successfully generated: 10_1_zhhk.pdf
+2025-09-16 07:35:14,179 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=10&session=2&lang=zhhk
+2025-09-16 07:35:16,887 - INFO - Generating PDF: 10_2_zhhk.pdf
+2025-09-16 07:35:17,297 - INFO - ✅ Successfully generated: 10_2_zhhk.pdf
+2025-09-16 07:35:18,299 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=10&session=3&lang=zhhk
+2025-09-16 07:35:21,401 - INFO - Generating PDF: 10_3_zhhk.pdf
+2025-09-16 07:35:21,706 - INFO - ✅ Successfully generated: 10_3_zhhk.pdf
+2025-09-16 07:35:22,707 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=10&session=4&lang=zhhk
+2025-09-16 07:35:26,157 - INFO - Generating PDF: 10_4_zhhk.pdf
+2025-09-16 07:35:26,619 - INFO - ✅ Successfully generated: 10_4_zhhk.pdf
+2025-09-16 07:35:27,620 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=10&session=5&lang=zhhk
+2025-09-16 07:35:30,391 - INFO - Generating PDF: 10_5_zhhk.pdf
+2025-09-16 07:35:30,707 - INFO - ✅ Successfully generated: 10_5_zhhk.pdf
+2025-09-16 07:35:31,708 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=10&session=6&lang=zhhk
+2025-09-16 07:35:34,311 - INFO - Generating PDF: 10_6_zhhk.pdf
+2025-09-16 07:35:34,527 - INFO - ✅ Successfully generated: 10_6_zhhk.pdf
+2025-09-16 07:35:35,528 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=10&session=7&lang=zhhk
+2025-09-16 07:35:38,178 - INFO - Generating PDF: 10_7_zhhk.pdf
+2025-09-16 07:35:38,389 - INFO - ✅ Successfully generated: 10_7_zhhk.pdf
+2025-09-16 07:35:39,391 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=10&session=8&lang=zhhk
+2025-09-16 07:35:41,976 - INFO - Generating PDF: 10_8_zhhk.pdf
+2025-09-16 07:35:42,182 - INFO - ✅ Successfully generated: 10_8_zhhk.pdf
+2025-09-16 07:35:43,183 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=10&session=9&lang=zhhk
+2025-09-16 07:35:47,255 - INFO - Generating PDF: 10_9_zhhk.pdf
+2025-09-16 07:35:47,919 - INFO - ✅ Successfully generated: 10_9_zhhk.pdf
+2025-09-16 07:35:48,920 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=10&session=10&lang=zhhk
+2025-09-16 07:35:51,766 - INFO - Generating PDF: 10_10_zhhk.pdf
+2025-09-16 07:35:52,160 - INFO - ✅ Successfully generated: 10_10_zhhk.pdf
+2025-09-16 07:35:53,202 - INFO - 
+==================================================
+2025-09-16 07:35:53,202 - INFO - PDF GENERATION SUMMARY
+2025-09-16 07:35:53,202 - INFO - ==================================================
+2025-09-16 07:35:53,202 - INFO - Total processed: 10
+2025-09-16 07:35:53,202 - INFO - Successful: 10
+2025-09-16 07:35:53,202 - INFO - Failed: 0
+2025-09-16 07:35:53,202 - INFO - Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output/zhhk
+2025-09-16 07:35:53,202 - INFO - 
+Generated files:
+2025-09-16 07:35:53,202 - INFO -   • 10_1_zhhk.pdf
+2025-09-16 07:35:53,202 - INFO -   • 10_2_zhhk.pdf
+2025-09-16 07:35:53,202 - INFO -   • 10_3_zhhk.pdf
+2025-09-16 07:35:53,202 - INFO -   • 10_4_zhhk.pdf
+2025-09-16 07:35:53,202 - INFO -   • 10_5_zhhk.pdf
+2025-09-16 07:35:53,202 - INFO -   • 10_6_zhhk.pdf
+2025-09-16 07:35:53,202 - INFO -   • 10_7_zhhk.pdf
+2025-09-16 07:35:53,202 - INFO -   • 10_8_zhhk.pdf
+2025-09-16 07:35:53,202 - INFO -   • 10_9_zhhk.pdf
+2025-09-16 07:35:53,202 - INFO -   • 10_10_zhhk.pdf
+2025-09-16 07:35:53,202 - INFO - Total time: 0:01:47.208714
+2025-09-16 07:43:31,426 - INFO - Starting PDF generation for type=20, lang=zhhk
+2025-09-16 07:43:31,426 - INFO - Will generate 20 PDFs starting from session 1
+2025-09-16 07:43:31,625 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=1&lang=zhhk
+2025-09-16 07:44:31,630 - WARNING - ⚠️ Attempt 1 failed for session 1: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  - navigating to "https://zume.training/zhhk/book/generator?type=20&session=1&lang=zhhk", waiting until "networkidle"
+
+2025-09-16 07:44:34,631 - INFO - 🔄 Retry attempt 2/2 for session 1
+2025-09-16 07:44:34,632 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=1&lang=zhhk
+2025-09-16 07:44:37,304 - INFO - Generating PDF: 20_1_zhhk.pdf
+2025-09-16 07:44:37,575 - INFO - ✅ Successfully generated: 20_1_zhhk.pdf
+2025-09-16 07:44:38,577 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=2&lang=zhhk
+2025-09-16 07:44:41,172 - INFO - Generating PDF: 20_2_zhhk.pdf
+2025-09-16 07:44:41,378 - INFO - ✅ Successfully generated: 20_2_zhhk.pdf
+2025-09-16 07:44:42,380 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=3&lang=zhhk
+2025-09-16 07:44:44,731 - INFO - Generating PDF: 20_3_zhhk.pdf
+2025-09-16 07:44:44,930 - INFO - ✅ Successfully generated: 20_3_zhhk.pdf
+2025-09-16 07:44:45,931 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=4&lang=zhhk
+2025-09-16 07:44:48,685 - INFO - Generating PDF: 20_4_zhhk.pdf
+2025-09-16 07:44:48,934 - INFO - ✅ Successfully generated: 20_4_zhhk.pdf
+2025-09-16 07:44:49,935 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=5&lang=zhhk
+2025-09-16 07:44:52,611 - INFO - Generating PDF: 20_5_zhhk.pdf
+2025-09-16 07:44:52,885 - INFO - ✅ Successfully generated: 20_5_zhhk.pdf
+2025-09-16 07:44:53,886 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=6&lang=zhhk
+2025-09-16 07:44:56,691 - INFO - Generating PDF: 20_6_zhhk.pdf
+2025-09-16 07:44:56,960 - INFO - ✅ Successfully generated: 20_6_zhhk.pdf
+2025-09-16 07:44:57,962 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=7&lang=zhhk
+2025-09-16 07:45:00,298 - INFO - Generating PDF: 20_7_zhhk.pdf
+2025-09-16 07:45:00,438 - INFO - ✅ Successfully generated: 20_7_zhhk.pdf
+2025-09-16 07:45:01,439 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=8&lang=zhhk
+2025-09-16 07:45:07,603 - INFO - Generating PDF: 20_8_zhhk.pdf
+2025-09-16 07:45:07,856 - INFO - ✅ Successfully generated: 20_8_zhhk.pdf
+2025-09-16 07:45:08,857 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=9&lang=zhhk
+2025-09-16 07:45:11,055 - INFO - Generating PDF: 20_9_zhhk.pdf
+2025-09-16 07:45:11,156 - INFO - ✅ Successfully generated: 20_9_zhhk.pdf
+2025-09-16 07:45:12,157 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=10&lang=zhhk
+2025-09-16 07:45:15,105 - INFO - Generating PDF: 20_10_zhhk.pdf
+2025-09-16 07:45:15,404 - INFO - ✅ Successfully generated: 20_10_zhhk.pdf
+2025-09-16 07:45:16,405 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=11&lang=zhhk
+2025-09-16 07:45:18,762 - INFO - Generating PDF: 20_11_zhhk.pdf
+2025-09-16 07:45:18,973 - INFO - ✅ Successfully generated: 20_11_zhhk.pdf
+2025-09-16 07:45:19,975 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=12&lang=zhhk
+2025-09-16 07:45:22,564 - INFO - Generating PDF: 20_12_zhhk.pdf
+2025-09-16 07:45:22,773 - INFO - ✅ Successfully generated: 20_12_zhhk.pdf
+2025-09-16 07:45:23,775 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=13&lang=zhhk
+2025-09-16 07:45:26,092 - INFO - Generating PDF: 20_13_zhhk.pdf
+2025-09-16 07:45:26,306 - INFO - ✅ Successfully generated: 20_13_zhhk.pdf
+2025-09-16 07:45:27,308 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=14&lang=zhhk
+2025-09-16 07:45:29,621 - INFO - Generating PDF: 20_14_zhhk.pdf
+2025-09-16 07:45:29,777 - INFO - ✅ Successfully generated: 20_14_zhhk.pdf
+2025-09-16 07:45:30,778 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=15&lang=zhhk
+2025-09-16 07:45:33,195 - INFO - Generating PDF: 20_15_zhhk.pdf
+2025-09-16 07:45:33,401 - INFO - ✅ Successfully generated: 20_15_zhhk.pdf
+2025-09-16 07:45:34,402 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=16&lang=zhhk
+2025-09-16 07:45:37,321 - INFO - Generating PDF: 20_16_zhhk.pdf
+2025-09-16 07:45:37,585 - INFO - ✅ Successfully generated: 20_16_zhhk.pdf
+2025-09-16 07:45:38,587 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=17&lang=zhhk
+2025-09-16 07:45:42,808 - INFO - Generating PDF: 20_17_zhhk.pdf
+2025-09-16 07:45:43,155 - INFO - ✅ Successfully generated: 20_17_zhhk.pdf
+2025-09-16 07:45:44,157 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=18&lang=zhhk
+2025-09-16 07:45:47,599 - INFO - Generating PDF: 20_18_zhhk.pdf
+2025-09-16 07:45:47,910 - INFO - ✅ Successfully generated: 20_18_zhhk.pdf
+2025-09-16 07:45:48,911 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=19&lang=zhhk
+2025-09-16 07:45:51,562 - INFO - Generating PDF: 20_19_zhhk.pdf
+2025-09-16 07:45:51,768 - INFO - ✅ Successfully generated: 20_19_zhhk.pdf
+2025-09-16 07:45:52,770 - INFO - Loading URL: https://zume.training/zhhk/book/generator?type=20&session=20&lang=zhhk
+2025-09-16 07:45:55,164 - INFO - Generating PDF: 20_20_zhhk.pdf
+2025-09-16 07:45:55,393 - INFO - ✅ Successfully generated: 20_20_zhhk.pdf
+2025-09-16 07:45:56,433 - INFO - 
+==================================================
+2025-09-16 07:45:56,433 - INFO - PDF GENERATION SUMMARY
+2025-09-16 07:45:56,433 - INFO - ==================================================
+2025-09-16 07:45:56,433 - INFO - Total processed: 20
+2025-09-16 07:45:56,433 - INFO - Successful: 20
+2025-09-16 07:45:56,433 - INFO - Failed: 0
+2025-09-16 07:45:56,433 - INFO - Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output/zhhk
+2025-09-16 07:45:56,433 - INFO - 
+Generated files:
+2025-09-16 07:45:56,433 - INFO -   • 20_1_zhhk.pdf
+2025-09-16 07:45:56,433 - INFO -   • 20_2_zhhk.pdf
+2025-09-16 07:45:56,433 - INFO -   • 20_3_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_4_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_5_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_6_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_7_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_8_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_9_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_10_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_11_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_12_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_13_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_14_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_15_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_16_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_17_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_18_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_19_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO -   • 20_20_zhhk.pdf
+2025-09-16 07:45:56,434 - INFO - Total time: 0:02:25.007203

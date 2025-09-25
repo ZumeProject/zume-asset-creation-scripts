@@ -1,0 +1,29 @@
+2025-08-27 10:51:30,153 - INFO - 🚀 Starting batch PDF generation
+2025-08-27 10:51:30,153 - INFO - Types: ['10']
+2025-08-27 10:51:30,153 - INFO - Languages: ['en']
+2025-08-27 10:51:30,153 - INFO - Total combinations: 1
+2025-08-27 10:51:30,153 - INFO - 
+📊 Progress: 1/1
+2025-08-27 10:51:30,153 - INFO - 🔄 Running generation for type=10, lang=en
+2025-08-27 10:51:30,153 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang en --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-08-27 10:51:30,186 - ERROR - ❌ Failed generation for type=10, lang=en (Duration: 0:00:00.032589)
+2025-08-27 10:51:30,186 - ERROR - Return code: 1
+2025-08-27 10:51:30,186 - ERROR - Error output: Traceback (most recent call last):
+  File "/Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/zume_pdf_generator.py", line 17, in <module>
+    from playwright.async_api import async_playwright
+ModuleNotFoundError: No module named 'playwright'
+
+2025-08-27 10:51:32,187 - INFO - 
+============================================================
+2025-08-27 10:51:32,188 - INFO - BATCH PDF GENERATION SUMMARY
+2025-08-27 10:51:32,188 - INFO - ============================================================
+2025-08-27 10:51:32,189 - INFO - Total combinations: 1
+2025-08-27 10:51:32,190 - INFO - Successful: 0
+2025-08-27 10:51:32,190 - INFO - Failed: 1
+2025-08-27 10:51:32,190 - INFO - Total time: 0:00:02.034294
+2025-08-27 10:51:32,191 - INFO - 
+Failed combinations:
+2025-08-27 10:51:32,191 - INFO -   • type=10, lang=en
+2025-08-27 10:51:32,191 - INFO -     Return code: 1
+2025-08-27 10:51:32,192 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
