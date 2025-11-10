@@ -130,8 +130,8 @@ def create_folder_structure(language_code: str, base_location: str = ".") -> Pat
     
     return lang_folder
 
-def save_config(language_code: str, folder_location: str) -> None:
-    """Save configuration to file"""
+def save_config(language_code: str, folder_location: str, save_to_file: bool = False) -> None:
+    """Save configuration to file (optional)"""
     config = {
         'language_code': language_code,
         'folder_location': os.path.abspath(folder_location),
@@ -139,11 +139,13 @@ def save_config(language_code: str, folder_location: str) -> None:
         'project_path': os.path.abspath(folder_location + '/' + language_code)
     }
     
-    # Save to JSON config file
-    with open('../.config.json', 'w') as f:
-        json.dump(config, f, indent=2)
-    
-    print(f"✅ Configuration saved to .config.json")
+    # Save to JSON config file only if requested (for backward compatibility)
+    if save_to_file:
+        with open('../.config.json', 'w') as f:
+            json.dump(config, f, indent=2)
+        print(f"✅ Configuration saved to .config.json")
+    else:
+        print(f"✅ Configuration prepared (not saved to .config.json - using session-based config)")
 
 def load_config() -> dict:
     """Load configuration from file"""
@@ -201,6 +203,17 @@ Examples:
              'Example: --skip vimeo,config to skip Vimeo credential setup and config saving'
     )
     
+    parser.add_argument(
+        '--session-id',
+        help='Session ID for tracking (optional, used by build.py)'
+    )
+    
+    parser.add_argument(
+        '--save-config',
+        action='store_true',
+        help='Save configuration to .config.json (optional, for backward compatibility)'
+    )
+    
     return parser.parse_args()
 
 def main():
@@ -222,6 +235,9 @@ def main():
     print("🚀 ZUME Slide Full Builder Setup")
     print("=" * 40)
     print(f"📍 Target location: {os.path.abspath(args.folder)}")
+    
+    if args.session_id:
+        print(f"🔑 Session ID: {args.session_id}")
     
     # Check if running in non-interactive mode
     non_interactive = args.language is not None and not args.force_interactive
@@ -249,8 +265,8 @@ def main():
         # Step 4: Create folder structure
         lang_folder = create_folder_structure(language_code, args.folder)
         
-        # Step 5: Save configuration
-        save_config(language_code, args.folder)
+        # Step 5: Save configuration (only if --save-config is provided)
+        save_config(language_code, args.folder, save_to_file=args.save_config)
         
         print("\n🎉 Setup completed successfully!")
         print(f"Mode: {'Non-interactive' if non_interactive else 'Interactive'}")

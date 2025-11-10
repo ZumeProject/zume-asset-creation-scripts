@@ -10,58 +10,38 @@ import sys
 import json
 import subprocess
 import tempfile
+import uuid
 from pathlib import Path
 from typing import Dict, Any
 
 
 class BuildRunner:
-    """Manages the entire build process with temporary configuration storage"""
+    """Manages the entire build process with session-based configuration"""
     
     def __init__(self):
         self.config = {}
+        self.session_id = str(uuid.uuid4())[:8]  # Short unique session ID
         self.temp_dir = None
-        self.original_config_file = None
-        self.backup_created = False
     
     def setup_temp_config(self):
-        """Create a temporary directory for storing configuration during build"""
-        self.temp_dir = tempfile.mkdtemp(prefix="zume_build_")
-        print(f"📁 Created temporary config directory: {self.temp_dir}")
-        
-        # Check if existing config file exists and back it up
-        if os.path.exists('.config.json'):
-            self.original_config_file = Path('.config.json').read_text()
-            self.backup_created = True
-            print("💾 Backed up existing .config.json")
+        """Create a temporary directory for session tracking and debugging"""
+        self.temp_dir = tempfile.mkdtemp(prefix=f"zume_build_{self.session_id}_")
+        print(f"📁 Created session directory: {self.temp_dir}")
+        print(f"🔑 Session ID: {self.session_id}")
     
     def cleanup_temp_config(self):
-        """Clean up temporary configuration and restore original if needed"""
-        if self.backup_created and self.original_config_file:
-            # Restore original config
-            with open('.config.json', 'w') as f:
-                f.write(self.original_config_file)
-            print("🔄 Restored original .config.json")
-        elif not self.backup_created and os.path.exists('.config.json'):
-            # Remove the config file we created
-            os.remove('.config.json')
-            print("🧹 Removed temporary .config.json")
-        
-        # Clean up temporary directory
+        """Clean up temporary directory"""
         if self.temp_dir and os.path.exists(self.temp_dir):
             import shutil
             shutil.rmtree(self.temp_dir)
-            print("🧹 Cleaned up temporary directory")
+            print(f"🧹 Cleaned up session directory (Session ID: {self.session_id})")
     
     def save_temp_config(self):
-        """Save current configuration to temporary file and main config"""
-        # Save to main config file for scripts to use
-        with open('.config.json', 'w') as f:
-            json.dump(self.config, f, indent=2)
-        
-        # Also save to temp directory for tracking
-        temp_config_path = os.path.join(self.temp_dir, 'build_config.json')
-        with open(temp_config_path, 'w') as f:
-            json.dump(self.config, f, indent=2)
+        """Save current configuration to temporary directory for tracking/debugging only"""
+        if self.temp_dir:
+            temp_config_path = os.path.join(self.temp_dir, 'build_config.json')
+            with open(temp_config_path, 'w') as f:
+                json.dump(self.config, f, indent=2)
     
     def collect_basic_info(self):
         """Collect basic build information"""
@@ -261,7 +241,7 @@ class BuildRunner:
     
     def run_setup(self):
         """Run the setup script"""
-        # Save current config
+        # Save current config for tracking
         self.save_temp_config()
         
         # Check if Vimeo credentials are already present
@@ -271,14 +251,15 @@ class BuildRunner:
         args = [
             sys.executable, 'parts/1-setup.py',
             '--language', self.config['language_code'],
-            '--folder', self.config['folder_location']
+            '--folder', self.config['folder_location'],
+            '--session-id', self.session_id
         ]
         
         # Only force interactive mode if credentials don't exist
         if not credentials_exist:
             args.append('--force-interactive')
         
-        print(f"\n🔄 Running parts/1-setup.py - Project Setup")
+        print(f"\n🔄 Running parts/1-setup.py - Project Setup (Session: {self.session_id})")
         print("-" * 50)
         
         try:
@@ -351,27 +332,25 @@ class BuildRunner:
                 print(f"❌ Missing or empty {cred} in .env file")
                 return False
         
-        # Check if config file was created
-        if not os.path.exists('.config.json'):
-            print("❌ .config.json file not found")
-            return False
-        
         print("✅ Setup verification passed")
         return True
     
     def run_video_download(self):
         """Run the video download script"""
-        # Update config with Vimeo folder ID
+        # Save current config for tracking
         self.save_temp_config()
         
-        # Video download script requires folder_id as --folder-id argument
-        print(f"\n🔄 Running parts/2-video-download.py - Video Download")
+        # Video download script requires folder_id, project_path, and language_code
+        print(f"\n🔄 Running parts/2-video-download.py - Video Download (Session: {self.session_id})")
         print("-" * 50)
         
         try:
-            # Run the script with folder_id as named argument
+            # Run the script with all required config via CLI args
             result = subprocess.run(
-                [sys.executable, 'parts/2-video-download.py', '--folder-id', self.config['vimeo_folder_id']],
+                [sys.executable, 'parts/2-video-download.py', 
+                 '--folder-id', self.config['vimeo_folder_id'],
+                 '--project-path', self.config['project_path'],
+                 '--language-code', self.config['language_code']],
                 capture_output=False,
                 text=True,
                 cwd=os.getcwd()
@@ -390,19 +369,24 @@ class BuildRunner:
     
     def run_slides_download(self):
         """Run the slides download script"""
+        # Save current config for tracking
+        self.save_temp_config()
+        
         # Slides download script accepts command-line arguments
-        print(f"\n🔄 Running parts/3-slides-download.py - Slides Download")
+        print(f"\n🔄 Running parts/3-slides-download.py - Slides Download (Session: {self.session_id})")
         print("-" * 50)
         
         try:
-            # Run the script with optimal arguments
+            # Run the script with optimal arguments and config via CLI args
             result = subprocess.run(
                 [sys.executable, 'parts/3-slides-download.py', 
                  '--curriculum', 'all',  # Process all curricula
                  '--missing-only',       # Only process missing screenshots
                  '--width', '3000',      # High-resolution screenshots
                  '--height', '1680',
-                 '--wait', '5'],         # Wait 5 seconds for page load
+                 '--wait', '5',          # Wait 5 seconds for page load
+                 '--project-path', self.config['project_path'],
+                 '--language-code', self.config['language_code']],
                 capture_output=False,
                 text=True,
                 cwd=os.getcwd()
@@ -421,6 +405,9 @@ class BuildRunner:
     
     def run_rename_files(self):
         """Run the file rename script"""
+        # Save current config for tracking
+        self.save_temp_config()
+        
         # Check if required JSON files exist
         json_files = ['parts/10.json', 'parts/20.json', 'parts/intensive.json']
         missing_files = []
@@ -437,8 +424,29 @@ class BuildRunner:
                 print("Rename step cancelled by user.")
                 return False
         
-        # Rename files script uses the config file automatically
-        return self.run_script('parts/4-rename-files.py', 'File Rename and Organization')
+        # Run the rename script with project path via CLI args
+        print(f"\n🔄 Running parts/4-rename-files.py - File Rename and Organization (Session: {self.session_id})")
+        print("-" * 50)
+        
+        try:
+            result = subprocess.run(
+                [sys.executable, 'parts/4-rename-files.py',
+                 '--project-path', self.config['project_path']],
+                capture_output=False,
+                text=True,
+                cwd=os.getcwd()
+            )
+            
+            if result.returncode == 0:
+                print(f"✅ parts/4-rename-files.py completed successfully")
+                return True
+            else:
+                print(f"❌ parts/4-rename-files.py failed with return code {result.returncode}")
+                return False
+                
+        except Exception as e:
+            print(f"❌ Error running parts/4-rename-files.py: {e}")
+            return False
     
     def display_build_summary(self):
         """Display a summary of the build process"""

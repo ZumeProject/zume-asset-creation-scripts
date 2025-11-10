@@ -1,15 +1,16 @@
 # Zume PDF Book Creator
 
-An automated tool to generate PDF books from the Zume training website using Python and Playwright.
+An automated tool to generate PDF books from the Zume training website using Python and Playwright. This project includes two scripts: a single-run generator and a batch generator for processing multiple type/language combinations.
 
 ## Features
 
-- 🚀 **Automated PDF Generation**: Batch generate PDFs from Zume training sessions
+- 🚀 **Automated PDF Generation**: Generate PDFs from Zume training sessions automatically
+- 📦 **Batch Processing**: Process multiple type/language combinations in one run
 - 🔄 **Smart Looping**: Automatically handles different session counts based on type
-- 📱 **Responsive**: Configurable zoom level for optimal PDF layout (default 60%)
+- 📱 **Responsive**: Configurable zoom level for optimal PDF layout (default 0.8)
 - 🗂️ **Organized Output**: Clean file naming and directory structure (Letter format PDFs)
 - 📊 **Progress Tracking**: Real-time logging and generation summary
-- 🛡️ **Error Handling**: Robust error handling with detailed logging
+- 🛡️ **Error Handling**: Robust error handling with automatic retries and detailed logging
 - 🌍 **Multi-language**: Support for any language code
 - ⚙️ **Configurable**: Flexible parameters and output options
 
@@ -25,7 +26,7 @@ An automated tool to generate PDF books from the Zume training website using Pyt
 1. **Clone or download this project**
    ```bash
    git clone <repository-url>
-   cd zume-pdf-book-creator
+   cd pdf-creator
    ```
 
 2. **Run the setup script**
@@ -39,7 +40,20 @@ An automated tool to generate PDF books from the Zume training website using Pyt
    playwright install chromium
    ```
 
-### Basic Usage
+## Scripts Overview
+
+This project includes two main scripts:
+
+1. **`zume_pdf_generator.py`** - Generates PDFs for a single type/language combination
+2. **`batch_pdf_generator.py`** - Batch generates PDFs for multiple type/language combinations
+
+## Usage
+
+### Single Generation (`zume_pdf_generator.py`)
+
+Use this script when you need to generate PDFs for a single type and language combination.
+
+#### Basic Usage
 
 ```bash
 # Generate 10 sessions for Amharic (am)
@@ -48,11 +62,11 @@ python zume_pdf_generator.py --type 10 --lang am
 # Generate intensive course (5 sessions) for English
 python zume_pdf_generator.py --type intensive --lang en
 
-# Generate 20 sessions for Spanish starting from session 5
-python zume_pdf_generator.py --type 20 --lang es --start-session 5
+# Generate 20 sessions for Spanish
+python zume_pdf_generator.py --type 20 --lang es
 ```
 
-## Command Line Options
+#### Command Line Options
 
 | Option | Required | Description | Default |
 |--------|----------|-------------|---------|
@@ -60,23 +74,13 @@ python zume_pdf_generator.py --type 20 --lang es --start-session 5
 | `--lang` | ✅ | Language code (e.g., `am`, `en`, `es`) | - |
 | `--start-session` | ❌ | Starting session number | `1` |
 | `--session` | ❌ | Generate only a specific session number (overrides `--start-session`) | - |
-| `--zoom` | ❌ | Zoom level for PDF generation (e.g., 0.6, 0.8, 1.0) | `0.6` |
+| `--zoom` | ❌ | Zoom level for PDF generation (e.g., 0.6, 0.8, 1.0) | `0.8` |
 | `--output-dir` | ❌ | Output directory for PDFs | `output` |
 | `--base-url` | ❌ | Base URL for Zume training | `https://zume.training` |
 | `--timeout` | ❌ | Page load timeout in milliseconds | `60000` |
 | `--max-retries` | ❌ | Maximum retry attempts for failed sessions | `2` |
 
-## Training Types
-
-| Type | Sessions Generated | Description |
-|------|-------------------|-------------|
-| `10` | 10 sessions | Standard 10-session training |
-| `20` | 20 sessions | Extended 20-session training |
-| `intensive` | 5 sessions | Intensive 5-session training |
-
-## Examples
-
-### Basic Examples
+#### Single Generation Examples
 
 ```bash
 # Generate all 10 sessions in Amharic
@@ -85,30 +89,17 @@ python zume_pdf_generator.py --type 10 --lang am
 # Generate intensive course in English
 python zume_pdf_generator.py --type intensive --lang en
 
-# Generate 20 sessions in Spanish
-python zume_pdf_generator.py --type 20 --lang es
-```
-
-### Advanced Examples
-
-```bash
-# Start from session 3 (useful if first sessions failed)
-python zume_pdf_generator.py --type 10 --lang am --start-session 3
+# Generate 20 sessions in Spanish starting from session 5
+python zume_pdf_generator.py --type 20 --lang es --start-session 5
 
 # Generate only a specific session (useful for retrying failed sessions)
 python zume_pdf_generator.py --type 10 --lang am --session 5
 
 # Use custom zoom level for larger/smaller text
-python zume_pdf_generator.py --type 10 --lang am --zoom 0.8
-
-# Combine zoom with specific session
-python zume_pdf_generator.py --type 20 --lang es --session 15 --zoom 0.7
+python zume_pdf_generator.py --type 10 --lang am --zoom 0.9
 
 # Save to custom directory
 python zume_pdf_generator.py --type 10 --lang am --output-dir my_pdfs
-
-# Use different base URL (for testing)
-python zume_pdf_generator.py --type 10 --lang am --base-url https://staging.zume.training
 
 # Increase timeout for slow connections (2 minutes)
 python zume_pdf_generator.py --type 10 --lang am --timeout 120000
@@ -116,6 +107,70 @@ python zume_pdf_generator.py --type 10 --lang am --timeout 120000
 # Increase retry attempts for unreliable connections
 python zume_pdf_generator.py --type 10 --lang am --max-retries 3
 ```
+
+### Batch Generation (`batch_pdf_generator.py`)
+
+Use this script to generate PDFs for multiple type/language combinations in one run. The batch generator automatically loops through all combinations and generates PDFs for each.
+
+#### Basic Usage
+
+```bash
+# Generate PDFs for multiple types and languages
+python batch_pdf_generator.py --types 10 20 --languages en es
+
+# Generate intensive course for multiple languages
+python batch_pdf_generator.py --types intensive --languages am en es
+
+# Generate for single type but multiple languages
+python batch_pdf_generator.py --types 10 --languages en es fr de
+```
+
+#### Command Line Options
+
+| Option | Required | Description | Default |
+|--------|----------|-------------|---------|
+| `--types` | ✅ | Training types: `10`, `20`, `intensive` (can specify multiple) | - |
+| `--languages` | ✅ | Language codes (e.g., `am`, `en`, `es`) - can specify multiple | - |
+| `--start-session` | ❌ | Starting session number for all generations | `1` |
+| `--session` | ❌ | Generate only a specific session number for all combinations (overrides `--start-session`) | - |
+| `--zoom` | ❌ | Zoom level for PDF generation | `0.8` |
+| `--output-dir` | ❌ | Output directory for PDFs | `output` |
+| `--base-url` | ❌ | Base URL for Zume training | `https://zume.training` |
+| `--timeout` | ❌ | Page load timeout in milliseconds | `60000` |
+| `--max-retries` | ❌ | Maximum retry attempts for failed sessions | `2` |
+
+#### Batch Generation Examples
+
+```bash
+# Generate PDFs for types 10 and 20 in English and Spanish (4 total combinations)
+python batch_pdf_generator.py --types 10 20 --languages en es
+
+# Generate intensive course for multiple languages
+python batch_pdf_generator.py --types intensive --languages am en es
+
+# Generate all types for all languages
+python batch_pdf_generator.py --types 10 20 intensive --languages am en es fr de
+
+# Generate specific session for multiple combinations
+python batch_pdf_generator.py --types 10 20 --languages en es --session 5
+
+# Custom output directory
+python batch_pdf_generator.py --types 10 --languages en es --output-dir my_pdfs
+
+# Custom zoom level for all batch generations
+python batch_pdf_generator.py --types 10 20 --languages en es --zoom 0.9
+
+# Increased timeout for all generations
+python batch_pdf_generator.py --types 10 20 --languages en es --timeout 120000
+```
+
+## Training Types
+
+| Type | Sessions Generated | Description |
+|------|-------------------|-------------|
+| `10` | 10 sessions | Standard 10-session training |
+| `20` | 20 sessions | Extended 20-session training |
+| `intensive` | 5 sessions | Intensive 5-session training |
 
 ## Output
 
@@ -131,24 +186,29 @@ Examples:
 ### Directory Structure
 
 ```
-zume-pdf-book-creator/
+pdf-creator/
 ├── output/              # Generated PDFs (default)
 │   ├── am/              # Amharic PDFs
 │   │   ├── 10_1_am.pdf
 │   │   ├── 10_2_am.pdf
+│   │   ├── 20_1_am.pdf
 │   │   └── ...
 │   ├── en/              # English PDFs
+│   │   ├── 10_1_en.pdf
 │   │   ├── intensive_1_en.pdf
 │   │   └── ...
 │   └── es/              # Spanish PDFs
 │       └── ...
-├── pdf_generation.log   # Detailed logs
+├── pdf_generation.log          # Detailed logs (single generation)
+├── batch_pdf_generation.log    # Detailed logs (batch generation)
 └── ...
 ```
 
 ## Logging
 
-The application creates detailed logs in `pdf_generation.log` and displays progress in the terminal:
+Both scripts create detailed logs and display progress in the terminal:
+
+### Single Generation Logs (`pdf_generation.log`)
 
 ```
 2024-01-15 10:30:15 - INFO - Starting PDF generation for type=10, lang=am
@@ -158,15 +218,31 @@ The application creates detailed logs in `pdf_generation.log` and displays progr
 2024-01-15 10:30:20 - INFO - ✅ Successfully generated: 10_1_am.pdf
 ```
 
+### Batch Generation Logs (`batch_pdf_generation.log`)
+
+```
+2024-01-15 10:30:15 - INFO - 🚀 Starting batch PDF generation
+2024-01-15 10:30:15 - INFO - Types: ['10', '20']
+2024-01-15 10:30:15 - INFO - Languages: ['en', 'es']
+2024-01-15 10:30:15 - INFO - Total combinations: 4
+2024-01-15 10:30:15 - INFO - 📊 Progress: 1/4
+2024-01-15 10:30:15 - INFO - 🔄 Running generation for type=10, lang=en
+...
+2024-01-15 10:35:00 - INFO - ✅ Successfully completed generation for type=10, lang=en
+```
+
+Both scripts provide summary reports at the end showing successful and failed generations.
+
 ## Error Handling
 
-The application includes comprehensive error handling:
+Both applications include comprehensive error handling:
 
 - **Network Issues**: Automatic retries (2 attempts by default) and configurable timeout (60 seconds by default)
 - **Invalid Parameters**: Input validation with helpful messages
 - **File System Errors**: Permission and disk space checks
 - **Browser Issues**: Automatic cleanup and error recovery
 - **Resilient Generation**: Failed sessions are retried automatically with detailed logging
+- **Batch Tracking**: Batch generator tracks success/failure for each combination and provides a summary
 
 ## Troubleshooting
 
@@ -196,31 +272,41 @@ The application includes comprehensive error handling:
 4. **Memory issues with large batches**
    - Generate smaller batches using `--start-session`
    - Generate individual sessions using `--session N`
+   - Process types/languages separately instead of all at once
    - Close other applications to free memory
 
 5. **PDF layout issues**
    - Adjust zoom level with `--zoom` parameter (try 0.5-1.0 range)
    - Smaller zoom (e.g., 0.5) fits more content per page
-   - Larger zoom (e.g., 0.8) makes text more readable
+   - Larger zoom (e.g., 0.8-1.0) makes text more readable
+
+6. **Batch generation partially fails**
+   - Check `batch_pdf_generation.log` for specific failure details
+   - Re-run only failed combinations using `zume_pdf_generator.py`
+   - Use `--session N` to retry specific failed sessions
 
 ### Getting Help
 
-- Check the log file `pdf_generation.log` for detailed error information
+- Check the log files (`pdf_generation.log` or `batch_pdf_generation.log`) for detailed error information
 - Ensure you have a stable internet connection
 - Verify the Zume training website is accessible
 - Make sure Python 3.8+ is installed
+- Review the command-line help: `python zume_pdf_generator.py --help` or `python batch_pdf_generator.py --help`
 
 ## Development
 
 ### Project Structure
 
 ```
-zume-pdf-book-creator/
-├── zume_pdf_generator.py    # Main application
-├── setup.py                 # Setup script
-├── requirements.txt         # Dependencies
-├── README.md               # Documentation
-└── output/                 # Generated PDFs
+pdf-creator/
+├── zume_pdf_generator.py      # Single generation script
+├── batch_pdf_generator.py     # Batch generation script
+├── setup.py                   # Setup script
+├── requirements.txt           # Dependencies
+├── README.md                  # Documentation
+├── assets/
+│   └── cover-page.pdf         # Cover page asset
+└── output/                    # Generated PDFs
 ```
 
 ### Running Tests
@@ -240,10 +326,10 @@ pytest
 pip install black flake8
 
 # Format code
-black zume_pdf_generator.py
+black *.py
 
 # Check code quality
-flake8 zume_pdf_generator.py
+flake8 *.py
 ```
 
 ## License
@@ -260,4 +346,4 @@ This project is created for Zume Training. Please respect the Zume training cont
 
 ---
 
-**Need help?** Check the troubleshooting section above or review the log files for detailed error information. 
+**Need help?** Check the troubleshooting section above or review the log files for detailed error information.

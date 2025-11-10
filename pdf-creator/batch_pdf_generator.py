@@ -52,6 +52,35 @@ class BatchPDFGenerator:
             if type_param not in valid_types:
                 raise ValueError(f"Invalid type '{type_param}'. Must be one of: {', '.join(valid_types)}")
     
+    def get_session_count(self, type_param: str) -> int:
+        """Get the number of sessions based on type parameter."""
+        session_counts = {
+            "10": 10,
+            "20": 20,
+            "intensive": 5
+        }
+        return session_counts.get(str(type_param), 1)
+    
+    def calculate_subprocess_timeout(self, type_param: str) -> int:
+        """Calculate subprocess timeout based on session count and page timeout."""
+        if self.single_session is not None:
+            # Single session - just need timeout + buffer
+            return (self.timeout // 1000) + 30
+        else:
+            # Multiple sessions - calculate based on session count
+            session_count = self.get_session_count(type_param)
+            # Estimated time per session: 
+            # - Average page load: 5-10 seconds (usually much less than timeout)
+            # - PDF generation: 1-2 seconds
+            # - Delays: 1 second between requests
+            # - Account for occasional retries: add 50% buffer
+            avg_time_per_session = 10  # Realistic average: 10 seconds per session
+            total_time = avg_time_per_session * session_count
+            # Add buffer for retries and startup (50% more time)
+            total_time = int(total_time * 1.5)
+            # Add startup buffer (30 seconds)
+            return total_time + 30
+    
     def build_command(self, type_param: str, lang: str) -> list:
         """Build the command to run zume_pdf_generator.py with the given parameters."""
         cmd = [
@@ -81,12 +110,16 @@ class BatchPDFGenerator:
         start_time = datetime.now()
         
         try:
+            # Calculate timeout based on number of sessions
+            subprocess_timeout = self.calculate_subprocess_timeout(type_param)
+            logger.info(f"⏱️  Subprocess timeout set to {subprocess_timeout} seconds")
+            
             # Run the subprocess
             result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=self.timeout // 1000 + 60  # Convert to seconds and add buffer
+                timeout=subprocess_timeout
             )
             
             end_time = datetime.now()

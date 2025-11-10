@@ -24,47 +24,46 @@ import datetime
 import sys
 import argparse
 
-def load_config() -> dict:
-    """Load configuration from .config.json file"""
-    config_file = Path('../.config.json')
-    if config_file.exists():
-        with open(config_file, 'r') as f:
-            return json.load(f)
-    return {}
+def load_config(args=None) -> dict:
+    """Load configuration from CLI args, env vars, or .config.json file"""
+    config = {}
+    
+    # Priority 1: Command-line arguments
+    if args and args.project_path:
+        config['project_path'] = args.project_path
+    
+    # Priority 2: Environment variables
+    if not config.get('project_path'):
+        config['project_path'] = os.environ.get('ZUME_PROJECT_PATH')
+    
+    # Priority 3: .config.json file (backward compatibility)
+    if not config.get('project_path'):
+        config_file = Path('../.config.json')
+        if config_file.exists():
+            try:
+                with open(config_file, 'r') as f:
+                    file_config = json.load(f)
+                    if file_config.get('project_path'):
+                        config['project_path'] = file_config['project_path']
+            except json.JSONDecodeError as e:
+                print(f"⚠️  Warning: Error reading .config.json: {e}")
+    
+    return config
 
-def get_project_path(provided_path: str = None) -> Path:
+def get_project_path(args=None) -> Path:
     """Get the project path from command line argument, environment variable, or configuration"""
-    # Check command line argument first
-    if provided_path:
-        project_path = Path(provided_path)
-        if not project_path.exists():
-            print(f"❌ Provided project path {project_path} does not exist.")
-            sys.exit(1)
-        return project_path
-    
-    # Check environment variable
-    env_path = os.environ.get('ZUME_PROJECT_PATH')
-    if env_path:
-        project_path = Path(env_path)
-        if not project_path.exists():
-            print(f"❌ Environment project path {project_path} does not exist.")
-            sys.exit(1)
-        return project_path
-    
-    # Fall back to configuration file
-    config = load_config()
-    if not config:
-        print("❌ No configuration found and no path provided. Please run 1-setup.py first or provide a path.")
-        sys.exit(1)
+    # Load config using priority order (CLI args -> env vars -> .config.json)
+    config = load_config(args)
     
     project_path = config.get('project_path')
     if not project_path:
-        print("❌ No project path found in configuration. Please run 1-setup.py first or provide a path.")
+        print("❌ No project path found.")
+        print("Provide via --project-path argument, ZUME_PROJECT_PATH env var, or .config.json")
         sys.exit(1)
     
     project_path = Path(project_path)
     if not project_path.exists():
-        print(f"❌ Project path {project_path} does not exist. Please run 1-setup.py first.")
+        print(f"❌ Project path {project_path} does not exist.")
         sys.exit(1)
     
     return project_path
@@ -450,7 +449,7 @@ def main():
     os.chdir(script_dir)
     
     # Load configuration and get project path
-    project_path = get_project_path(args.project_path)
+    project_path = get_project_path(args)
     print(f"📍 Project path: {project_path}")
     
     # Step 0: Set up output directory (clear if exists, create if not)

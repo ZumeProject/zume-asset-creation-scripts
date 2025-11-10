@@ -76,16 +76,245 @@ class ZumePDFGenerator:
                     logger.info(f"🔄 Retry attempt {attempt}/{self.max_retries} for session {session}")
                     
                 logger.info(f"Loading URL: {url}")
-                await page.goto(url, wait_until='networkidle', timeout=self.timeout)
+                # First wait for page to load
+                await page.goto(url, wait_until='load', timeout=self.timeout)
+                
+                # For languages with complex fonts like Gujarati, also wait for network to be idle
+                # This ensures font files are downloaded
+                if lang == 'gu':
+                    try:
+                        await page.wait_for_load_state('networkidle', timeout=30000)
+                        logger.debug(f"Network idle confirmed for Gujarati session {session}")
+                    except Exception as e:
+                        logger.warning(f"Network idle timeout for session {session} (continuing anyway): {str(e)}")
+                        # Fallback: wait a bit for fonts to load
+                        await page.wait_for_timeout(2000)
                 
                 # Set zoom level
                 await page.evaluate("document.body.style.zoom = '" + str(self.zoom) + "'")
                 
-                # Wait a bit for zoom to apply
-                await page.wait_for_timeout(1000)
+                # Wait for fonts to load (critical for languages with custom fonts like Gujarati)
+                # This ensures all web fonts are fully loaded and rendered before generating the PDF
+                try:
+                    font_info = await page.evaluate("""
+                        async () => {
+                            // Get all font families used on the page
+                            const getAllFontFamilies = () => {
+                                const fonts = new Set();
+                                const walker = document.createTreeWalker(
+                                    document.body,
+                                    NodeFilter.SHOW_ELEMENT,
+                                    null
+                                );
+                                
+                                let node;
+                                while (node = walker.nextNode()) {
+                                    const computedStyle = window.getComputedStyle(node);
+                                    const fontFamily = computedStyle.fontFamily;
+                                    if (fontFamily) {
+                                        // Parse font family string (can have multiple fonts)
+                                        fontFamily.split(',').forEach(font => {
+                                            const cleanFont = font.trim().replace(/['"]/g, '');
+                                            if (cleanFont && cleanFont !== 'inherit' && cleanFont !== 'initial') {
+                                                fonts.add(cleanFont);
+                                            }
+                                        });
+                                    }
+                                }
+                                return Array.from(fonts);
+                            };
+                            
+                            const fontFamilies = getAllFontFamilies();
+                            
+                            // Wait for all stylesheets to load (they may contain @font-face rules)
+                            const stylesheets = Array.from(document.styleSheets);
+                            for (const sheet of stylesheets) {
+                                try {
+                                    if (sheet.cssRules) {
+                                        // Stylesheet loaded, check for @font-face rules
+                                        for (const rule of sheet.cssRules) {
+                                            if (rule.type === CSSRule.FONT_FACE_RULE) {
+                                                // Found a @font-face rule, font will need to load
+                                            }
+                                        }
+                                    }
+                                } catch (e) {
+                                    // Cross-origin stylesheet, ignore
+                                }
+                            }
+                            
+                            // Wait for font API to be ready
+                            if (document.fonts && document.fonts.ready) {
+                                await document.fonts.ready;
+                            }
+                            
+                            // Also wait for any pending font loads from @font-face
+                            // Wait for fonts to be registered in the FontFaceSet
+                            let fontLoadAttempts = 0;
+                            while (fontLoadAttempts < 10) {
+                                if (document.fonts && document.fonts.size > 0) {
+                                    // Fonts are registered, break
+                                    break;
+                                }
+                                await new Promise(resolve => setTimeout(resolve, 100));
+                                fontLoadAttempts++;
+                            }
+                            
+                            // Wait for all fonts to actually load with retries
+                            let maxRetries = 30; // 30 * 250ms = 7.5 seconds max (increased for complex fonts)
+                            let allFontsLoaded = false;
+                            let fontStatuses = [];
+                            
+                            while (maxRetries > 0 && !allFontsLoaded) {
+                                allFontsLoaded = true;
+                                fontStatuses = [];
+                                
+                                if (document.fonts && document.fonts.size > 0) {
+                                    // Check all fonts in the document
+                                    for (const font of document.fonts.values()) {
+                                        const status = font.status;
+                                        fontStatuses.push({
+                                            family: font.family,
+                                            style: font.style,
+                                            weight: font.weight,
+                                            status: status
+                                        });
+                                        if (status !== 'loaded' && status !== 'unloaded') {
+                                            // 'unloaded' means font file hasn't been requested yet, which is OK
+                                            // But 'loading' or 'error' means we need to wait
+                                            if (status === 'loading') {
+                                                allFontsLoaded = false;
+                                            } else if (status === 'error') {
+                                                console.warn(`Font load error: ${font.family}`);
+                                            }
+                                        }
+                                    }
+                                    
+                                    // Also check if specific font families are loaded by testing them
+                                    if (fontFamilies.length > 0) {
+                                        for (const family of fontFamilies.slice(0, 5)) { // Check first 5 families
+                                            try {
+                                                const loaded = document.fonts.check(`16px "${family}"`);
+                                                if (!loaded) {
+                                                    // Font family not loaded yet
+                                                    allFontsLoaded = false;
+                                                }
+                                            } catch (e) {
+                                                // Font check failed, continue
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    // If no fonts registered yet, wait a bit more
+                                    allFontsLoaded = false;
+                                }
+                                
+                                if (!allFontsLoaded) {
+                                    await new Promise(resolve => setTimeout(resolve, 250));
+                                    maxRetries--;
+                                }
+                            }
+                            
+                            // Log font statuses for debugging
+                            if (fontStatuses.length > 0) {
+                                const loadedCount = fontStatuses.filter(f => f.status === 'loaded').length;
+                                const loadingCount = fontStatuses.filter(f => f.status === 'loading').length;
+                                console.log(`Font loading status: ${loadedCount} loaded, ${loadingCount} loading, ${fontStatuses.length} total`);
+                            }
+                            
+                            // Additional wait to ensure font rendering is complete
+                            // Increased wait time for complex fonts like Gujarati
+                            await new Promise(resolve => setTimeout(resolve, 2000));
+                            
+                            // Force multiple layout recalculations to ensure fonts are rendered
+                            document.body.offsetHeight;
+                            document.body.offsetHeight;
+                            
+                            // Verify fonts are actually rendering by checking if actual page text is visible
+                            // Find first text node with non-ASCII characters (likely using custom fonts)
+                            const walker = document.createTreeWalker(
+                                document.body,
+                                NodeFilter.SHOW_TEXT,
+                                null
+                            );
+                            let hasVisibleText = false;
+                            let node;
+                            while (node = walker.nextNode()) {
+                                const text = node.textContent.trim();
+                                // Check for non-ASCII characters (indicating custom fonts needed)
+                                if (text.length > 0 && /[^\x00-\x7F]/.test(text)) {
+                                    const parent = node.parentElement;
+                                    if (parent) {
+                                        const rect = parent.getBoundingClientRect();
+                                        const style = window.getComputedStyle(parent);
+                                        if (rect.width > 0 && rect.height > 0 && 
+                                            style.visibility !== 'hidden' && 
+                                            style.display !== 'none') {
+                                            hasVisibleText = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            
+                            return {
+                                allFontsLoaded: allFontsLoaded,
+                                fontFamilies: fontFamilies,
+                                fontCount: document.fonts ? document.fonts.size : 0,
+                                textRendering: hasVisibleText,
+                                fontStatuses: fontStatuses
+                            };
+                        }
+                    """)
+                    
+                    if font_info:
+                        font_statuses = font_info.get('fontStatuses', [])
+                        loaded_fonts = [f for f in font_statuses if f.get('status') == 'loaded']
+                        loading_fonts = [f for f in font_statuses if f.get('status') == 'loading']
+                        
+                        logger.info(f"Font info for session {session}: {len(font_info.get('fontFamilies', []))} font families found, "
+                                  f"{font_info.get('fontCount', 0)} fonts registered, "
+                                  f"{len(loaded_fonts)} loaded, {len(loading_fonts)} loading, "
+                                  f"all loaded: {font_info.get('allFontsLoaded', False)}, "
+                                  f"text rendering: {font_info.get('textRendering', False)}")
+                        
+                        if font_info.get('fontFamilies'):
+                            logger.debug(f"Font families used: {', '.join(font_info['fontFamilies'][:5])}")
+                        
+                        if loaded_fonts:
+                            font_details = []
+                            for f in loaded_fonts[:3]:
+                                family = f.get('family', 'unknown')
+                                weight = f.get('weight', '')
+                                style = f.get('style', '')
+                                font_details.append(f"{family} ({weight} {style})")
+                            logger.debug(f"Loaded fonts: {', '.join(font_details)}")
+                        
+                        if loading_fonts:
+                            logger.warning(f"Still loading fonts: {', '.join([f.get('family', 'unknown') for f in loading_fonts[:3]])}")
+                    
+                    if not font_info.get('allFontsLoaded', False):
+                        logger.warning(f"Some fonts may not be fully loaded for session {session}, but continuing with PDF generation")
+                    
+                    # Additional wait specifically for Gujarati and other complex script languages
+                    if lang == 'gu':
+                        logger.debug(f"Additional wait for Gujarati font rendering")
+                        await page.wait_for_timeout(1500)
+                        # Force another layout recalculation
+                        await page.evaluate("document.body.offsetHeight")
+                        
+                except Exception as font_error:
+                    logger.warning(f"Font loading check failed (continuing anyway): {str(font_error)}")
+                    # Fallback: wait longer for fonts to potentially load, especially for Gujarati
+                    fallback_wait = 4000 if lang == 'gu' else 2500
+                    await page.wait_for_timeout(fallback_wait)
+                    # Force layout recalculation
+                    await page.evaluate("document.body.offsetHeight")
                 
-                # Generate PDF
+                # Generate PDF with font embedding enabled (default in Playwright, but explicit)
                 logger.info(f"Generating PDF: {filename}")
+                # Note: Playwright automatically embeds fonts used on the page in the PDF
+                # But we ensure fonts are fully loaded before this step
                 await page.pdf(
                     path=str(filepath),
                     format="Letter",
@@ -129,9 +358,21 @@ class ZumePDFGenerator:
             sessions_to_generate = range(start_session, start_session + session_count)
         
         async with async_playwright() as p:
-            # Launch browser
-            browser = await p.chromium.launch(headless=True)
+            # Launch browser with optimizations for font rendering
+            # Note: System fonts should be accessible by default in Playwright
+            browser = await p.chromium.launch(
+                headless=True,
+                args=[
+                    '--disable-features=TranslateUI',  # Disable translation UI
+                    '--disable-ipc-flooding-protection',  # Allow more resources
+                ]
+            )
             page = await browser.new_page()
+            
+            # Set extra HTTP headers to ensure proper language handling
+            await page.set_extra_http_headers({
+                'Accept-Language': f'{lang},en;q=0.9'
+            })
             
             # Set a reasonable viewport
             await page.set_viewport_size({"width": 1920, "height": 1080})

@@ -1,29 +1,771 @@
-2025-08-27 10:51:30,153 - INFO - 🚀 Starting batch PDF generation
-2025-08-27 10:51:30,153 - INFO - Types: ['10']
-2025-08-27 10:51:30,153 - INFO - Languages: ['en']
-2025-08-27 10:51:30,153 - INFO - Total combinations: 1
-2025-08-27 10:51:30,153 - INFO - 
+2025-11-03 09:43:01,456 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 09:43:01,456 - INFO - Types: ['10']
+2025-11-03 09:43:01,456 - INFO - Languages: ['hi']
+2025-11-03 09:43:01,456 - INFO - Total combinations: 1
+2025-11-03 09:43:01,456 - INFO - 
 📊 Progress: 1/1
-2025-08-27 10:51:30,153 - INFO - 🔄 Running generation for type=10, lang=en
-2025-08-27 10:51:30,153 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang en --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
-2025-08-27 10:51:30,186 - ERROR - ❌ Failed generation for type=10, lang=en (Duration: 0:00:00.032589)
-2025-08-27 10:51:30,186 - ERROR - Return code: 1
-2025-08-27 10:51:30,186 - ERROR - Error output: Traceback (most recent call last):
-  File "/Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/zume_pdf_generator.py", line 17, in <module>
-    from playwright.async_api import async_playwright
-ModuleNotFoundError: No module named 'playwright'
-
-2025-08-27 10:51:32,187 - INFO - 
+2025-11-03 09:43:01,457 - INFO - 🔄 Running generation for type=10, lang=hi
+2025-11-03 09:43:01,457 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang hi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 09:43:20,952 - ERROR - ❌ Failed generation for type=10, lang=hi (Duration: 0:00:19.495702)
+2025-11-03 09:43:20,952 - ERROR - Return code: 1
+2025-11-03 09:44:30,074 - ERROR - ❌ Unexpected error: Invalid type '10,20,intensive'. Must be one of: 10, 20, intensive
+2025-11-03 09:45:00,593 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 09:45:00,594 - INFO - Types: ['10']
+2025-11-03 09:45:00,594 - INFO - Languages: ['hi']
+2025-11-03 09:45:00,594 - INFO - Total combinations: 1
+2025-11-03 09:45:00,594 - INFO - 
+📊 Progress: 1/1
+2025-11-03 09:45:00,594 - INFO - 🔄 Running generation for type=10, lang=hi
+2025-11-03 09:45:00,594 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang hi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 09:46:44,678 - INFO - ✅ Successfully completed generation for type=10, lang=hi (Duration: 0:01:44.084329)
+2025-11-03 09:46:46,680 - INFO - 
 ============================================================
-2025-08-27 10:51:32,188 - INFO - BATCH PDF GENERATION SUMMARY
-2025-08-27 10:51:32,188 - INFO - ============================================================
-2025-08-27 10:51:32,189 - INFO - Total combinations: 1
-2025-08-27 10:51:32,190 - INFO - Successful: 0
-2025-08-27 10:51:32,190 - INFO - Failed: 1
-2025-08-27 10:51:32,190 - INFO - Total time: 0:00:02.034294
-2025-08-27 10:51:32,191 - INFO - 
+2025-11-03 09:46:46,680 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 09:46:46,680 - INFO - ============================================================
+2025-11-03 09:46:46,681 - INFO - Total combinations: 1
+2025-11-03 09:46:46,681 - INFO - Successful: 1
+2025-11-03 09:46:46,681 - INFO - Failed: 0
+2025-11-03 09:46:46,681 - INFO - Total time: 0:01:46.086009
+2025-11-03 09:46:46,682 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 10:09:57,295 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 10:09:57,295 - INFO - Types: ['10']
+2025-11-03 10:09:57,295 - INFO - Languages: ['hi', '—zoom', '0.8']
+2025-11-03 10:09:57,295 - INFO - Total combinations: 3
+2025-11-03 10:09:57,296 - INFO - 
+📊 Progress: 1/3
+2025-11-03 10:09:57,296 - INFO - 🔄 Running generation for type=10, lang=hi
+2025-11-03 10:09:57,296 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang hi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 10:11:42,387 - INFO - ✅ Successfully completed generation for type=10, lang=hi (Duration: 0:01:45.091100)
+2025-11-03 10:11:44,388 - INFO - 
+📊 Progress: 2/3
+2025-11-03 10:11:44,389 - INFO - 🔄 Running generation for type=10, lang=—zoom
+2025-11-03 10:11:44,389 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang —zoom --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 10:13:17,608 - INFO - ✅ Successfully completed generation for type=10, lang=—zoom (Duration: 0:01:33.219165)
+2025-11-03 10:13:19,610 - INFO - 
+📊 Progress: 3/3
+2025-11-03 10:13:19,610 - INFO - 🔄 Running generation for type=10, lang=0.8
+2025-11-03 10:13:19,610 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang 0.8 --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 10:14:52,833 - INFO - ✅ Successfully completed generation for type=10, lang=0.8 (Duration: 0:01:33.222217)
+2025-11-03 10:14:54,834 - INFO - 
+============================================================
+2025-11-03 10:14:54,835 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 10:14:54,835 - INFO - ============================================================
+2025-11-03 10:14:54,835 - INFO - Total combinations: 3
+2025-11-03 10:14:54,835 - INFO - Successful: 3
+2025-11-03 10:14:54,835 - INFO - Failed: 0
+2025-11-03 10:14:54,835 - INFO - Total time: 0:04:57.538738
+2025-11-03 10:14:54,836 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 11:09:25,510 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 11:09:25,510 - INFO - Types: ['10']
+2025-11-03 11:09:25,510 - INFO - Languages: ['hi,gu', '—-zoom', '0.8']
+2025-11-03 11:09:25,510 - INFO - Total combinations: 3
+2025-11-03 11:09:25,510 - INFO - 
+📊 Progress: 1/3
+2025-11-03 11:09:25,510 - INFO - 🔄 Running generation for type=10, lang=hi,gu
+2025-11-03 11:09:25,510 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang hi,gu --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:09:35,070 - ERROR - ❌ Failed generation for type=10, lang=hi,gu (Duration: 0:00:09.560102)
+2025-11-03 11:09:35,070 - ERROR - Return code: 1
+2025-11-03 11:10:02,238 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 11:10:02,238 - INFO - Types: ['10']
+2025-11-03 11:10:02,238 - INFO - Languages: ['hi', '—-zoom', '0.8']
+2025-11-03 11:10:02,238 - INFO - Total combinations: 3
+2025-11-03 11:10:02,238 - INFO - 
+📊 Progress: 1/3
+2025-11-03 11:10:02,238 - INFO - 🔄 Running generation for type=10, lang=hi
+2025-11-03 11:10:02,238 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang hi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:10:20,955 - ERROR - ❌ Failed generation for type=10, lang=hi (Duration: 0:00:18.716236)
+2025-11-03 11:10:20,955 - ERROR - Return code: 1
+2025-11-03 11:30:40,569 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 11:30:40,569 - INFO - Types: ['10', '20', 'intensive']
+2025-11-03 11:30:40,569 - INFO - Languages: ['gu']
+2025-11-03 11:30:40,569 - INFO - Total combinations: 3
+2025-11-03 11:30:40,569 - INFO - 
+📊 Progress: 1/3
+2025-11-03 11:30:40,569 - INFO - 🔄 Running generation for type=10, lang=gu
+2025-11-03 11:30:40,569 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang gu --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.9 --start-session 1
+2025-11-03 11:32:26,117 - INFO - ✅ Successfully completed generation for type=10, lang=gu (Duration: 0:01:45.547337)
+2025-11-03 11:32:28,118 - INFO - 
+📊 Progress: 2/3
+2025-11-03 11:32:28,118 - INFO - 🔄 Running generation for type=20, lang=gu
+2025-11-03 11:32:28,119 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang gu --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.9 --start-session 1
+2025-11-03 11:34:28,126 - ERROR - ⏰ Timeout for type=20, lang=gu
+2025-11-03 11:34:30,125 - INFO - 
+📊 Progress: 3/3
+2025-11-03 11:34:30,126 - INFO - 🔄 Running generation for type=intensive, lang=gu
+2025-11-03 11:34:30,126 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type intensive --lang gu --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.9 --start-session 1
+2025-11-03 11:34:48,217 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 11:34:48,217 - INFO - Types: ['10', '20', 'intensive']
+2025-11-03 11:34:48,217 - INFO - Languages: ['hi']
+2025-11-03 11:34:48,217 - INFO - Total combinations: 3
+2025-11-03 11:34:48,217 - INFO - 
+📊 Progress: 1/3
+2025-11-03 11:34:48,217 - INFO - 🔄 Running generation for type=10, lang=hi
+2025-11-03 11:34:48,217 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang hi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:35:04,624 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 11:35:04,624 - INFO - Types: ['10', '20', 'intensive']
+2025-11-03 11:35:04,624 - INFO - Languages: ['kn']
+2025-11-03 11:35:04,624 - INFO - Total combinations: 3
+2025-11-03 11:35:04,624 - INFO - 
+📊 Progress: 1/3
+2025-11-03 11:35:04,624 - INFO - 🔄 Running generation for type=10, lang=kn
+2025-11-03 11:35:04,624 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang kn --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:36:01,132 - INFO - ✅ Successfully completed generation for type=intensive, lang=gu (Duration: 0:01:31.006211)
+2025-11-03 11:36:03,134 - INFO - 
+============================================================
+2025-11-03 11:36:03,134 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 11:36:03,134 - INFO - ============================================================
+2025-11-03 11:36:03,135 - INFO - Total combinations: 3
+2025-11-03 11:36:03,135 - INFO - Successful: 2
+2025-11-03 11:36:03,135 - INFO - Failed: 1
+2025-11-03 11:36:03,135 - INFO - Total time: 0:05:22.564688
+2025-11-03 11:36:03,135 - INFO - 
 Failed combinations:
-2025-08-27 10:51:32,191 - INFO -   • type=10, lang=en
-2025-08-27 10:51:32,191 - INFO -     Return code: 1
-2025-08-27 10:51:32,192 - INFO - 
+2025-11-03 11:36:03,135 - INFO -   • type=20, lang=gu
+2025-11-03 11:36:03,135 - INFO -     Error: Timeout
+2025-11-03 11:36:03,136 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 11:36:35,358 - INFO - ✅ Successfully completed generation for type=10, lang=hi (Duration: 0:01:47.140910)
+2025-11-03 11:36:37,359 - INFO - 
+📊 Progress: 2/3
+2025-11-03 11:36:37,360 - INFO - 🔄 Running generation for type=20, lang=hi
+2025-11-03 11:36:37,360 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang hi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:36:50,660 - INFO - ✅ Successfully completed generation for type=10, lang=kn (Duration: 0:01:46.035336)
+2025-11-03 11:36:52,660 - INFO - 
+📊 Progress: 2/3
+2025-11-03 11:36:52,661 - INFO - 🔄 Running generation for type=20, lang=kn
+2025-11-03 11:36:52,661 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang kn --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:38:37,368 - ERROR - ⏰ Timeout for type=20, lang=hi
+2025-11-03 11:38:39,370 - INFO - 
+📊 Progress: 3/3
+2025-11-03 11:38:39,370 - INFO - 🔄 Running generation for type=intensive, lang=hi
+2025-11-03 11:38:39,370 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type intensive --lang hi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:38:52,671 - ERROR - ⏰ Timeout for type=20, lang=kn
+2025-11-03 11:38:54,673 - INFO - 
+📊 Progress: 3/3
+2025-11-03 11:38:54,673 - INFO - 🔄 Running generation for type=intensive, lang=kn
+2025-11-03 11:38:54,674 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type intensive --lang kn --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:40:13,526 - INFO - ✅ Successfully completed generation for type=intensive, lang=hi (Duration: 0:01:34.155526)
+2025-11-03 11:40:15,527 - INFO - 
+============================================================
+2025-11-03 11:40:15,527 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 11:40:15,527 - INFO - ============================================================
+2025-11-03 11:40:15,528 - INFO - Total combinations: 3
+2025-11-03 11:40:15,528 - INFO - Successful: 2
+2025-11-03 11:40:15,528 - INFO - Failed: 1
+2025-11-03 11:40:15,528 - INFO - Total time: 0:05:27.309944
+2025-11-03 11:40:15,528 - INFO - 
+Failed combinations:
+2025-11-03 11:40:15,528 - INFO -   • type=20, lang=hi
+2025-11-03 11:40:15,528 - INFO -     Error: Timeout
+2025-11-03 11:40:15,529 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 11:40:25,554 - INFO - ✅ Successfully completed generation for type=intensive, lang=kn (Duration: 0:01:30.879926)
+2025-11-03 11:40:27,556 - INFO - 
+============================================================
+2025-11-03 11:40:27,557 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 11:40:27,557 - INFO - ============================================================
+2025-11-03 11:40:27,557 - INFO - Total combinations: 3
+2025-11-03 11:40:27,557 - INFO - Successful: 2
+2025-11-03 11:40:27,557 - INFO - Failed: 1
+2025-11-03 11:40:27,557 - INFO - Total time: 0:05:22.931973
+2025-11-03 11:40:27,557 - INFO - 
+Failed combinations:
+2025-11-03 11:40:27,557 - INFO -   • type=20, lang=kn
+2025-11-03 11:40:27,557 - INFO -     Error: Timeout
+2025-11-03 11:40:27,558 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 11:49:24,488 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 11:49:24,488 - INFO - Types: ['10', '20', 'intensive']
+2025-11-03 11:49:24,488 - INFO - Languages: ['ml']
+2025-11-03 11:49:24,488 - INFO - Total combinations: 3
+2025-11-03 11:49:24,488 - INFO - 
+📊 Progress: 1/3
+2025-11-03 11:49:24,488 - INFO - 🔄 Running generation for type=10, lang=ml
+2025-11-03 11:49:24,488 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang ml --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:49:33,785 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 11:49:33,785 - INFO - Types: ['10', '20', 'intensive']
+2025-11-03 11:49:33,785 - INFO - Languages: ['mr']
+2025-11-03 11:49:33,785 - INFO - Total combinations: 3
+2025-11-03 11:49:33,785 - INFO - 
+📊 Progress: 1/3
+2025-11-03 11:49:33,785 - INFO - 🔄 Running generation for type=10, lang=mr
+2025-11-03 11:49:33,785 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang mr --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:49:41,584 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 11:49:41,584 - INFO - Types: ['10', '20', 'intensive']
+2025-11-03 11:49:41,585 - INFO - Languages: ['or']
+2025-11-03 11:49:41,585 - INFO - Total combinations: 3
+2025-11-03 11:49:41,585 - INFO - 
+📊 Progress: 1/3
+2025-11-03 11:49:41,585 - INFO - 🔄 Running generation for type=10, lang=or
+2025-11-03 11:49:41,585 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang or --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:51:12,470 - INFO - ✅ Successfully completed generation for type=10, lang=ml (Duration: 0:01:47.981858)
+2025-11-03 11:51:14,472 - INFO - 
+📊 Progress: 2/3
+2025-11-03 11:51:14,472 - INFO - 🔄 Running generation for type=20, lang=ml
+2025-11-03 11:51:14,472 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang ml --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:51:20,057 - INFO - ✅ Successfully completed generation for type=10, lang=mr (Duration: 0:01:46.271719)
+2025-11-03 11:51:22,058 - INFO - 
+📊 Progress: 2/3
+2025-11-03 11:51:22,058 - INFO - 🔄 Running generation for type=20, lang=mr
+2025-11-03 11:51:22,058 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang mr --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:51:26,178 - INFO - ✅ Successfully completed generation for type=10, lang=or (Duration: 0:01:44.593632)
+2025-11-03 11:51:28,180 - INFO - 
+📊 Progress: 2/3
+2025-11-03 11:51:28,180 - INFO - 🔄 Running generation for type=20, lang=or
+2025-11-03 11:51:28,181 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang or --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:53:14,478 - ERROR - ⏰ Timeout for type=20, lang=ml
+2025-11-03 11:53:16,480 - INFO - 
+📊 Progress: 3/3
+2025-11-03 11:53:16,480 - INFO - 🔄 Running generation for type=intensive, lang=ml
+2025-11-03 11:53:16,480 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type intensive --lang ml --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:53:22,064 - ERROR - ⏰ Timeout for type=20, lang=mr
+2025-11-03 11:53:24,065 - INFO - 
+📊 Progress: 3/3
+2025-11-03 11:53:24,066 - INFO - 🔄 Running generation for type=intensive, lang=mr
+2025-11-03 11:53:24,066 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type intensive --lang mr --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:53:28,192 - ERROR - ⏰ Timeout for type=20, lang=or
+2025-11-03 11:53:30,193 - INFO - 
+📊 Progress: 3/3
+2025-11-03 11:53:30,194 - INFO - 🔄 Running generation for type=intensive, lang=or
+2025-11-03 11:53:30,194 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type intensive --lang or --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 11:54:52,552 - INFO - ✅ Successfully completed generation for type=intensive, lang=ml (Duration: 0:01:36.072298)
+2025-11-03 11:54:54,553 - INFO - 
+============================================================
+2025-11-03 11:54:54,553 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 11:54:54,553 - INFO - ============================================================
+2025-11-03 11:54:54,554 - INFO - Total combinations: 3
+2025-11-03 11:54:54,554 - INFO - Successful: 2
+2025-11-03 11:54:54,554 - INFO - Failed: 1
+2025-11-03 11:54:54,554 - INFO - Total time: 0:05:30.064927
+2025-11-03 11:54:54,554 - INFO - 
+Failed combinations:
+2025-11-03 11:54:54,554 - INFO -   • type=20, lang=ml
+2025-11-03 11:54:54,554 - INFO -     Error: Timeout
+2025-11-03 11:54:54,554 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 11:54:55,924 - INFO - ✅ Successfully completed generation for type=intensive, lang=mr (Duration: 0:01:31.857840)
+2025-11-03 11:54:57,926 - INFO - 
+============================================================
+2025-11-03 11:54:57,926 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 11:54:57,926 - INFO - ============================================================
+2025-11-03 11:54:57,926 - INFO - Total combinations: 3
+2025-11-03 11:54:57,927 - INFO - Successful: 2
+2025-11-03 11:54:57,927 - INFO - Failed: 1
+2025-11-03 11:54:57,927 - INFO - Total time: 0:05:24.140434
+2025-11-03 11:54:57,927 - INFO - 
+Failed combinations:
+2025-11-03 11:54:57,927 - INFO -   • type=20, lang=mr
+2025-11-03 11:54:57,927 - INFO -     Error: Timeout
+2025-11-03 11:54:57,928 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 11:55:02,316 - INFO - ✅ Successfully completed generation for type=intensive, lang=or (Duration: 0:01:32.121281)
+2025-11-03 11:55:04,317 - INFO - 
+============================================================
+2025-11-03 11:55:04,318 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 11:55:04,318 - INFO - ============================================================
+2025-11-03 11:55:04,318 - INFO - Total combinations: 3
+2025-11-03 11:55:04,318 - INFO - Successful: 2
+2025-11-03 11:55:04,318 - INFO - Failed: 1
+2025-11-03 11:55:04,319 - INFO - Total time: 0:05:22.732664
+2025-11-03 11:55:04,319 - INFO - 
+Failed combinations:
+2025-11-03 11:55:04,319 - INFO -   • type=20, lang=or
+2025-11-03 11:55:04,319 - INFO -     Error: Timeout
+2025-11-03 11:55:04,320 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 12:02:07,260 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 12:02:07,260 - INFO - Types: ['10', '20', 'intensive']
+2025-11-03 12:02:07,260 - INFO - Languages: ['ta']
+2025-11-03 12:02:07,260 - INFO - Total combinations: 3
+2025-11-03 12:02:07,260 - INFO - 
+📊 Progress: 1/3
+2025-11-03 12:02:07,260 - INFO - 🔄 Running generation for type=10, lang=ta
+2025-11-03 12:02:07,260 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang ta --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:02:15,471 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 12:02:15,471 - INFO - Types: ['10', '20', 'intensive']
+2025-11-03 12:02:15,471 - INFO - Languages: ['te']
+2025-11-03 12:02:15,471 - INFO - Total combinations: 3
+2025-11-03 12:02:15,471 - INFO - 
+📊 Progress: 1/3
+2025-11-03 12:02:15,471 - INFO - 🔄 Running generation for type=10, lang=te
+2025-11-03 12:02:15,471 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang te --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:02:23,652 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 12:02:23,652 - INFO - Types: ['10', '20', 'intensive']
+2025-11-03 12:02:23,652 - INFO - Languages: ['vi']
+2025-11-03 12:02:23,653 - INFO - Total combinations: 3
+2025-11-03 12:02:23,653 - INFO - 
+📊 Progress: 1/3
+2025-11-03 12:02:23,653 - INFO - 🔄 Running generation for type=10, lang=vi
+2025-11-03 12:02:23,653 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang vi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:03:54,619 - INFO - ✅ Successfully completed generation for type=10, lang=ta (Duration: 0:01:47.358850)
+2025-11-03 12:03:56,620 - INFO - 
+📊 Progress: 2/3
+2025-11-03 12:03:56,621 - INFO - 🔄 Running generation for type=20, lang=ta
+2025-11-03 12:03:56,621 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang ta --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:04:01,135 - INFO - ✅ Successfully completed generation for type=10, lang=te (Duration: 0:01:45.663980)
+2025-11-03 12:04:03,137 - INFO - 
+📊 Progress: 2/3
+2025-11-03 12:04:03,137 - INFO - 🔄 Running generation for type=20, lang=te
+2025-11-03 12:04:03,137 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang te --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:04:07,569 - INFO - ✅ Successfully completed generation for type=10, lang=vi (Duration: 0:01:43.915920)
+2025-11-03 12:04:09,570 - INFO - 
+📊 Progress: 2/3
+2025-11-03 12:04:09,571 - INFO - 🔄 Running generation for type=20, lang=vi
+2025-11-03 12:04:09,571 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang vi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:05:56,632 - ERROR - ⏰ Timeout for type=20, lang=ta
+2025-11-03 12:05:58,634 - INFO - 
+📊 Progress: 3/3
+2025-11-03 12:05:58,635 - INFO - 🔄 Running generation for type=intensive, lang=ta
+2025-11-03 12:05:58,635 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type intensive --lang ta --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:06:03,147 - ERROR - ⏰ Timeout for type=20, lang=te
+2025-11-03 12:06:05,149 - INFO - 
+📊 Progress: 3/3
+2025-11-03 12:06:05,149 - INFO - 🔄 Running generation for type=intensive, lang=te
+2025-11-03 12:06:05,149 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type intensive --lang te --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:06:09,580 - ERROR - ⏰ Timeout for type=20, lang=vi
+2025-11-03 12:06:11,582 - INFO - 
+📊 Progress: 3/3
+2025-11-03 12:06:11,583 - INFO - 🔄 Running generation for type=intensive, lang=vi
+2025-11-03 12:06:11,583 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type intensive --lang vi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:07:30,765 - INFO - ✅ Successfully completed generation for type=intensive, lang=ta (Duration: 0:01:32.130238)
+2025-11-03 12:07:32,767 - INFO - 
+============================================================
+2025-11-03 12:07:32,767 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 12:07:32,767 - INFO - ============================================================
+2025-11-03 12:07:32,767 - INFO - Total combinations: 3
+2025-11-03 12:07:32,767 - INFO - Successful: 2
+2025-11-03 12:07:32,767 - INFO - Failed: 1
+2025-11-03 12:07:32,767 - INFO - Total time: 0:05:25.506958
+2025-11-03 12:07:32,767 - INFO - 
+Failed combinations:
+2025-11-03 12:07:32,767 - INFO -   • type=20, lang=ta
+2025-11-03 12:07:32,767 - INFO -     Error: Timeout
+2025-11-03 12:07:32,767 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 12:07:40,124 - INFO - ✅ Successfully completed generation for type=intensive, lang=te (Duration: 0:01:34.974334)
+2025-11-03 12:07:42,125 - INFO - 
+============================================================
+2025-11-03 12:07:42,125 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 12:07:42,126 - INFO - ============================================================
+2025-11-03 12:07:42,126 - INFO - Total combinations: 3
+2025-11-03 12:07:42,126 - INFO - Successful: 2
+2025-11-03 12:07:42,126 - INFO - Failed: 1
+2025-11-03 12:07:42,126 - INFO - Total time: 0:05:26.653700
+2025-11-03 12:07:42,126 - INFO - 
+Failed combinations:
+2025-11-03 12:07:42,126 - INFO -   • type=20, lang=te
+2025-11-03 12:07:42,127 - INFO -     Error: Timeout
+2025-11-03 12:07:42,127 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 12:07:42,331 - INFO - ✅ Successfully completed generation for type=intensive, lang=vi (Duration: 0:01:30.747904)
+2025-11-03 12:07:44,333 - INFO - 
+============================================================
+2025-11-03 12:07:44,334 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 12:07:44,334 - INFO - ============================================================
+2025-11-03 12:07:44,334 - INFO - Total combinations: 3
+2025-11-03 12:07:44,334 - INFO - Successful: 2
+2025-11-03 12:07:44,334 - INFO - Failed: 1
+2025-11-03 12:07:44,334 - INFO - Total time: 0:05:20.680385
+2025-11-03 12:07:44,334 - INFO - 
+Failed combinations:
+2025-11-03 12:07:44,334 - INFO -   • type=20, lang=vi
+2025-11-03 12:07:44,334 - INFO -     Error: Timeout
+2025-11-03 12:07:44,335 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 12:21:06,723 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 12:21:06,723 - INFO - Types: ['10', '20', 'intensive']
+2025-11-03 12:21:06,723 - INFO - Languages: ['pa']
+2025-11-03 12:21:06,723 - INFO - Total combinations: 3
+2025-11-03 12:21:06,724 - INFO - 
+📊 Progress: 1/3
+2025-11-03 12:21:06,724 - INFO - 🔄 Running generation for type=10, lang=pa
+2025-11-03 12:21:06,724 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang pa --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:22:53,927 - INFO - ✅ Successfully completed generation for type=10, lang=pa (Duration: 0:01:47.203226)
+2025-11-03 12:22:55,928 - INFO - 
+📊 Progress: 2/3
+2025-11-03 12:22:55,929 - INFO - 🔄 Running generation for type=20, lang=pa
+2025-11-03 12:22:55,929 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang pa --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:24:55,935 - ERROR - ⏰ Timeout for type=20, lang=pa
+2025-11-03 12:24:57,937 - INFO - 
+📊 Progress: 3/3
+2025-11-03 12:24:57,937 - INFO - 🔄 Running generation for type=intensive, lang=pa
+2025-11-03 12:24:57,937 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type intensive --lang pa --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 12:26:30,980 - INFO - ✅ Successfully completed generation for type=intensive, lang=pa (Duration: 0:01:33.042742)
+2025-11-03 12:26:32,982 - INFO - 
+============================================================
+2025-11-03 12:26:32,982 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 12:26:32,982 - INFO - ============================================================
+2025-11-03 12:26:32,982 - INFO - Total combinations: 3
+2025-11-03 12:26:32,983 - INFO - Successful: 2
+2025-11-03 12:26:32,983 - INFO - Failed: 1
+2025-11-03 12:26:32,983 - INFO - Total time: 0:05:26.258119
+2025-11-03 12:26:32,983 - INFO - 
+Failed combinations:
+2025-11-03 12:26:32,983 - INFO -   • type=20, lang=pa
+2025-11-03 12:26:32,983 - INFO -     Error: Timeout
+2025-11-03 12:26:32,984 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 12:48:51,483 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 12:48:51,483 - INFO - Types: ['20']
+2025-11-03 12:48:51,483 - INFO - Languages: ['gu']
+2025-11-03 12:48:51,483 - INFO - Total combinations: 1
+2025-11-03 12:48:51,483 - INFO - 
+📊 Progress: 1/1
+2025-11-03 12:48:51,483 - INFO - 🔄 Running generation for type=20, lang=gu
+2025-11-03 12:48:51,483 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang gu --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1 --session 16
+2025-11-03 12:49:59,300 - INFO - ✅ Successfully completed generation for type=20, lang=gu (Duration: 0:01:07.816793)
+2025-11-03 12:50:01,301 - INFO - 
+============================================================
+2025-11-03 12:50:01,301 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 12:50:01,301 - INFO - ============================================================
+2025-11-03 12:50:01,301 - INFO - Total combinations: 1
+2025-11-03 12:50:01,302 - INFO - Successful: 1
+2025-11-03 12:50:01,302 - INFO - Failed: 0
+2025-11-03 12:50:01,302 - INFO - Total time: 0:01:09.817839
+2025-11-03 12:50:01,302 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 12:52:48,915 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 12:52:48,915 - INFO - Types: ['20']
+2025-11-03 12:52:48,915 - INFO - Languages: ['gu']
+2025-11-03 12:52:48,915 - INFO - Total combinations: 1
+2025-11-03 12:52:48,915 - INFO - 
+📊 Progress: 1/1
+2025-11-03 12:52:48,915 - INFO - 🔄 Running generation for type=20, lang=gu
+2025-11-03 12:52:48,915 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang gu --output-dir output --base-url https://zume.training --timeout 360000 --max-retries 2 --zoom 0.8 --start-session 17
+2025-11-03 12:56:35,220 - ERROR - ❌ Failed generation for type=20, lang=gu (Duration: 0:03:46.304951)
+2025-11-03 12:56:35,220 - ERROR - Return code: 1
+2025-11-03 13:00:22,509 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 13:00:22,509 - INFO - Types: ['20']
+2025-11-03 13:00:22,509 - INFO - Languages: ['gu']
+2025-11-03 13:00:22,509 - INFO - Total combinations: 1
+2025-11-03 13:00:22,509 - INFO - 
+📊 Progress: 1/1
+2025-11-03 13:00:22,509 - INFO - 🔄 Running generation for type=20, lang=gu
+2025-11-03 13:00:22,509 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang gu --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 17
+2025-11-03 13:00:22,509 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 13:00:43,821 - ERROR - ❌ Failed generation for type=20, lang=gu (Duration: 0:00:21.311658)
+2025-11-03 13:00:43,821 - ERROR - Return code: 1
+2025-11-03 13:03:59,038 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 13:03:59,038 - INFO - Types: ['20']
+2025-11-03 13:03:59,038 - INFO - Languages: ['gu']
+2025-11-03 13:03:59,038 - INFO - Total combinations: 1
+2025-11-03 13:03:59,038 - INFO - 
+📊 Progress: 1/1
+2025-11-03 13:03:59,038 - INFO - 🔄 Running generation for type=20, lang=gu
+2025-11-03 13:03:59,038 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang gu --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 13:03:59,038 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 13:04:11,728 - ERROR - ❌ Failed generation for type=20, lang=gu (Duration: 0:00:12.690064)
+2025-11-03 13:04:11,728 - ERROR - Return code: 1
+2025-11-03 13:20:06,146 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 13:20:06,146 - INFO - Types: ['20']
+2025-11-03 13:20:06,146 - INFO - Languages: ['gu']
+2025-11-03 13:20:06,146 - INFO - Total combinations: 1
+2025-11-03 13:20:06,146 - INFO - 
+📊 Progress: 1/1
+2025-11-03 13:20:06,146 - INFO - 🔄 Running generation for type=20, lang=gu
+2025-11-03 13:20:06,146 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang gu --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 13:20:06,146 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 13:22:20,103 - INFO - ✅ Successfully completed generation for type=20, lang=gu (Duration: 0:02:13.957007)
+2025-11-03 13:22:22,104 - INFO - 
+============================================================
+2025-11-03 13:22:22,105 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 13:22:22,105 - INFO - ============================================================
+2025-11-03 13:22:22,105 - INFO - Total combinations: 1
+2025-11-03 13:22:22,105 - INFO - Successful: 1
+2025-11-03 13:22:22,105 - INFO - Failed: 0
+2025-11-03 13:22:22,105 - INFO - Total time: 0:02:15.958358
+2025-11-03 13:22:22,105 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 13:45:50,746 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 13:45:50,746 - INFO - Types: ['20']
+2025-11-03 13:45:50,746 - INFO - Languages: ['gu']
+2025-11-03 13:45:50,746 - INFO - Total combinations: 1
+2025-11-03 13:45:50,746 - INFO - 
+📊 Progress: 1/1
+2025-11-03 13:45:50,746 - INFO - 🔄 Running generation for type=20, lang=gu
+2025-11-03 13:45:50,746 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang gu --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 13:45:50,746 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 13:45:50,760 - ERROR - ❌ Failed generation for type=20, lang=gu (Duration: 0:00:00.013982)
+2025-11-03 13:45:50,760 - ERROR - Return code: 1
+2025-11-03 13:45:50,760 - ERROR - Error output:   File "/Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/zume_pdf_generator.py", line 285
+    logger.debug(f"Loaded fonts: {', '.join([f'{f.get(\"family\", \"unknown\")} ({f.get(\"weight\", \"\")} {f.get(\"style\", \"\")})' for f in loaded_fonts[:3]])}")
+                                                                                                                                                                   ^
+SyntaxError: f-string expression part cannot include a backslash
+
+2025-11-03 13:45:52,762 - INFO - 
+============================================================
+2025-11-03 13:45:52,762 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 13:45:52,762 - INFO - ============================================================
+2025-11-03 13:45:52,763 - INFO - Total combinations: 1
+2025-11-03 13:45:52,763 - INFO - Successful: 0
+2025-11-03 13:45:52,763 - INFO - Failed: 1
+2025-11-03 13:45:52,763 - INFO - Total time: 0:00:02.015586
+2025-11-03 13:45:52,763 - INFO - 
+Failed combinations:
+2025-11-03 13:45:52,763 - INFO -   • type=20, lang=gu
+2025-11-03 13:45:52,763 - INFO -     Return code: 1
+2025-11-03 13:45:52,764 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 13:46:19,444 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 13:46:19,444 - INFO - Types: ['20']
+2025-11-03 13:46:19,444 - INFO - Languages: ['gu']
+2025-11-03 13:46:19,444 - INFO - Total combinations: 1
+2025-11-03 13:46:19,444 - INFO - 
+📊 Progress: 1/1
+2025-11-03 13:46:19,444 - INFO - 🔄 Running generation for type=20, lang=gu
+2025-11-03 13:46:19,444 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang gu --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 13:46:19,444 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 13:46:19,455 - ERROR - ❌ Failed generation for type=20, lang=gu (Duration: 0:00:00.010855)
+2025-11-03 13:46:19,455 - ERROR - Return code: 1
+2025-11-03 13:46:19,455 - ERROR - Error output:   File "/Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/zume_pdf_generator.py", line 285
+    logger.debug(f"Loaded fonts: {', '.join([f'{f.get(\"family\", \"unknown\")} ({f.get(\"weight\", \"\")} {f.get(\"style\", \"\")})' for f in loaded_fonts[:3]])}")
+                                                                                                                                                                   ^
+SyntaxError: f-string expression part cannot include a backslash
+
+2025-11-03 13:46:21,457 - INFO - 
+============================================================
+2025-11-03 13:46:21,457 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 13:46:21,457 - INFO - ============================================================
+2025-11-03 13:46:21,458 - INFO - Total combinations: 1
+2025-11-03 13:46:21,458 - INFO - Successful: 0
+2025-11-03 13:46:21,458 - INFO - Failed: 1
+2025-11-03 13:46:21,458 - INFO - Total time: 0:00:02.012462
+2025-11-03 13:46:21,458 - INFO - 
+Failed combinations:
+2025-11-03 13:46:21,459 - INFO -   • type=20, lang=gu
+2025-11-03 13:46:21,459 - INFO -     Return code: 1
+2025-11-03 13:46:21,459 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 13:47:39,159 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 13:47:39,159 - INFO - Types: ['20']
+2025-11-03 13:47:39,159 - INFO - Languages: ['gu']
+2025-11-03 13:47:39,159 - INFO - Total combinations: 1
+2025-11-03 13:47:39,159 - INFO - 
+📊 Progress: 1/1
+2025-11-03 13:47:39,159 - INFO - 🔄 Running generation for type=20, lang=gu
+2025-11-03 13:47:39,159 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang gu --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 1
+2025-11-03 13:47:39,159 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 13:52:52,024 - INFO - ✅ Successfully completed generation for type=20, lang=gu (Duration: 0:05:12.864530)
+2025-11-03 13:52:54,026 - INFO - 
+============================================================
+2025-11-03 13:52:54,026 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 13:52:54,026 - INFO - ============================================================
+2025-11-03 13:52:54,026 - INFO - Total combinations: 1
+2025-11-03 13:52:54,026 - INFO - Successful: 1
+2025-11-03 13:52:54,027 - INFO - Failed: 0
+2025-11-03 13:52:54,027 - INFO - Total time: 0:05:14.866149
+2025-11-03 13:52:54,027 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 14:15:57,845 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 14:15:57,845 - INFO - Types: ['10', '20', 'intensive']
+2025-11-03 14:15:57,845 - INFO - Languages: ['vi']
+2025-11-03 14:15:57,845 - INFO - Total combinations: 3
+2025-11-03 14:15:57,845 - INFO - 
+📊 Progress: 1/3
+2025-11-03 14:15:57,845 - INFO - 🔄 Running generation for type=10, lang=vi
+2025-11-03 14:15:57,845 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 10 --lang vi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 14:15:57,845 - INFO - ⏱️  Subprocess timeout set to 180 seconds
+2025-11-03 14:16:14,866 - ERROR - ❌ Failed generation for type=10, lang=vi (Duration: 0:00:17.020754)
+2025-11-03 14:16:14,866 - ERROR - Return code: 1
+2025-11-03 14:17:09,771 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 14:17:09,771 - INFO - Types: ['20']
+2025-11-03 14:17:09,771 - INFO - Languages: ['vi']
+2025-11-03 14:17:09,771 - INFO - Total combinations: 1
+2025-11-03 14:17:09,771 - INFO - 
+📊 Progress: 1/1
+2025-11-03 14:17:09,771 - INFO - 🔄 Running generation for type=20, lang=vi
+2025-11-03 14:17:09,771 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang vi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 14:17:09,771 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 14:17:46,055 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 14:17:46,055 - INFO - Types: ['20']
+2025-11-03 14:17:46,055 - INFO - Languages: ['hi']
+2025-11-03 14:17:46,055 - INFO - Total combinations: 1
+2025-11-03 14:17:46,055 - INFO - 
+📊 Progress: 1/1
+2025-11-03 14:17:46,055 - INFO - 🔄 Running generation for type=20, lang=hi
+2025-11-03 14:17:46,055 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang hi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 14:17:46,055 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 14:17:58,024 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 14:17:58,024 - INFO - Types: ['20']
+2025-11-03 14:17:58,024 - INFO - Languages: ['kn']
+2025-11-03 14:17:58,024 - INFO - Total combinations: 1
+2025-11-03 14:17:58,024 - INFO - 
+📊 Progress: 1/1
+2025-11-03 14:17:58,024 - INFO - 🔄 Running generation for type=20, lang=kn
+2025-11-03 14:17:58,024 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang kn --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 14:17:58,024 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 14:18:14,748 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 14:18:14,748 - INFO - Types: ['20']
+2025-11-03 14:18:14,748 - INFO - Languages: ['ml']
+2025-11-03 14:18:14,748 - INFO - Total combinations: 1
+2025-11-03 14:18:14,748 - INFO - 
+📊 Progress: 1/1
+2025-11-03 14:18:14,748 - INFO - 🔄 Running generation for type=20, lang=ml
+2025-11-03 14:18:14,748 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang ml --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 14:18:14,748 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 14:18:27,978 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 14:18:27,978 - INFO - Types: ['20']
+2025-11-03 14:18:27,978 - INFO - Languages: ['mr']
+2025-11-03 14:18:27,978 - INFO - Total combinations: 1
+2025-11-03 14:18:27,978 - INFO - 
+📊 Progress: 1/1
+2025-11-03 14:18:27,978 - INFO - 🔄 Running generation for type=20, lang=mr
+2025-11-03 14:18:27,978 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang mr --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 14:18:27,978 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 14:18:40,171 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 14:18:40,171 - INFO - Types: ['20']
+2025-11-03 14:18:40,171 - INFO - Languages: ['or']
+2025-11-03 14:18:40,171 - INFO - Total combinations: 1
+2025-11-03 14:18:40,171 - INFO - 
+📊 Progress: 1/1
+2025-11-03 14:18:40,171 - INFO - 🔄 Running generation for type=20, lang=or
+2025-11-03 14:18:40,171 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang or --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 14:18:40,171 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 14:18:54,624 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 14:18:54,624 - INFO - Types: ['20']
+2025-11-03 14:18:54,624 - INFO - Languages: ['ta']
+2025-11-03 14:18:54,625 - INFO - Total combinations: 1
+2025-11-03 14:18:54,625 - INFO - 
+📊 Progress: 1/1
+2025-11-03 14:18:54,625 - INFO - 🔄 Running generation for type=20, lang=ta
+2025-11-03 14:18:54,625 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang ta --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 14:18:54,625 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 14:19:00,815 - INFO - ✅ Successfully completed generation for type=20, lang=vi (Duration: 0:01:51.043918)
+2025-11-03 14:19:02,817 - INFO - 
+============================================================
+2025-11-03 14:19:02,817 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 14:19:02,817 - INFO - ============================================================
+2025-11-03 14:19:02,818 - INFO - Total combinations: 1
+2025-11-03 14:19:02,818 - INFO - Successful: 1
+2025-11-03 14:19:02,818 - INFO - Failed: 0
+2025-11-03 14:19:02,818 - INFO - Total time: 0:01:53.045744
+2025-11-03 14:19:02,819 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 14:19:06,085 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 14:19:06,085 - INFO - Types: ['20']
+2025-11-03 14:19:06,085 - INFO - Languages: ['te']
+2025-11-03 14:19:06,085 - INFO - Total combinations: 1
+2025-11-03 14:19:06,085 - INFO - 
+📊 Progress: 1/1
+2025-11-03 14:19:06,085 - INFO - 🔄 Running generation for type=20, lang=te
+2025-11-03 14:19:06,085 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang te --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 14:19:06,085 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 14:19:21,664 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 14:19:21,664 - INFO - Types: ['20']
+2025-11-03 14:19:21,664 - INFO - Languages: ['vi']
+2025-11-03 14:19:21,664 - INFO - Total combinations: 1
+2025-11-03 14:19:21,664 - INFO - 
+📊 Progress: 1/1
+2025-11-03 14:19:21,664 - INFO - 🔄 Running generation for type=20, lang=vi
+2025-11-03 14:19:21,664 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang vi --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 14:19:21,664 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 14:19:34,700 - INFO - ✅ Successfully completed generation for type=20, lang=hi (Duration: 0:01:48.645440)
+2025-11-03 14:19:36,702 - INFO - 
+============================================================
+2025-11-03 14:19:36,703 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 14:19:36,703 - INFO - ============================================================
+2025-11-03 14:19:36,703 - INFO - Total combinations: 1
+2025-11-03 14:19:36,703 - INFO - Successful: 1
+2025-11-03 14:19:36,703 - INFO - Failed: 0
+2025-11-03 14:19:36,704 - INFO - Total time: 0:01:50.647141
+2025-11-03 14:19:36,704 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 14:19:47,967 - INFO - ✅ Successfully completed generation for type=20, lang=kn (Duration: 0:01:49.943065)
+2025-11-03 14:19:49,968 - INFO - 
+============================================================
+2025-11-03 14:19:49,968 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 14:19:49,968 - INFO - ============================================================
+2025-11-03 14:19:49,968 - INFO - Total combinations: 1
+2025-11-03 14:19:49,969 - INFO - Successful: 1
+2025-11-03 14:19:49,969 - INFO - Failed: 0
+2025-11-03 14:19:49,969 - INFO - Total time: 0:01:51.944503
+2025-11-03 14:19:49,969 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 14:20:06,277 - INFO - ✅ Successfully completed generation for type=20, lang=ml (Duration: 0:01:51.528530)
+2025-11-03 14:20:08,278 - INFO - 
+============================================================
+2025-11-03 14:20:08,278 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 14:20:08,278 - INFO - ============================================================
+2025-11-03 14:20:08,279 - INFO - Total combinations: 1
+2025-11-03 14:20:08,279 - INFO - Successful: 1
+2025-11-03 14:20:08,279 - INFO - Failed: 0
+2025-11-03 14:20:08,279 - INFO - Total time: 0:01:53.530001
+2025-11-03 14:20:08,279 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 14:20:21,551 - INFO - ✅ Successfully completed generation for type=20, lang=mr (Duration: 0:01:53.573673)
+2025-11-03 14:20:23,552 - INFO - 
+============================================================
+2025-11-03 14:20:23,552 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 14:20:23,553 - INFO - ============================================================
+2025-11-03 14:20:23,553 - INFO - Total combinations: 1
+2025-11-03 14:20:23,553 - INFO - Successful: 1
+2025-11-03 14:20:23,553 - INFO - Failed: 0
+2025-11-03 14:20:23,553 - INFO - Total time: 0:01:55.574307
+2025-11-03 14:20:23,554 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 14:20:31,760 - INFO - ✅ Successfully completed generation for type=20, lang=or (Duration: 0:01:51.589009)
+2025-11-03 14:20:33,761 - INFO - 
+============================================================
+2025-11-03 14:20:33,761 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 14:20:33,761 - INFO - ============================================================
+2025-11-03 14:20:33,761 - INFO - Total combinations: 1
+2025-11-03 14:20:33,761 - INFO - Successful: 1
+2025-11-03 14:20:33,761 - INFO - Failed: 0
+2025-11-03 14:20:33,761 - INFO - Total time: 0:01:53.590425
+2025-11-03 14:20:33,761 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 14:20:47,010 - INFO - ✅ Successfully completed generation for type=20, lang=ta (Duration: 0:01:52.385234)
+2025-11-03 14:20:49,011 - INFO - 
+============================================================
+2025-11-03 14:20:49,012 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 14:20:49,012 - INFO - ============================================================
+2025-11-03 14:20:49,012 - INFO - Total combinations: 1
+2025-11-03 14:20:49,012 - INFO - Successful: 1
+2025-11-03 14:20:49,012 - INFO - Failed: 0
+2025-11-03 14:20:49,012 - INFO - Total time: 0:01:54.386753
+2025-11-03 14:20:49,012 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 14:20:55,524 - INFO - ✅ Successfully completed generation for type=20, lang=te (Duration: 0:01:49.438844)
+2025-11-03 14:20:57,525 - INFO - 
+============================================================
+2025-11-03 14:20:57,526 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 14:20:57,526 - INFO - ============================================================
+2025-11-03 14:20:57,526 - INFO - Total combinations: 1
+2025-11-03 14:20:57,526 - INFO - Successful: 1
+2025-11-03 14:20:57,527 - INFO - Failed: 0
+2025-11-03 14:20:57,527 - INFO - Total time: 0:01:51.440474
+2025-11-03 14:20:57,528 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 14:21:11,413 - INFO - ✅ Successfully completed generation for type=20, lang=vi (Duration: 0:01:49.748872)
+2025-11-03 14:21:13,414 - INFO - 
+============================================================
+2025-11-03 14:21:13,415 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 14:21:13,415 - INFO - ============================================================
+2025-11-03 14:21:13,415 - INFO - Total combinations: 1
+2025-11-03 14:21:13,416 - INFO - Successful: 1
+2025-11-03 14:21:13,416 - INFO - Failed: 0
+2025-11-03 14:21:13,416 - INFO - Total time: 0:01:51.750531
+2025-11-03 14:21:13,417 - INFO - 
+Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output
+2025-11-03 14:53:47,887 - INFO - 🚀 Starting batch PDF generation
+2025-11-03 14:53:47,887 - INFO - Types: ['20']
+2025-11-03 14:53:47,887 - INFO - Languages: ['pa']
+2025-11-03 14:53:47,887 - INFO - Total combinations: 1
+2025-11-03 14:53:47,887 - INFO - 
+📊 Progress: 1/1
+2025-11-03 14:53:47,887 - INFO - 🔄 Running generation for type=20, lang=pa
+2025-11-03 14:53:47,887 - INFO - Command: /Users/chris/.pyenv/versions/3.11.9/bin/python zume_pdf_generator.py --type 20 --lang pa --output-dir output --base-url https://zume.training --timeout 60000 --max-retries 2 --zoom 0.8 --start-session 16
+2025-11-03 14:53:47,887 - INFO - ⏱️  Subprocess timeout set to 330 seconds
+2025-11-03 14:55:39,130 - INFO - ✅ Successfully completed generation for type=20, lang=pa (Duration: 0:01:51.243104)
+2025-11-03 14:55:41,132 - INFO - 
+============================================================
+2025-11-03 14:55:41,132 - INFO - BATCH PDF GENERATION SUMMARY
+2025-11-03 14:55:41,133 - INFO - ============================================================
+2025-11-03 14:55:41,133 - INFO - Total combinations: 1
+2025-11-03 14:55:41,133 - INFO - Successful: 1
+2025-11-03 14:55:41,133 - INFO - Failed: 0
+2025-11-03 14:55:41,134 - INFO - Total time: 0:01:53.244746
+2025-11-03 14:55:41,134 - INFO - 
 Output directory: /Users/chris/Documents/ZUME/zume-asset-creation-scripts/pdf-creator/output

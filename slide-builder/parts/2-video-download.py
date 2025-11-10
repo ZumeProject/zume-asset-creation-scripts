@@ -18,31 +18,49 @@ from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
-def load_config():
-    """Load configuration from .config.json file"""
-    config_file = Path('../.config.json')
-    if not config_file.exists():
-        print("❌ Configuration file .config.json not found!")
-        print("Please run 1-setup.py first to create the configuration.")
+def load_config(args=None):
+    """Load configuration from CLI args, env vars, or .config.json file"""
+    config = {}
+    
+    # Priority 1: Command-line arguments
+    if args:
+        if args.project_path:
+            config['project_path'] = args.project_path
+        if args.language_code:
+            config['language_code'] = args.language_code
+    
+    # Priority 2: Environment variables
+    if not config.get('project_path'):
+        config['project_path'] = os.environ.get('ZUME_PROJECT_PATH')
+    if not config.get('language_code'):
+        config['language_code'] = os.environ.get('ZUME_LANGUAGE_CODE')
+    
+    # Priority 3: .config.json file (backward compatibility)
+    if not config.get('project_path') or not config.get('language_code'):
+        config_file = Path('../.config.json')
+        if config_file.exists():
+            try:
+                with open(config_file, 'r') as f:
+                    file_config = json.load(f)
+                    if not config.get('project_path') and file_config.get('project_path'):
+                        config['project_path'] = file_config['project_path']
+                    if not config.get('language_code') and file_config.get('language_code'):
+                        config['language_code'] = file_config['language_code']
+            except json.JSONDecodeError as e:
+                print(f"⚠️  Warning: Error reading .config.json: {e}")
+    
+    # Validate required fields
+    if 'project_path' not in config or not config['project_path']:
+        print("❌ Missing required configuration: 'project_path'")
+        print("Provide via --project-path argument, ZUME_PROJECT_PATH env var, or .config.json")
         sys.exit(1)
     
-    try:
-        with open(config_file, 'r') as f:
-            config = json.load(f)
-        
-        # Validate required fields
-        if 'project_path' not in config:
-            print("❌ Invalid configuration: missing 'project_path' field")
-            sys.exit(1)
-        
-        if 'language_code' not in config:
-            print("❌ Invalid configuration: missing 'language_code' field")
-            sys.exit(1)
-        
-        return config
-    except json.JSONDecodeError as e:
-        print(f"❌ Error reading configuration file: {e}")
+    if 'language_code' not in config or not config['language_code']:
+        print("❌ Missing required configuration: 'language_code'")
+        print("Provide via --language-code argument, ZUME_LANGUAGE_CODE env var, or .config.json")
         sys.exit(1)
+    
+    return config
 
 
 def load_vimeo_folders():
@@ -404,6 +422,8 @@ def main():
     parser.add_argument('--list-only', action='store_true', help='Only list videos without downloading')
     parser.add_argument('--folder-id', help='Override: Use specific Vimeo folder ID instead of language lookup')
     parser.add_argument('--list-languages', action='store_true', help='List all available languages and exit')
+    parser.add_argument('--project-path', help='Project path (overrides .config.json)')
+    parser.add_argument('--language-code', help='Language code (overrides .config.json)')
     
     args = parser.parse_args()
     
@@ -418,7 +438,7 @@ def main():
             sys.exit(1)
     
     # Load configuration
-    config = load_config()
+    config = load_config(args)
     
     # Determine folder ID - either from override argument or language lookup
     if args.folder_id:
