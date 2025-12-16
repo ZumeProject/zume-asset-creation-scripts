@@ -12,6 +12,7 @@ import asyncio
 import argparse
 import os
 import sys
+import json
 from datetime import datetime
 from pathlib import Path
 from playwright.async_api import async_playwright
@@ -60,8 +61,15 @@ class ZumePDFGenerator:
         """Build the URL for the given parameters."""
         return f"{self.base_url}/{lang}/book/generator?type={type_param}&session={session}&lang={lang}"
     
-    async def generate_single_pdf(self, page, type_param: str, session: int, lang: str) -> bool:
+    async def generate_single_pdf(self, page, type_param: str, session: int, lang: str, browser_type: str = None) -> bool:
         """Generate a single PDF from the given parameters with retry logic."""
+        # #region agent log
+        log_path = "/Users/chris/Documents/ZUME/zume-asset-creation-scripts/.cursor/debug.log"
+        try:
+            with open(log_path, "a") as f:
+                f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "C", "location": "zume_pdf_generator.py:63", "message": "generate_single_pdf called", "data": {"browser_type": browser_type, "session": session, "type_param": type_param, "lang": lang}, "timestamp": int(datetime.now().timestamp() * 1000)}) + "\n")
+        except: pass
+        # #endregion
         url = self.build_url(type_param, session, lang)
         filename = self.generate_filename(type_param, session, lang)
         
@@ -312,7 +320,17 @@ class ZumePDFGenerator:
                     await page.evaluate("document.body.offsetHeight")
                 
                 # Generate PDF with font embedding enabled (default in Playwright, but explicit)
+                # PDF generation only works with Chromium
+                if browser_type and browser_type != "chromium":
+                    raise RuntimeError(f"PDF generation is only supported for Chromium, but browser type is: {browser_type}")
+                
                 logger.info(f"Generating PDF: {filename}")
+                # #region agent log
+                try:
+                    with open(log_path, "a") as f:
+                        f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "B", "location": "zume_pdf_generator.py:318", "message": "About to call page.pdf()", "data": {"browser_type": browser_type, "filename": filename, "session": session}, "timestamp": int(datetime.now().timestamp() * 1000)}) + "\n")
+                except: pass
+                # #endregion
                 # Note: Playwright automatically embeds fonts used on the page in the PDF
                 # But we ensure fonts are fully loaded before this step
                 await page.pdf(
@@ -332,6 +350,12 @@ class ZumePDFGenerator:
                 return True
                 
             except Exception as e:
+                # #region agent log
+                try:
+                    with open(log_path, "a") as f:
+                        f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "B", "location": "zume_pdf_generator.py:334", "message": "PDF generation exception caught", "data": {"browser_type": browser_type, "session": session, "attempt": attempt, "error_type": type(e).__name__, "error_message": str(e)}, "timestamp": int(datetime.now().timestamp() * 1000)}) + "\n")
+                except: pass
+                # #endregion
                 if attempt == self.max_retries:
                     logger.error(f"❌ Failed to generate PDF for session {session} after {self.max_retries} attempts: {str(e)}")
                 else:
@@ -359,14 +383,158 @@ class ZumePDFGenerator:
         
         async with async_playwright() as p:
             # Launch browser with optimizations for font rendering
-            # Note: System fonts should be accessible by default in Playwright
-            browser = await p.chromium.launch(
-                headless=True,
-                args=[
-                    '--disable-features=TranslateUI',  # Disable translation UI
-                    '--disable-ipc-flooding-protection',  # Allow more resources
-                ]
-            )
+            # Note: PDF generation requires Chromium-based browser (Chromium or Chrome)
+            browser = None
+            browser_type_used = None
+            
+            # Try different browser channels and configurations
+            # First try system Chrome (if available), then bundled Chromium
+            browser_attempts = [
+                # Attempt 1: Try system Chrome (more stable, if installed)
+                {
+                    "name": "System Chrome",
+                    "launch_func": lambda: p.chromium.launch(channel="chrome", headless=True, args=[
+                        '--disable-features=TranslateUI',
+                        '--disable-ipc-flooding-protection',
+                        '--no-sandbox',
+                        '--disable-dev-shm-usage',
+                    ])
+                },
+                # Attempt 2: Try Chromium with minimal args
+                {
+                    "name": "Chromium (minimal)",
+                    "launch_func": lambda: p.chromium.launch(headless=True, args=[
+                        '--no-sandbox',
+                        '--disable-dev-shm-usage',
+                    ])
+                },
+                # Attempt 3: Try Chromium with macOS optimizations
+                {
+                    "name": "Chromium (macOS optimized)",
+                    "launch_func": lambda: p.chromium.launch(headless=True, args=[
+                        '--disable-features=TranslateUI',
+                        '--disable-ipc-flooding-protection',
+                        '--no-sandbox',
+                        '--disable-dev-shm-usage',
+                        '--disable-gpu',
+                        '--disable-software-rasterizer',
+                    ])
+                },
+                # Attempt 4: Try Chromium with single-process mode
+                {
+                    "name": "Chromium (single-process)",
+                    "launch_func": lambda: p.chromium.launch(headless=True, args=[
+                        '--no-sandbox',
+                        '--disable-setuid-sandbox',
+                        '--disable-dev-shm-usage',
+                        '--disable-gpu',
+                        '--single-process',
+                    ])
+                },
+            ]
+            
+            chromium_launched = False
+            last_error = None
+            last_error_type = None
+            
+            for attempt, browser_config in enumerate(browser_attempts, 1):
+                try:
+                    # #region agent log
+                    log_path = "/Users/chris/Documents/ZUME/zume-asset-creation-scripts/.cursor/debug.log"
+                    try:
+                        with open(log_path, "a") as f:
+                            f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "A", "location": f"zume_pdf_generator.py:396", "message": f"Attempting browser launch: {browser_config['name']} (attempt {attempt}/{len(browser_attempts)})", "data": {"browser_name": browser_config['name']}, "timestamp": int(datetime.now().timestamp() * 1000)}) + "\n")
+                    except: pass
+                    # #endregion
+                    
+                    if attempt > 1:
+                        logger.info(f"🔄 Trying alternative browser: {browser_config['name']} (attempt {attempt}/{len(browser_attempts)})...")
+                        await asyncio.sleep(1)  # Brief delay between retries
+                    
+                    browser = await browser_config["launch_func"]()
+                    
+                    # Small delay to ensure browser connection is fully established
+                    await asyncio.sleep(0.5)
+                    
+                    # Verify browser is still connected
+                    # #region agent log
+                    try:
+                        with open(log_path, "a") as f:
+                            f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "E", "location": "zume_pdf_generator.py:413", "message": "Before browser.version check", "data": {"attempt": attempt, "browser_name": browser_config['name']}, "timestamp": int(datetime.now().timestamp() * 1000)}) + "\n")
+                    except: pass
+                    # #endregion
+                    
+                    browser_version = browser.version
+                    
+                    # #region agent log
+                    try:
+                        with open(log_path, "a") as f:
+                            f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "E", "location": "zume_pdf_generator.py:420", "message": "After browser.version check", "data": {"version": browser_version, "attempt": attempt, "browser_name": browser_config['name']}, "timestamp": int(datetime.now().timestamp() * 1000)}) + "\n")
+                    except: pass
+                    # #endregion
+                    
+                    browser_type_used = "chromium"
+                    chromium_launched = True
+                    logger.info(f"✅ Using {browser_config['name']} browser (version: {browser_version})")
+                    break
+                    
+                except Exception as browser_err:
+                    # #region agent log
+                    try:
+                        with open(log_path, "a") as f:
+                            f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "A", "location": "zume_pdf_generator.py:428", "message": "Browser launch exception", "data": {"error_type": type(browser_err).__name__, "error_message": str(browser_err), "attempt": attempt, "browser_name": browser_config['name']}, "timestamp": int(datetime.now().timestamp() * 1000)}) + "\n")
+                    except: pass
+                    # #endregion
+                    
+                    last_error = browser_err
+                    last_error_type = type(browser_err).__name__
+                    
+                    # Check if this is a segfault/crash error
+                    error_str = str(browser_err)
+                    is_segfault = "SEGV" in error_str or "signal 11" in error_str or "segmentation fault" in error_str.lower()
+                    
+                    if browser:
+                        try:
+                            await browser.close()
+                        except Exception:
+                            pass
+                    browser = None
+                    
+                    if attempt < len(browser_attempts):
+                        if is_segfault:
+                            logger.warning(f"⚠️ {browser_config['name']} crashed (segmentation fault). Trying alternative...")
+                        else:
+                            logger.warning(f"⚠️ {browser_config['name']} launch failed: {str(browser_err)[:100]}")
+                    else:
+                        # Last attempt failed
+                        if is_segfault:
+                            logger.error(f"❌ All browser launch attempts failed with segmentation faults.")
+                        else:
+                            logger.error(f"❌ All browser launch attempts failed. Last error: {str(browser_err)[:200]}")
+            
+            if not chromium_launched:
+                error_msg = f"Failed to launch Chromium-based browser after {len(browser_attempts)} attempts. PDF generation requires Chromium or Chrome."
+                
+                # Provide helpful error message based on error type
+                if last_error_type == "TargetClosedError" and last_error:
+                    error_str = str(last_error)
+                    if "SEGV" in error_str or "signal 11" in error_str:
+                        error_msg += "\n\n🔧 TROUBLESHOOTING: Chromium is crashing with a segmentation fault."
+                        error_msg += "\n   This usually indicates a corrupted or incompatible Chromium installation."
+                        error_msg += "\n   Try reinstalling Chromium:"
+                        error_msg += "\n   1. Run: playwright install chromium --force"
+                        error_msg += "\n   2. Or: playwright install chrome (to use system Chrome)"
+                        error_msg += "\n   3. If that doesn't work, try: rm -rf ~/Library/Caches/ms-playwright && playwright install chromium"
+                
+                if last_error:
+                    error_msg += f"\n\nLast error: {str(last_error)[:300]}"
+                
+                logger.error(f"❌ {error_msg}")
+                raise RuntimeError(error_msg)
+            
+            if browser is None:
+                raise RuntimeError("Failed to launch browser")
+            
             page = await browser.new_page()
             
             # Set extra HTTP headers to ensure proper language handling
@@ -378,8 +546,15 @@ class ZumePDFGenerator:
             await page.set_viewport_size({"width": 1920, "height": 1080})
             
             try:
+                # #region agent log
+                log_path = "/Users/chris/Documents/ZUME/zume-asset-creation-scripts/.cursor/debug.log"
+                try:
+                    with open(log_path, "a") as f:
+                        f.write(json.dumps({"sessionId": "debug-session", "runId": "run1", "hypothesisId": "C", "location": "zume_pdf_generator.py:427", "message": "Starting PDF generation loop", "data": {"browser_type_used": browser_type_used, "sessions": list(sessions_to_generate)}, "timestamp": int(datetime.now().timestamp() * 1000)}) + "\n")
+                except: pass
+                # #endregion
                 for session in sessions_to_generate:
-                    success = await self.generate_single_pdf(page, type_param, session, lang)
+                    success = await self.generate_single_pdf(page, type_param, session, lang, browser_type_used)
                     
                     if success:
                         results["success"] += 1
@@ -391,7 +566,10 @@ class ZumePDFGenerator:
                     await asyncio.sleep(1)
                 
             finally:
-                await browser.close()
+                try:
+                    await browser.close()
+                except Exception:
+                    pass
         
         return results
     
