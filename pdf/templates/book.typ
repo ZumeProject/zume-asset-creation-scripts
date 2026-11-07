@@ -35,7 +35,19 @@
   margin: (top: 0.75in, bottom: 1in, left: 0.45in, right: 0.55in),
   numbering: none,
 )
-#set text(font: "Liberation Sans", size: 9.5pt, fill: black, lang: book.lang)
+// Font stack: Latin body + script fallbacks (Arabic / CJK) swapped in by prepare_build_dir.
+// typst_lang is ISO 639 (required); book.lang stays the zume site code (e.g. zhtw).
+#set text(
+  font: ("Liberation Sans",),
+  size: 9.5pt,
+  fill: black,
+  lang: book.at("typst_lang", default: book.lang),
+  region: {
+    let r = book.at("typst_region", default: none)
+    if r == none or r == "" { none } else { r }
+  },
+  dir: if book.at("direction", default: "ltr") == "rtl" { rtl } else { ltr },
+)
 #set par(justify: false, leading: 0.82em, spacing: 0.65em)
 
 // Horizontal dashed divider: vertical breathing room + slight horizontal inset

@@ -46,6 +46,32 @@ OUTPUT_NAMES = {
     "intensive": "Zume-Training-Intensive-{lang}.pdf",
 }
 
+# Map zume site/API locale codes → Typst ISO 639 lang (+ optional region).
+_TYPST_LANG_MAP: dict[str, tuple[str, str | None]] = {
+    "zhtw": ("zh", "TW"),
+    "zh-tw": ("zh", "TW"),
+    "zh_tw": ("zh", "TW"),
+    "cntw": ("zh", "TW"),
+    "zhcn": ("zh", "CN"),
+    "zh-cn": ("zh", "CN"),
+    "zhhk": ("zh", "HK"),
+    "zh-hk": ("zh", "HK"),
+    "zh": ("zh", None),
+    "ar_jo": ("ar", "JO"),
+    "ar_tn": ("ar", "TN"),
+    "pa_pk": ("pa", "PK"),
+}
+
+
+def _typst_lang_region(lang: str) -> tuple[str, str | None]:
+    key = (lang or "en").strip().lower().replace(" ", "")
+    if key in _TYPST_LANG_MAP:
+        return _TYPST_LANG_MAP[key]
+    # Already ISO-ish (en, de, ar, …) — Typst accepts 2–3 letter codes.
+    if 2 <= len(key) <= 3 and key.isalpha():
+        return key, None
+    return "en", None
+
 
 def _repo() -> Path:
     return load_repo_root()
@@ -471,6 +497,13 @@ def assemble_book(
     script_cache: dict[str, dict[str, Any] | None] = {}
     activity_cache: dict[str, dict[str, Any] | None] = {}
     locale = str(presenter.get("locale") or lang or "en")
+    # Known RTL locale codes on zume6 (site display_code). Layout columns stay
+    # LTR for now; Typst uses this for text direction / shaping only.
+    rtl_locales = {"ar", "ar_jo", "ar_tn", "fa", "ur", "ps", "pus", "he", "ckb", "ku"}
+    text_direction = "rtl" if locale.lower() in rtl_locales or lang.lower() in rtl_locales else "ltr"
+    # Typst #set text(lang: …) requires ISO 639-1/2/3; zume site codes like
+    # zhtw/zhcn are not valid. Keep book.lang as the site/API code for QR + filenames.
+    typst_lang, typst_region = _typst_lang_region(lang)
 
     sessions_out: list[dict[str, Any]] = []
     for session in sessions_manifest:
@@ -527,12 +560,14 @@ def assemble_book(
     book = _sanitize_plain(
         {
             "lang": lang,
+            "typst_lang": typst_lang,
+            "typst_region": typst_region,
             "type": course_type,
             "title": "Zúme Training",
             "subtitle": COURSE_LABELS[course_type],
             "version_label": f"v6.0 - {course_type}",
             "site": SITE_BASE,
-            "direction": "ltr",
+            "direction": text_direction,
             "output_name": OUTPUT_NAMES[course_type].format(lang=lang),
             "sessions": sessions_out,
             "meta": {
