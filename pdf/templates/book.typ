@@ -193,9 +193,16 @@
 }
 
 // ---------- Cover ----------
+// Version string is drawn from book.version_label (cover PNG has the old
+// baked-in label whitened out so Typst owns the v6.0 text).
 #page(margin: 0pt, numbering: none)[
-  #align(center + horizon)[
+  #block(width: 100%, height: 100%)[
     #image("cover-10.png", width: 100%, height: 100%, fit: "cover")
+    #place(
+      bottom + center,
+      dy: -0.48in,
+      text(size: 9.5pt, fill: rgb("#787878"))[#book.version_label],
+    )
   ]
 ]
 
@@ -208,8 +215,10 @@
 #counter(page).update(3)
 
 // ---------- Sessions ----------
+// Each session opener starts on an odd (recto) page for duplex printing.
+// If the previous session ended on an odd page, Typst inserts a blank even page.
 #for session in book.sessions [
-  #pagebreak(weak: false)
+  #pagebreak(weak: false, to: "odd")
 
   // Session title block with ~3× top/bottom margin (Chris tweak #3)
   #block(width: 100%, breakable: false, inset: (top: session-header-pad, bottom: session-header-pad))[
