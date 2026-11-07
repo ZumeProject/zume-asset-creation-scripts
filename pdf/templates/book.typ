@@ -193,9 +193,16 @@
 }
 
 // ---------- Cover ----------
+// Version string is drawn from book.version_label (cover PNG has the old
+// baked-in label whitened out so Typst owns the v6.0 text).
 #page(margin: 0pt, numbering: none)[
-  #align(center + horizon)[
+  #block(width: 100%, height: 100%)[
     #image("cover-10.png", width: 100%, height: 100%, fit: "cover")
+    #place(
+      bottom + center,
+      dy: -0.48in,
+      text(size: 9.5pt, fill: rgb("#787878"))[#book.version_label],
+    )
   ]
 ]
 
