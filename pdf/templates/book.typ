@@ -32,7 +32,7 @@
 )
 #set page(
   paper: "us-letter",
-  margin: (top: 0.6in, bottom: 0.7in, left: 0.45in, right: 0.55in),
+  margin: (top: 0.75in, bottom: 1in, left: 0.45in, right: 0.55in),
   numbering: none,
 )
 #set text(font: "Liberation Sans", size: 9.5pt, fill: black, lang: book.lang)
