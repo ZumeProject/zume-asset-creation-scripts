@@ -37,7 +37,7 @@ def main(argv: list[str] | None = None) -> int:
         dest="course_type",
         default="10",
         choices=["10", "20", "intensive"],
-        help="Course format (Phase 1: 10 only)",
+        help="Course format: 10, 20, or intensive",
     )
     build.add_argument(
         "--targets",
@@ -62,9 +62,6 @@ def main(argv: list[str] | None = None) -> int:
                 "(only pdf is implemented).",
                 file=sys.stderr,
             )
-            return 2
-        if args.course_type != "10":
-            print("Phase 1 currently supports --type 10 only.", file=sys.stderr)
             return 2
         try:
             pdf_path = build_pdf(args.lang, args.course_type, args.output)
