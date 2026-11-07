@@ -184,6 +184,8 @@ def overview_block(
         tools_intro = ui_get(ui, "instruction.tools_intro")
 
     # Some sessions are tool-practice only (no concepts)
+    overview_label = ui_get(ui, "label.overview", default="OVERVIEW")
+
     if not concepts and tools:
         if len(tools) == 1:
             concepts_intro = ui_get(ui, "instruction.tool_session_intro", "instruction.tool_practice_session_intro")
@@ -191,6 +193,7 @@ def overview_block(
             concepts_intro = ui_get(ui, "instruction.tools_session_intro")
         return {
             "kind": "overview",
+            "label": overview_label,
             "duration": format_duration(duration),
             "concepts_intro": concepts_intro,
             "concepts": tools,
@@ -200,6 +203,7 @@ def overview_block(
 
     return {
         "kind": "overview",
+        "label": overview_label,
         "duration": format_duration(duration),
         "concepts_intro": concepts_intro if concepts else "",
         "concepts": concepts,
@@ -264,7 +268,8 @@ def assemble_session_blocks(
             blocks.append(
                 {
                     "kind": "break",
-                    "label": ui_get(ui, "label.break", default="BREAK"),
+                    # API key is label.take_a_break (label.break is absent).
+                    "label": ui_get(ui, "label.take_a_break", "label.break", default="BREAK"),
                     "paragraphs": [
                         ui_get(
                             ui,
@@ -338,15 +343,18 @@ def assemble_session_blocks(
             body = paragraphs(script.get("content") or "")
             qr_target = video_url(video_key, locale=locale)
             qr = ensure_qr(build_dir, f"video-{video_key}", qr_target)
+            # Workbook chrome historically said "READ"; zume6 UI has no label.read —
+            # only label.watch (the slide type being collapsed). Use that so locales translate.
+            watch_label = ui_get(ui, "label.watch", default="READ")
             blocks.append(
                 {
                     "kind": "read",
-                    "label": "READ",
+                    "label": watch_label,
                     "duration": format_duration(duration if duration and duration <= 10 else 5),
                     "title": title,
                     "paragraphs": body,
                     "qr": qr,
-                    "qr_caption": f"Watch: {title}",
+                    "qr_caption": f"{watch_label}: {title}",
                     "qr_url": qr_target,
                     "video_key": video_key,
                 }

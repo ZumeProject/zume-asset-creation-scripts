@@ -317,7 +317,7 @@
       ]
     ] else if kind == "overview" [
       #guidebook-section(
-        "OVERVIEW",
+        block-data.at("label", default: "OVERVIEW"),
         duration: block-data.at("duration", default: none),
       )[
         #if block-data.at("concepts_intro", default: "") != "" [
