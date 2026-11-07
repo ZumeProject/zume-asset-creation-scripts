@@ -1,0 +1,1502 @@
+[
+  {
+    "session": 1,
+    "checkinCode": "3354",
+    "conceptKeys": [
+      1,
+      2,
+      3
+    ],
+    "toolKeys": [],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_1_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_1_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_1_3"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_1_4"
+      },
+      {
+        "type": "watch",
+        "videoKey": "1",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "1",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 1,
+        "overrideKey": "t1_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "2",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "2",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 2,
+        "overrideKey": "t2_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "3",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "3",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 3,
+        "overrideKey": "t3_c"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_1_5"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_1_6"
+      }
+    ]
+  },
+  {
+    "session": 2,
+    "checkinCode": "4568",
+    "conceptKeys": [],
+    "toolKeys": [
+      4
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_2_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_2_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_2_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_2_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_2_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "4",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "4",
+        "duration": 5
+      },
+      {
+        "type": "activity",
+        "activityKey": "soaps",
+        "duration": 30,
+        "activityInstance": 1,
+        "overrideKey": "t4_c"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_2_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_2_7"
+      }
+    ]
+  },
+  {
+    "session": 3,
+    "checkinCode": "8767",
+    "conceptKeys": [],
+    "toolKeys": [
+      5
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_3_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_3_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_3_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_3_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_3_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "5",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "5",
+        "duration": 5
+      },
+      {
+        "type": "activity",
+        "activityKey": "accountability",
+        "duration": 20,
+        "activityInstance": 1,
+        "overrideKey": "t5_c"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_3_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_3_7"
+      }
+    ]
+  },
+  {
+    "session": 4,
+    "checkinCode": "6787",
+    "conceptKeys": [
+      6
+    ],
+    "toolKeys": [
+      8
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_4_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_4_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_4_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_4_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_4_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "6",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "6",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 1,
+        "overrideKey": "t6_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "8",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "8",
+        "duration": 5
+      },
+      {
+        "type": "activity",
+        "activityKey": "listof100",
+        "duration": 30,
+        "activityInstance": 1,
+        "overrideKey": "t8_c"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_4_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_4_7"
+      }
+    ]
+  },
+  {
+    "session": 5,
+    "checkinCode": "3450",
+    "conceptKeys": [],
+    "toolKeys": [
+      7
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_5_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_5_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_5_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_5_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_5_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "7",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "7",
+        "duration": 5
+      },
+      {
+        "type": "activity",
+        "activityKey": "prayercycle",
+        "duration": 60,
+        "activityInstance": 1,
+        "overrideKey": "t7_cc"
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 2,
+        "overrideKey": "t7_d"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_5_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_5_7"
+      }
+    ]
+  },
+  {
+    "session": 6,
+    "checkinCode": "2344",
+    "conceptKeys": [
+      9,
+      13,
+      10
+    ],
+    "toolKeys": [],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_6_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_6_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_6_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_6_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_6_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "9",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "9",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 1,
+        "overrideKey": "t9_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "13",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "13",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 2,
+        "overrideKey": "t13_c"
+      },
+      {
+        "type": "center",
+        "contentKey": "gospel_intro",
+        "overrideKey": "t10_a"
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 3,
+        "overrideKey": "t10_b"
+      },
+      {
+        "type": "center",
+        "contentKey": "gospel_presentations",
+        "overrideKey": "t10_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "10",
+        "duration": 5,
+        "overrideKey": "t10_d",
+        "watchTitle": "Presentation 1"
+      },
+      {
+        "type": "video",
+        "videoKey": "10",
+        "duration": 5,
+        "overrideKey": "t10_e"
+      },
+      {
+        "type": "watch",
+        "videoKey": "33",
+        "duration": 5,
+        "overrideKey": "t10_f",
+        "watchTitle": "Presentation 2"
+      },
+      {
+        "type": "video",
+        "videoKey": "33",
+        "duration": 5,
+        "overrideKey": "t10_g"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_6_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_6_7"
+      }
+    ]
+  },
+  {
+    "session": 7,
+    "checkinCode": "1116",
+    "conceptKeys": [],
+    "toolKeys": [],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_7_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_7_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_7_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_7_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_7_5"
+      },
+      {
+        "type": "activity",
+        "activityKey": "sharegospel",
+        "duration": 50,
+        "activityInstance": 1,
+        "overrideKey": "s2_7_6"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_7_7"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_7_8"
+      }
+    ]
+  },
+  {
+    "session": 8,
+    "checkinCode": "5431",
+    "conceptKeys": [],
+    "toolKeys": [
+      11,
+      12
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_8_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_8_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_8_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_8_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_8_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "11",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "11",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 1,
+        "overrideKey": "t11_c"
+      },
+      {
+        "type": "center",
+        "contentKey": "baptism_reminder",
+        "overrideKey": "t11_d"
+      },
+      {
+        "type": "watch",
+        "videoKey": "12",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "12",
+        "duration": 5
+      },
+      {
+        "type": "activity",
+        "activityKey": "sharetestimony",
+        "duration": 30,
+        "activityInstance": 1,
+        "overrideKey": "t12_c"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_8_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_8_7"
+      }
+    ]
+  },
+  {
+    "session": 9,
+    "checkinCode": "8768",
+    "conceptKeys": [],
+    "toolKeys": [
+      12
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_9_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_9_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_9_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_9_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_9_5"
+      },
+      {
+        "type": "center",
+        "contentKey": "testimony_practice",
+        "overrideKey": "s2_9_6"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_9_7"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_9_8"
+      },
+      {
+        "type": "center",
+        "contentKey": "lords_supper_reminder",
+        "overrideKey": "s2_9_9"
+      }
+    ]
+  },
+  {
+    "session": 10,
+    "checkinCode": "2347",
+    "conceptKeys": [
+      14,
+      15
+    ],
+    "toolKeys": [
+      16
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_10_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_10_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_10_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_10_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_10_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "14",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "14",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 1,
+        "overrideKey": "t14_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "15",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "15",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 2,
+        "overrideKey": "t15_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "16",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "16",
+        "duration": 5
+      },
+      {
+        "type": "activity",
+        "activityKey": "lordssupper",
+        "duration": 10,
+        "activityInstance": 1,
+        "overrideKey": "t16_c"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_10_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_10_7"
+      }
+    ]
+  },
+  {
+    "session": 11,
+    "checkinCode": "9434",
+    "conceptKeys": [],
+    "toolKeys": [
+      17
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_11_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_11_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_11_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_11_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_11_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "17",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "17",
+        "duration": 5
+      },
+      {
+        "type": "activity",
+        "activityKey": "prayerwalking",
+        "duration": 90,
+        "durationMin": 60,
+        "activityInstance": 1,
+        "overrideKey": "t17_d"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "prayId": 2,
+        "overrideKey": "t17_e"
+      }
+    ]
+  },
+  {
+    "session": 12,
+    "checkinCode": "2348",
+    "conceptKeys": [
+      18
+    ],
+    "toolKeys": [
+      20
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_12_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_12_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_12_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_12_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_12_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "18",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "18",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 1,
+        "overrideKey": "t18_c"
+      },
+      {
+        "type": "activity",
+        "activityKey": "blessprayer",
+        "duration": 10,
+        "activityInstance": 1,
+        "overrideKey": "t19_a"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_12_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_12_7"
+      }
+    ]
+  },
+  {
+    "session": 13,
+    "checkinCode": "6785",
+    "conceptKeys": [
+      19,
+      21
+    ],
+    "toolKeys": [],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_13_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_13_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_13_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_13_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_13_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "19",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "19",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 1,
+        "overrideKey": "t20_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "21",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "21",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 2,
+        "overrideKey": "t21_cc"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_13_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_13_7"
+      }
+    ]
+  },
+  {
+    "session": 14,
+    "checkinCode": "9872",
+    "conceptKeys": [],
+    "toolKeys": [],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_14_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_14_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_14_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_14_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_14_5"
+      },
+      {
+        "type": "activity",
+        "activityKey": "33group",
+        "duration": 45,
+        "activityInstance": 1,
+        "overrideKey": "s2_14_6"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_14_7"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_14_8"
+      }
+    ]
+  },
+  {
+    "session": 15,
+    "checkinCode": "4327",
+    "conceptKeys": [
+      22,
+      23
+    ],
+    "toolKeys": [],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_15_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_15_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_15_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_15_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_15_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "22",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "22",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 1,
+        "overrideKey": "t22_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "23",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "23",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 2,
+        "overrideKey": "t23_c"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_15_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_15_7"
+      }
+    ]
+  },
+  {
+    "session": 16,
+    "checkinCode": "2871",
+    "conceptKeys": [
+      24,
+      25,
+      26
+    ],
+    "toolKeys": [],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_16_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_16_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_16_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_16_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_16_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "24",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "24",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 1,
+        "overrideKey": "t24_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "25",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "25",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 2,
+        "overrideKey": "t25_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "26",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "26",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 3,
+        "overrideKey": "t26_c"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_16_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_16_7"
+      }
+    ]
+  },
+  {
+    "session": 17,
+    "checkinCode": "4328",
+    "conceptKeys": [
+      29
+    ],
+    "toolKeys": [
+      28
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_17_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_17_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_17_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_17_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_17_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "29",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "29",
+        "duration": 5
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 1,
+        "overrideKey": "t29_c"
+      },
+      {
+        "type": "watch",
+        "videoKey": "28",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "28",
+        "duration": 5
+      },
+      {
+        "type": "activity",
+        "activityKey": "coachingchecklist",
+        "duration": 20,
+        "activityInstance": 1,
+        "overrideKey": "t28_c"
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 2,
+        "overrideKey": "t28_d"
+      },
+      {
+        "type": "activity",
+        "activityKey": "getacoach",
+        "duration": 5,
+        "activityInstance": 1,
+        "overrideKey": "t28_e"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_17_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_17_7"
+      }
+    ]
+  },
+  {
+    "session": 18,
+    "checkinCode": "6548",
+    "conceptKeys": [],
+    "toolKeys": [
+      31,
+      32
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_18_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_18_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_18_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_18_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_18_5"
+      },
+      {
+        "type": "center",
+        "contentKey": "fourfields_tools_callout",
+        "overrideKey": "t31_a"
+      },
+      {
+        "type": "center",
+        "contentKey": "fourfields_overview",
+        "overrideKey": "t31_b"
+      },
+      {
+        "type": "center",
+        "contentKey": "fourfields_field_descriptions",
+        "overrideKey": "t31_c"
+      },
+      {
+        "type": "left_image",
+        "contentKey": "fourfields_example",
+        "activityKey": "4fields",
+        "overrideKey": "t31_d"
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 5,
+        "overrideKey": "t31_e"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "prayId": 2,
+        "overrideKey": "s2_18_6"
+      },
+      {
+        "type": "center",
+        "contentKey": "genmapping_overview",
+        "overrideKey": "t32_a"
+      },
+      {
+        "type": "left_image",
+        "contentKey": "genmapping_example",
+        "activityKey": "genmapping",
+        "overrideKey": "t32_b"
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 6,
+        "overrideKey": "t32_c"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_18_7"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_18_8"
+      }
+    ]
+  },
+  {
+    "session": 19,
+    "checkinCode": "7657",
+    "conceptKeys": [],
+    "toolKeys": [
+      30
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_19_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_19_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_19_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_19_4"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_19_5"
+      },
+      {
+        "type": "watch",
+        "videoKey": "30",
+        "duration": 5
+      },
+      {
+        "type": "video",
+        "videoKey": "30",
+        "duration": 5
+      },
+      {
+        "type": "activity",
+        "activityKey": "peermentoring",
+        "duration": 45,
+        "activityInstance": 1,
+        "overrideKey": "t30_c"
+      },
+      {
+        "type": "review",
+        "duration": 1,
+        "overrideKey": "s2_19_6"
+      },
+      {
+        "type": "obey",
+        "obeyId": 1,
+        "overrideKey": "s2_19_7"
+      }
+    ]
+  },
+  {
+    "session": 20,
+    "checkinCode": "2767",
+    "conceptKeys": [],
+    "toolKeys": [
+      27
+    ],
+    "slides": [
+      {
+        "type": "title",
+        "overrideKey": "s2_20_1"
+      },
+      {
+        "type": "checkin",
+        "duration": 1,
+        "overrideKey": "s2_20_2"
+      },
+      {
+        "type": "pray",
+        "duration": 5,
+        "overrideKey": "s2_20_3"
+      },
+      {
+        "type": "look_back",
+        "duration": 5,
+        "overrideKey": "s2_20_4"
+      },
+      {
+        "type": "center",
+        "contentKey": "session20_encouragement",
+        "overrideKey": "s2_20_5"
+      },
+      {
+        "type": "overview",
+        "duration": 1,
+        "overrideKey": "s2_20_6"
+      },
+      {
+        "type": "center",
+        "contentKey": "3monthplan_intro",
+        "overrideKey": "t27_a",
+        "firstContentItemIsTitle": true
+      },
+      {
+        "type": "activity",
+        "activityKey": "3monthplan",
+        "duration": 30,
+        "activityInstance": 1,
+        "overrideKey": "t27_b"
+      },
+      {
+        "type": "discuss",
+        "duration": 10,
+        "discussionId": 1,
+        "overrideKey": "t27_c"
+      },
+      {
+        "type": "activity",
+        "activityKey": "join_the_community",
+        "duration": 0,
+        "activityInstance": 1,
+        "overrideKey": "next_steps"
+      },
+      {
+        "type": "congratulations",
+        "overrideKey": "congratulations"
+      }
+    ]
+  }
+]

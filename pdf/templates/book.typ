@@ -247,6 +247,10 @@
         ]
         #para-block[#block-data.url_hint #text(weight: "bold")[#block-data.code]]
       ]
+    ] else if kind == "break" [
+      #guidebook-section(block-data.label)[
+        #paras(block-data.at("paragraphs", default: ()))
+      ]
     ] else if kind == "pray" [
       #guidebook-section(
         block-data.label,

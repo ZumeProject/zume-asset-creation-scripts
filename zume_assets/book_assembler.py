@@ -55,8 +55,25 @@ def _load_json(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+MANIFEST_FILES = {
+    "10": "ten_session.json",
+    "20": "twenty_session.json",
+    "intensive": "intensive_session.json",
+}
+
+
+def load_course_manifest(course_type: str) -> list[dict[str, Any]]:
+    name = MANIFEST_FILES.get(course_type)
+    if not name:
+        raise NotImplementedError(f"No course manifest for type={course_type}")
+    path = _repo() / "manifest" / name
+    if not path.exists():
+        raise FileNotFoundError(f"Missing course manifest: {path}")
+    return _load_json(path)
+
+
 def load_ten_session_manifest() -> list[dict[str, Any]]:
-    return _load_json(_repo() / "manifest" / "ten_session.json")
+    return load_course_manifest("10")
 
 
 def ui_get(ui: dict[str, str], *keys: str, default: str = "") -> str:
@@ -205,6 +222,7 @@ def assemble_session_blocks(
 ) -> list[dict[str, Any]]:
     ui: dict[str, str] = presenter.get("ui") or {}
     videos: dict[str, Any] = presenter.get("videos") or {}
+    locale = str(presenter.get("locale") or "en")
     prefix = f"{UI_PREFIX[course_type]}.session.{session['session']}"
     blocks: list[dict[str, Any]] = []
     pending_video: str | None = None
@@ -216,9 +234,26 @@ def assemble_session_blocks(
         if stype == "title":
             continue
 
+        if stype == "break":
+            blocks.append(
+                {
+                    "kind": "break",
+                    "label": ui_get(ui, "label.break", default="BREAK"),
+                    "paragraphs": [
+                        ui_get(
+                            ui,
+                            "instruction.break",
+                            default="Take a short break, then continue with the next section.",
+                        )
+                    ],
+                }
+            )
+            continue
+
         if stype == "checkin":
             code = str(session.get("checkinCode") or "")
-            qr = ensure_qr(build_dir, f"checkin-{code or 'open'}", checkin_url(code or None))
+            qr_target = checkin_url(code or None, locale=locale)
+            qr = ensure_qr(build_dir, f"checkin-{code or 'open'}", qr_target)
             blocks.append(
                 {
                     "kind": "checkin",
@@ -228,7 +263,7 @@ def assemble_session_blocks(
                     "url_hint": ui_get(ui, "instruction.checkin_url", default="Or zume.training/checkin and use code:"),
                     "code": code,
                     "qr": qr,
-                    "qr_url": checkin_url(code or None),
+                    "qr_url": qr_target,
                 }
             )
             continue
@@ -275,7 +310,8 @@ def assemble_session_blocks(
             script = script_cache[video_key] or {}
             title = (videos.get(video_key) or {}).get("title") or concept_title(presenter, video_key)
             body = paragraphs(script.get("content") or "")
-            qr = ensure_qr(build_dir, f"video-{video_key}", video_url(video_key))
+            qr_target = video_url(video_key, locale=locale)
+            qr = ensure_qr(build_dir, f"video-{video_key}", qr_target)
             blocks.append(
                 {
                     "kind": "read",
@@ -285,7 +321,7 @@ def assemble_session_blocks(
                     "paragraphs": body,
                     "qr": qr,
                     "qr_caption": f"Watch: {title}",
-                    "qr_url": video_url(video_key),
+                    "qr_url": qr_target,
                     "video_key": video_key,
                 }
             )
@@ -322,7 +358,8 @@ def assemble_session_blocks(
                 default=activity.get("body_title") or activity.get("title") or activity_key,
             )
             activity_body = html_to_text(activity.get("content"))
-            qr = ensure_qr(build_dir, f"activity-{activity_key}", activity_url(activity_key))
+            qr_target = activity_url(activity_key, locale=locale)
+            qr = ensure_qr(build_dir, f"activity-{activity_key}", qr_target)
             block: dict[str, Any] = {
                 "kind": "activity",
                 "label": ui_get(ui, "label.activity", default="ACTIVITY"),
@@ -332,7 +369,7 @@ def assemble_session_blocks(
                 "paragraphs": paragraphs(activity_body),
                 "qr": qr,
                 "qr_caption": body_title,
-                "qr_url": activity_url(activity_key),
+                "qr_url": qr_target,
                 "activity_key": activity_key,
             }
             if activity_key == "listof100":
@@ -367,12 +404,11 @@ def assemble_session_blocks(
                 "content_key": content_key,
             }
             if activity_key:
-                qr = ensure_qr(
-                    build_dir, f"activity-{activity_key}", activity_url(str(activity_key))
-                )
+                qr_target = activity_url(str(activity_key), locale=locale)
+                qr = ensure_qr(build_dir, f"activity-{activity_key}", qr_target)
                 block["qr"] = qr
                 block["qr_caption"] = title
-                block["qr_url"] = activity_url(str(activity_key))
+                block["qr_url"] = qr_target
             blocks.append(block)
             continue
 
@@ -393,6 +429,7 @@ def assemble_session_blocks(
             continue
 
         if stype == "congratulations":
+            qr_target = activity_url("join_the_community", locale=locale)
             blocks.append(
                 {
                     "kind": "congratulations",
@@ -401,9 +438,8 @@ def assemble_session_blocks(
                         "Congratulations on completing Zúme Training!",
                         "Join the Zúme community using the QR code.",
                     ],
-                    "qr": ensure_qr(
-                        build_dir, "activity-join_the_community", activity_url("join_the_community")
-                    ),
+                    "qr": ensure_qr(build_dir, "activity-join_the_community", qr_target),
+                    "qr_url": qr_target,
                 }
             )
             continue
@@ -419,11 +455,11 @@ def assemble_book(
     build_dir: Path | None = None,
     cache_api: bool = True,
 ) -> dict[str, Any]:
-    if course_type != "10":
-        raise NotImplementedError("Phase 1 only implements course type=10")
+    if course_type not in MANIFEST_FILES:
+        raise NotImplementedError(f"Unsupported course type={course_type}")
 
     root = _repo()
-    build_dir = build_dir or (root / "output" / lang / "build-10")
+    build_dir = build_dir or (root / "output" / lang / f"build-{course_type}")
     build_dir.mkdir(parents=True, exist_ok=True)
     (build_dir / "qr").mkdir(parents=True, exist_ok=True)
 
@@ -431,9 +467,10 @@ def assemble_book(
     if cache_api:
         cache_json(presenter, build_dir / "cache" / "presenter.json")
 
-    sessions_manifest = load_ten_session_manifest()
+    sessions_manifest = load_course_manifest(course_type)
     script_cache: dict[str, dict[str, Any] | None] = {}
     activity_cache: dict[str, dict[str, Any] | None] = {}
+    locale = str(presenter.get("locale") or lang or "en")
 
     sessions_out: list[dict[str, Any]] = []
     for session in sessions_manifest:
@@ -463,6 +500,7 @@ def assemble_book(
 
     # Append congratulations after final session if not already present
     if sessions_out and not any(b.get("kind") == "congratulations" for b in sessions_out[-1]["blocks"]):
+        qr_target = activity_url("join_the_community", locale=locale)
         sessions_out[-1]["blocks"].append(
             {
                 "kind": "congratulations",
@@ -471,9 +509,8 @@ def assemble_book(
                     "Congratulations on completing Zúme Training!",
                     "Join the Zúme community using the QR code.",
                 ],
-                "qr": ensure_qr(
-                    build_dir, "activity-join_the_community", activity_url("join_the_community")
-                ),
+                "qr": ensure_qr(build_dir, "activity-join_the_community", qr_target),
+                "qr_url": qr_target,
             }
         )
 
@@ -499,7 +536,7 @@ def assemble_book(
             "output_name": OUTPUT_NAMES[course_type].format(lang=lang),
             "sessions": sessions_out,
             "meta": {
-                "source": "live api.zume.training + manifest/ten_session.json",
+                "source": f"live api.zume.training + manifest/{MANIFEST_FILES[course_type]}",
                 "presenter_locale": presenter.get("locale"),
                 "session_count": len(sessions_out),
                 "block_count": sum(len(s["blocks"]) for s in sessions_out),
