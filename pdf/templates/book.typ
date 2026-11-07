@@ -122,12 +122,29 @@
   if items == none or items.len() == 0 { return }
   for item in items [
     #block(breakable: false, sticky: true, width: 100%)[
-      #grid(
-        // Keep bullet marker on the reading-start side.
-        columns: if is-rtl { (1fr, 0.85em) } else { (0.85em, 1fr) },
-        gutter: 0.2em,
-        ..if is-rtl { ([#item], [•]) } else { ([•], [#item]) },
-      )
+      // Lock grid to LTR column order so parent dir:rtl does not double-flip
+      // the marker. Explicitly place • on the reading-start side.
+      #{
+        set text(dir: ltr)
+        if is-rtl {
+          grid(
+            columns: (1fr, 0.85em),
+            gutter: 0.2em,
+            align(top + right, {
+              set text(dir: rtl)
+              item
+            }),
+            align(top + right)[•],
+          )
+        } else {
+          grid(
+            columns: (0.85em, 1fr),
+            gutter: 0.2em,
+            align(top + left)[•],
+            align(top + left, item),
+          )
+        }
+      }
     ]
     #v(0.65em)
   ]
