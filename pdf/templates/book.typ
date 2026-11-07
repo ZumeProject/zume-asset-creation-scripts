@@ -351,11 +351,20 @@
       ]
     ] else if kind == "activity" [
       #let worksheet = if block-data.at("worksheet", default: none) == "listof100" {
+        let ws-title = block-data.at("worksheet_title", default: "List of 100")
+        let ws-hint = block-data.at(
+          "worksheet_hint",
+          default: "Write names below. Mark Disciple / Unbeliever / Unknown.",
+        )
+        let marks = block-data.at("worksheet_marks", default: ("Disciple", "Unbeliever", "Unknown"))
+        let m0 = if marks.len() > 0 { marks.at(0) } else { "Disciple" }
+        let m1 = if marks.len() > 1 { marks.at(1) } else { "Unbeliever" }
+        let m2 = if marks.len() > 2 { marks.at(2) } else { "Unknown" }
         {
           v(0.35em)
-          text(weight: "bold")[List of 100]
+          text(weight: "bold")[#ws-title]
           v(0.3em)
-          text(size: 8.5pt, fill: muted)[Write names below. Mark Disciple / Unbeliever / Unknown.]
+          text(size: 8.5pt, fill: muted)[#ws-hint]
           let count = block-data.at("worksheet_count", default: 100)
           for i in range(1, count + 1) [
             #block(breakable: false, sticky: true, below: 0.3em, width: 100%)[
@@ -365,7 +374,7 @@
                 text(size: 9pt)[#i],
                 [
                   #box(width: 100%, stroke: (bottom: 0.4pt + luma(160)), inset: (bottom: 0.5em))[]
-                  #text(size: 7.5pt, fill: muted)[☐ Disciple   ☐ Unbeliever   ☐ Unknown]
+                  #text(size: 7.5pt, fill: muted)[☐ #m0   ☐ #m1   ☐ #m2]
                 ],
               )
             ]

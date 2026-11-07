@@ -73,6 +73,50 @@ def _typst_lang_region(lang: str) -> tuple[str, str | None]:
     return "en", None
 
 
+def _listof100_worksheet_title(presenter: dict[str, Any], activity: dict[str, Any]) -> str:
+    """Short localized 'List of 100' heading for the printable worksheet."""
+    videos = presenter.get("videos") or {}
+    video_title = str((videos.get("8") or videos.get(8) or {}).get("title") or "")
+    for sep in ("──", "–", "—", " - ", "-"):
+        if sep in video_title:
+            short = video_title.split(sep)[-1].strip().strip("「」『』\"“”«»")
+            if short:
+                return short
+    # Fall back to activity title (e.g. «قائمة المئة» / 「百人關注名單」).
+    title = str(activity.get("title") or "")
+    for left, right in (("「", "」"), ("『", "』"), ("“", "”"), ("«", "»"), ('"', '"')):
+        if left in title and right in title:
+            inner = title.split(left, 1)[1].split(right, 1)[0].strip()
+            if inner:
+                return inner
+    return title or "List of 100"
+
+
+def _listof100_mark_labels(instruction: str) -> list[str]:
+    """Parse Disciple / Unbeliever / Unknown labels from the localized mark instruction."""
+    defaults = ["Disciple", "Unbeliever", "Unknown"]
+    text = (instruction or "").strip()
+    if not text:
+        return defaults
+    if "：" in text:
+        tail = text.rsplit("：", 1)[-1]
+    elif ":" in text:
+        tail = text.rsplit(":", 1)[-1]
+    else:
+        tail = text
+    tail = tail.strip().rstrip(".。")
+    for sep in ("، أو ", " أو ", ", or ", " or ", "、", "或", "، ", ", "):
+        tail = tail.replace(sep, "|")
+    parts = [p.strip().strip("«»\"“”「」") for p in tail.split("|") if p.strip()]
+    if len(parts) >= 3:
+        parts = parts[:3]
+        # Title-case Latin labels (instruction text is often lowercase).
+        if all(p.isascii() for p in parts):
+            parts = [p[:1].upper() + p[1:] for p in parts]
+        return parts
+    return defaults
+
+
 def _repo() -> Path:
     return load_repo_root()
 
@@ -409,6 +453,22 @@ def assemble_session_blocks(
             if activity_key == "listof100":
                 block["worksheet"] = "listof100"
                 block["worksheet_count"] = 100
+                # Typst worksheet heading was hard-coded "List of 100"; prefer the
+                # short tool name from video 8, else the localized activity title.
+                block["worksheet_title"] = _listof100_worksheet_title(presenter, activity)
+                # Session UI instruction.2 is the "mark disciple / unbeliever / unknown" line.
+                mark_src = instructions[2] if len(instructions) > 2 else (
+                    next(
+                        (
+                            s
+                            for s in instructions
+                            if "disciple" in s.lower() or "تلميذ" in s or "門徒" in s
+                        ),
+                        instructions[-1] if instructions else "",
+                    )
+                )
+                block["worksheet_hint"] = mark_src or "Write names below. Mark Disciple / Unbeliever / Unknown."
+                block["worksheet_marks"] = _listof100_mark_labels(mark_src)
             blocks.append(block)
             continue
 
