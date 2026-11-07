@@ -39,15 +39,21 @@ def preferred_font() -> str:
 
 
 def prepare_build_dir(build_dir: Path, book: dict) -> Path:
-    """Copy template beside book.json and rewrite font if needed."""
+    """Copy template + static assets beside book.json and rewrite font if needed."""
     root = load_repo_root()
     template_src = root / "pdf" / "templates" / "book.typ"
+    assets_dir = root / "pdf" / "assets"
     build_dir.mkdir(parents=True, exist_ok=True)
     typ_path = build_dir / "book.typ"
     text = template_src.read_text(encoding="utf-8")
     font = preferred_font()
     text = text.replace('font: "Liberation Sans"', f'font: "{font}"')
     typ_path.write_text(text, encoding="utf-8")
+
+    for name in ("cover-10.png", "zume-logo.png"):
+        src = assets_dir / name
+        if src.exists():
+            shutil.copy2(src, build_dir / name)
     return typ_path
 
 
