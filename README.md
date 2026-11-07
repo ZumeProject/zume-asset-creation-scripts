@@ -28,9 +28,9 @@ typst --version
 From the repo root:
 
 ```bash
-python build.py --lang en --type 10 --targets pdf
+python3 build.py --lang en --type 10 --targets pdf
 # equivalent:
-python -m zume_assets build --lang en --type 10 --targets pdf
+python3 -m zume_assets build --lang en --type 10 --targets pdf
 ```
 
 Output:
