@@ -11,10 +11,15 @@
 #let muted = rgb("#444444")
 
 #let sidebar-w = 1.65in
-#let col-gutter = 0.5in
-#let content-inset = 0.55em
+// Near-zero gutter so right-aligned labels/QR sit against the blue bar (Chris tweak #1).
+// Breathing room for body text is content-inset on the far side of the bar.
+#let col-gutter = 0.04in
+// Padding between the blue vertical bar and right-column text (Chris tweak #2)
+#let content-inset = 0.42in
 #let left-pad = sidebar-w + col-gutter
 #let qr-size = 1.35in
+// Session header breathing room (~3× prior ~0.55–0.7em top/bottom) (Chris tweak #3)
+#let session-header-pad = 3em
 #let para-gap = 1.75em
 #let rule-pad-y = 2.6em
 #let rule-pad-x = 0.22in
@@ -107,7 +112,8 @@
     #grid(
       columns: (sidebar-w, 1fr),
       column-gutter: col-gutter,
-      align(top, sidebar-label-only(label, duration: duration)),
+      // Full-width cell so right-aligned labels hug the blue bar
+      align(top, block(width: 100%)[#sidebar-label-only(label, duration: duration)]),
       align(top, content-panel(body)),
     )
   ]
@@ -129,15 +135,17 @@
 ) = {
   dashed-rule()
 
-  let sidebar = {
-    sidebar-label-only(label, duration: duration)
-    if qr != none and qr != "" [
+  // Labels + QR right-aligned to the blue vertical bar (Chris tweak #1).
+  // Must be width:100% so align(right) hugs the bar instead of shrink-wrapping left.
+  let sidebar = block(width: 100%)[
+    #sidebar-label-only(label, duration: duration)
+    #if qr != none and qr != "" [
       #v(0.65em)
-      #align(center)[
+      #align(right)[
         #image(qr, width: qr-size)
       ]
     ]
-  }
+  ]
 
   let n = calc.min(paragraphs.len(), calc.max(beside-min, 1))
   // If few paragraphs, keep all beside the QR
@@ -201,12 +209,14 @@
 #for session in book.sessions [
   #pagebreak(weak: false)
 
-  #align(center)[
-    #image("zume-logo.png", width: 2.4in)
-    #v(0.4em)
-    #text(size: 14pt, weight: "bold", fill: black)[#session.title]
+  // Session title block with ~3× top/bottom margin (Chris tweak #3)
+  #block(width: 100%, breakable: false, inset: (top: session-header-pad, bottom: session-header-pad))[
+    #align(center)[
+      #image("zume-logo.png", width: 2.4in)
+      #v(0.45em)
+      #text(size: 14pt, weight: "bold", fill: black)[#session.title]
+    ]
   ]
-  #v(0.55em)
 
   #for block-data in session.blocks [
     #let kind = block-data.at("kind")
