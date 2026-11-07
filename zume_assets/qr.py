@@ -7,7 +7,7 @@ from pathlib import Path
 import qrcode
 
 
-def make_qr_png(url: str, dest: Path, *, box_size: int = 8, border: int = 2) -> Path:
+def make_qr_png(url: str, dest: Path, *, box_size: int = 8, border: int = 1) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
     img = qrcode.make(
         url,
