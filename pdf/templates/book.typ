@@ -21,7 +21,8 @@
 #let qr-size = 1.35in
 // Session header breathing room (~3× prior ~0.55–0.7em top/bottom)
 #let session-header-pad = 3em
-#let para-gap = 1.75em
+// Slightly tighter than 1.75em (~3–5pt less) so paragraphs don’t feel loose.
+#let para-gap = 1.35em
 #let rule-pad-y = 2.6em
 #let rule-pad-x = 0.22in
 
