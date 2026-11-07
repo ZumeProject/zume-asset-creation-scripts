@@ -1,9 +1,8 @@
-// Zúme Training guidebook — matches reference two-column layout:
-// left sidebar = section labels + timing + QR (for READ/ACTIVITY);
-// right column = reading content. Light-blue rules + dashed section dividers.
+// Zúme Training guidebook — reference two-column layout.
+// Left rail: section labels, timing, QR. Right: reading content.
 //
-// QR is #place'd in the left rail so right-column text keeps flowing beside
-// (and past) it — no empty full-height band reserved for the QR row.
+// QR fix: unbreakable top-aligned grid keeps label+QR with enough right-column
+// text so the QR never sits beside an empty band (orphaned at page bottom).
 
 #let book = json("book.json")
 
@@ -15,7 +14,10 @@
 #let col-gutter = 0.5in
 #let content-inset = 0.55em
 #let left-pad = sidebar-w + col-gutter
-#let qr-size = 1.45in
+#let qr-size = 1.35in
+#let para-gap = 1.75em
+#let rule-pad-y = 2.6em
+#let rule-pad-x = 0.22in
 
 #set document(
   title: book.title + " — " + book.subtitle,
@@ -27,22 +29,31 @@
   numbering: none,
 )
 #set text(font: "Liberation Sans", size: 9.5pt, fill: black, lang: book.lang)
-// Paragraph breathing room (Chris feedback #3)
-#set par(justify: false, leading: 0.85em, spacing: 1.35em)
+#set par(justify: false, leading: 0.82em, spacing: 0.65em)
 
-// Horizontal dashed divider with clear padding above/below (Chris feedback #1)
+// Horizontal dashed divider: vertical breathing room + slight horizontal inset
 #let dashed-rule() = {
-  v(1.45em)
-  line(length: 100%, stroke: (paint: rule-blue, thickness: 0.75pt, dash: "densely-dashed"))
-  v(1.5em)
+  v(0.35em)
+  block(
+    width: 100%,
+    breakable: false,
+    inset: (top: rule-pad-y, bottom: rule-pad-y, x: rule-pad-x),
+  )[
+    #line(
+      length: 100%,
+      stroke: (paint: rule-blue, thickness: 0.75pt, dash: "densely-dashed"),
+    )
+  ]
+  v(0.35em)
 }
 
 #let sidebar-label-only(label, duration: none) = {
+  if label == none or label == "" { return }
   align(right)[
     #text(weight: "bold", size: 14pt, fill: black)[#upper(label)]
     #if duration != none [
       #linebreak()
-      #v(0.2em)
+      #v(0.22em)
       #text(size: 9.5pt, fill: black)[(#duration)]
     ]
   ]
@@ -53,15 +64,31 @@
     width: 100%,
     breakable: true,
     stroke: (left: 1pt + rule-blue),
-    inset: (left: content-inset, top: 0.05em, bottom: 0.2em),
+    inset: (left: content-inset, top: 0.1em, bottom: 0.25em),
     body,
   )
+}
+
+/// Explicit blank-line-style gap between paragraphs.
+/// Use a trailing #v so the gap cannot collapse with adjacent block spacing.
+#let para-block(body) = {
+  block(width: 100%, breakable: true)[
+    #body
+  ]
+  v(para-gap)
+}
+
+#let paras(items) = {
+  if items == none { return }
+  for p in items [
+    #para-block[#p]
+  ]
 }
 
 #let bullets(items) = {
   if items == none or items.len() == 0 { return }
   for item in items [
-    #block(sticky: true, spacing: 0.4em)[
+    #block(breakable: false, sticky: true, width: 100%)[
       #grid(
         columns: (0.85em, 1fr),
         gutter: 0.2em,
@@ -69,20 +96,14 @@
         [#item],
       )
     ]
+    #v(0.65em)
   ]
 }
 
-#let paras(items) = {
-  if items == none { return }
-  for p in items [
-    #par[#p]
-  ]
-}
-
-/// Short sections without a left-rail QR: label | content grid.
+/// Short sections without left-rail QR.
 #let guidebook-section(label, duration: none, body) = {
   dashed-rule()
-  block(breakable: false, sticky: true, width: 100%, spacing: 0em)[
+  block(breakable: false, sticky: true, width: 100%, below: 0.35em)[
     #grid(
       columns: (sidebar-w, 1fr),
       column-gutter: col-gutter,
@@ -92,39 +113,82 @@
   ]
 }
 
-/// Sections with a left-rail QR (READ / ACTIVITY).
-/// Label + QR are placed in the left rail; ALL body text flows in the right
-/// column beside and below the QR (Chris feedback #2).
-#let guidebook-section-qr(label, duration: none, qr: none, body) = {
+/// READ/ACTIVITY with left-rail QR.
+/// Unbreakable opener grid: [label+QR | title + enough paragraphs to fill QR height].
+/// Remaining paragraphs continue in the right column below (left-padded).
+/// This prevents an orphan QR at the bottom of a page with an empty right band.
+#let guidebook-section-qr(
+  label,
+  duration: none,
+  qr: none,
+  title: none,
+  paragraphs: (),
+  lead-extra: none,
+  rest-extra: none,
+  beside-min: 6,
+) = {
   dashed-rule()
-  block(breakable: true, width: 100%, spacing: 0em)[
-    // Left rail: label + optional QR (does not force right column height)
-    #place(top + left, dy: 0pt)[
-      #box(width: sidebar-w)[
-        #sidebar-label-only(label, duration: duration)
-        #if qr != none and qr != "" [
-          #v(0.75em)
-          #align(center)[
-            #image(qr, width: qr-size)
-          ]
-        ]
+
+  let sidebar = {
+    sidebar-label-only(label, duration: duration)
+    if qr != none and qr != "" [
+      #v(0.65em)
+      #align(center)[
+        #image(qr, width: qr-size)
       ]
     ]
-    // Right column: full flowing content
-    #block(inset: (left: left-pad), width: 100%, breakable: true, spacing: 0em)[
-      #content-panel(body)
+  }
+
+  let n = calc.min(paragraphs.len(), calc.max(beside-min, 1))
+  // If few paragraphs, keep all beside the QR
+  if paragraphs.len() <= beside-min + 2 {
+    n = paragraphs.len()
+  }
+  let lead = paragraphs.slice(0, n)
+  let rest = if paragraphs.len() > n { paragraphs.slice(n) } else { () }
+
+  // Unbreakable: if this won't fit at page bottom, Typst moves the whole opener
+  block(breakable: false, sticky: true, width: 100%, below: 0.2em)[
+    #grid(
+      columns: (sidebar-w, 1fr),
+      column-gutter: col-gutter,
+      align(top, sidebar),
+      align(top, content-panel[
+        #if title != none [
+          #para-block[#text(weight: "bold", size: 9.5pt)[#title]]
+        ]
+        #if lead-extra != none [#lead-extra]
+        #for p in lead [
+          #para-block[#p]
+        ]
+      ]),
+    )
+  ]
+
+  if rest.len() > 0 or rest-extra != none [
+    #block(
+      breakable: true,
+      width: 100%,
+      inset: (left: left-pad),
+      above: 0em,
+    )[
+      #content-panel[
+        #for p in rest [
+          #para-block[#p]
+        ]
+        #if rest-extra != none [#rest-extra]
+      ]
     ]
   ]
 }
 
-// ---------- Cover (reference artwork) ----------
+// ---------- Cover ----------
 #page(margin: 0pt, numbering: none)[
   #align(center + horizon)[
     #image("cover-10.png", width: 100%, height: 100%, fit: "cover")
   ]
 ]
 
-// blank page 2 like reference (cover art verso / spacer)
 #page(numbering: none)[]
 
 #set page(numbering: "1", footer: context {
@@ -137,32 +201,30 @@
 #for session in book.sessions [
   #pagebreak(weak: false)
 
-  // Session header: logo + title (reference centers these)
   #align(center)[
     #image("zume-logo.png", width: 2.4in)
-    #v(0.35em)
+    #v(0.4em)
     #text(size: 14pt, weight: "bold", fill: black)[#session.title]
   ]
-  #v(0.7em)
+  #v(0.55em)
 
   #for block-data in session.blocks [
     #let kind = block-data.at("kind")
 
     #if kind == "checkin" [
-      // Reference places check-in QR in the RIGHT column under the instruction.
       #guidebook-section(
         block-data.label,
         duration: block-data.at("duration", default: none),
       )[
-        #par[#block-data.instruction]
+        #para-block[#block-data.instruction]
         #if block-data.at("qr", default: none) != none [
-          #v(0.7em)
-          #align(left)[
-            #image(block-data.qr, width: 1.7in)
-          ]
           #v(0.55em)
+          #align(left)[
+            #image(block-data.qr, width: 1.65in)
+          ]
+          #v(0.45em)
         ]
-        #par[#block-data.url_hint #text(weight: "bold")[#block-data.code]]
+        #para-block[#block-data.url_hint #text(weight: "bold")[#block-data.code]]
       ]
     ] else if kind == "pray" [
       #guidebook-section(
@@ -184,12 +246,12 @@
         duration: block-data.at("duration", default: none),
       )[
         #if block-data.at("concepts_intro", default: "") != "" [
-          #par[#block-data.concepts_intro]
+          #para-block[#block-data.concepts_intro]
           #bullets(block-data.at("concepts", default: ()))
         ]
         #if block-data.at("tools_intro", default: "") != "" [
-          #v(0.45em)
-          #par[#block-data.tools_intro]
+          #v(0.35em)
+          #para-block[#block-data.tools_intro]
           #bullets(block-data.at("tools", default: ()))
         ]
       ]
@@ -198,40 +260,30 @@
         block-data.label,
         duration: block-data.at("duration", default: none),
         qr: block-data.at("qr", default: none),
-      )[
-        #text(weight: "bold", size: 9.5pt)[#block-data.title]
-        #v(0.45em)
-        #paras(block-data.at("paragraphs", default: ()))
-      ]
+        title: block-data.title,
+        paragraphs: block-data.at("paragraphs", default: ()),
+        beside-min: 7,
+      )
     ] else if kind == "discuss" [
       #guidebook-section(
         block-data.label,
         duration: block-data.at("duration", default: none),
       )[
         #if block-data.at("intro", default: "") != "" [
-          #par[#block-data.intro]
-          #v(0.25em)
+          #para-block[#block-data.intro]
         ]
         #bullets(block-data.at("questions", default: ()))
       ]
     ] else if kind == "activity" [
-      #guidebook-section-qr(
-        block-data.label,
-        duration: block-data.at("duration", default: none),
-        qr: block-data.at("qr", default: none),
-      )[
-        #text(weight: "bold", size: 9.5pt)[#block-data.title]
-        #v(0.4em)
-        #bullets(block-data.at("instructions", default: ()))
-        #paras(block-data.at("paragraphs", default: ()))
-        #if block-data.at("worksheet", default: none) == "listof100" [
-          #v(0.45em)
-          #text(weight: "bold")[List of 100]
-          #v(0.25em)
-          #text(size: 8.5pt, fill: muted)[Write names below. Mark Disciple / Unbeliever / Unknown.]
-          #let count = block-data.at("worksheet_count", default: 100)
-          #for i in range(1, count + 1) [
-            #block(breakable: false, sticky: true, spacing: 0.28em, width: 100%)[
+      #let worksheet = if block-data.at("worksheet", default: none) == "listof100" {
+        {
+          v(0.35em)
+          text(weight: "bold")[List of 100]
+          v(0.3em)
+          text(size: 8.5pt, fill: muted)[Write names below. Mark Disciple / Unbeliever / Unknown.]
+          let count = block-data.at("worksheet_count", default: 100)
+          for i in range(1, count + 1) [
+            #block(breakable: false, sticky: true, below: 0.3em, width: 100%)[
               #grid(
                 columns: (1.5em, 1fr),
                 gutter: 0.25em,
@@ -243,15 +295,27 @@
               )
             ]
           ]
-        ]
-      ]
+        }
+      } else { none }
+
+      #guidebook-section-qr(
+        block-data.label,
+        duration: block-data.at("duration", default: none),
+        qr: block-data.at("qr", default: none),
+        title: block-data.title,
+        paragraphs: block-data.at("paragraphs", default: ()),
+        lead-extra: {
+          bullets(block-data.at("instructions", default: ()))
+        },
+        rest-extra: worksheet,
+        beside-min: 5,
+      )
     ] else if kind == "center" [
       #dashed-rule()
       #block(inset: (left: left-pad), width: 100%)[
         #content-panel[
           #if block-data.at("title", default: none) != none [
-            #text(weight: "bold", size: 11pt)[#block-data.title]
-            #v(0.35em)
+            #para-block[#text(weight: "bold", size: 11pt)[#block-data.title]]
           ]
           #paras(block-data.at("paragraphs", default: ()))
         ]
@@ -262,21 +326,17 @@
         #guidebook-section-qr(
           "",
           qr: qr,
-        )[
-          #text(weight: "bold")[#block-data.title]
-          #v(0.3em)
-          #for p in block-data.at("paragraphs", default: ()) [
-            #text(style: "italic", fill: muted)[#p]
-          ]
-        ]
+          title: block-data.title,
+          paragraphs: block-data.at("paragraphs", default: ()),
+          beside-min: 3,
+        )
       ] else [
         #dashed-rule()
         #block(inset: (left: left-pad), width: 100%)[
           #content-panel[
-            #text(weight: "bold")[#block-data.title]
-            #v(0.3em)
+            #para-block[#text(weight: "bold")[#block-data.title]]
             #for p in block-data.at("paragraphs", default: ()) [
-              #text(style: "italic", fill: muted)[#p]
+              #para-block[#text(style: "italic", fill: muted)[#p]]
             ]
           ]
         ]
@@ -292,9 +352,9 @@
         #text(size: 16pt, weight: "bold", fill: accent)[#block-data.label]
         #v(0.55em)
         #for p in block-data.at("paragraphs", default: ()) [
-          #par[#p]
+          #para-block[#p]
         ]
-        #v(0.5em)
+        #v(0.45em)
         #if block-data.at("qr", default: none) != none [
           #image(block-data.qr, width: 1.35in)
         ]
