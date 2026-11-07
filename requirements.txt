@@ -1,0 +1,4 @@
+# Shared deps for the new Typst PDF pipeline (Phase 1)
+qrcode[pil]>=8.0
+Pillow>=10.0
+pypdf>=4.0
