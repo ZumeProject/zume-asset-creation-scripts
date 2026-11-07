@@ -1,6 +1,9 @@
 // Zúme Training guidebook — matches reference two-column layout:
 // left sidebar = section labels + timing + QR (for READ/ACTIVITY);
 // right column = reading content. Light-blue rules + dashed section dividers.
+//
+// QR is #place'd in the left rail so right-column text keeps flowing beside
+// (and past) it — no empty full-height band reserved for the QR row.
 
 #let book = json("book.json")
 
@@ -12,6 +15,7 @@
 #let col-gutter = 0.5in
 #let content-inset = 0.55em
 #let left-pad = sidebar-w + col-gutter
+#let qr-size = 1.45in
 
 #set document(
   title: book.title + " — " + book.subtitle,
@@ -23,29 +27,23 @@
   numbering: none,
 )
 #set text(font: "Liberation Sans", size: 9.5pt, fill: black, lang: book.lang)
-#set par(justify: false, leading: 0.78em, spacing: 0.85em)
+// Paragraph breathing room (Chris feedback #3)
+#set par(justify: false, leading: 0.85em, spacing: 1.35em)
 
+// Horizontal dashed divider with clear padding above/below (Chris feedback #1)
 #let dashed-rule() = {
-  v(0.65em)
+  v(1.45em)
   line(length: 100%, stroke: (paint: rule-blue, thickness: 0.75pt, dash: "densely-dashed"))
-  v(0.7em)
+  v(1.5em)
 }
 
-#let sidebar-label(label, duration: none, qr: none) = {
-  block(width: 100%, breakable: false)[
-    #align(right)[
-      #text(weight: "bold", size: 14pt, fill: black)[#upper(label)]
-      #if duration != none [
-        #linebreak()
-        #v(0.15em)
-        #text(size: 9.5pt, fill: black)[(#duration)]
-      ]
-    ]
-    #if qr != none and qr != "" [
-      #v(0.7em)
-      #align(center)[
-        #image(qr, width: 1.45in)
-      ]
+#let sidebar-label-only(label, duration: none) = {
+  align(right)[
+    #text(weight: "bold", size: 14pt, fill: black)[#upper(label)]
+    #if duration != none [
+      #linebreak()
+      #v(0.2em)
+      #text(size: 9.5pt, fill: black)[(#duration)]
     ]
   ]
 }
@@ -55,7 +53,7 @@
     width: 100%,
     breakable: true,
     stroke: (left: 1pt + rule-blue),
-    inset: (left: content-inset, top: 0.05em, bottom: 0.15em),
+    inset: (left: content-inset, top: 0.05em, bottom: 0.2em),
     body,
   )
 }
@@ -63,7 +61,7 @@
 #let bullets(items) = {
   if items == none or items.len() == 0 { return }
   for item in items [
-    #block(sticky: true, spacing: 0.28em)[
+    #block(sticky: true, spacing: 0.4em)[
       #grid(
         columns: (0.85em, 1fr),
         gutter: 0.2em,
@@ -74,52 +72,48 @@
   ]
 }
 
-/// Section with left sidebar (label/time/optional QR) + flowing right content.
-/// Sticky header keeps label (+ QR) with the first content chunk; overflow continues
-/// in the right column with the blue rule (matching reference continuation pages).
-#let guidebook-section(label, duration: none, qr: none, header: none, body) = {
-  dashed-rule()
-  // Sticky opener: sidebar + start of content (title / first chunk)
-  block(breakable: false, sticky: true, width: 100%, spacing: 0em)[
-    #grid(
-      columns: (sidebar-w, 1fr),
-      column-gutter: col-gutter,
-      sidebar-label(label, duration: duration, qr: qr),
-      content-panel[
-        #if header != none [#header]
-        #body
-      ],
-    )
-  ]
-}
-
-/// Like guidebook-section but body may be long: put only `lead` in sticky opener,
-/// then continue `rest` with matching left indent + rule.
-#let guidebook-section-flow(label, duration: none, qr: none, lead, rest) = {
-  dashed-rule()
-  block(breakable: false, sticky: true, width: 100%, spacing: 0em)[
-    #grid(
-      columns: (sidebar-w, 1fr),
-      column-gutter: col-gutter,
-      sidebar-label(label, duration: duration, qr: qr),
-      content-panel[#lead],
-    )
-  ]
-  if rest != none [
-    #block(
-      breakable: true,
-      width: 100%,
-      inset: (left: left-pad),
-      spacing: 0em,
-      content-panel[#rest],
-    )
-  ]
-}
-
 #let paras(items) = {
   if items == none { return }
   for p in items [
     #par[#p]
+  ]
+}
+
+/// Short sections without a left-rail QR: label | content grid.
+#let guidebook-section(label, duration: none, body) = {
+  dashed-rule()
+  block(breakable: false, sticky: true, width: 100%, spacing: 0em)[
+    #grid(
+      columns: (sidebar-w, 1fr),
+      column-gutter: col-gutter,
+      align(top, sidebar-label-only(label, duration: duration)),
+      align(top, content-panel(body)),
+    )
+  ]
+}
+
+/// Sections with a left-rail QR (READ / ACTIVITY).
+/// Label + QR are placed in the left rail; ALL body text flows in the right
+/// column beside and below the QR (Chris feedback #2).
+#let guidebook-section-qr(label, duration: none, qr: none, body) = {
+  dashed-rule()
+  block(breakable: true, width: 100%, spacing: 0em)[
+    // Left rail: label + optional QR (does not force right column height)
+    #place(top + left, dy: 0pt)[
+      #box(width: sidebar-w)[
+        #sidebar-label-only(label, duration: duration)
+        #if qr != none and qr != "" [
+          #v(0.75em)
+          #align(center)[
+            #image(qr, width: qr-size)
+          ]
+        ]
+      ]
+    ]
+    // Right column: full flowing content
+    #block(inset: (left: left-pad), width: 100%, breakable: true, spacing: 0em)[
+      #content-panel(body)
+    ]
   ]
 }
 
@@ -149,7 +143,7 @@
     #v(0.35em)
     #text(size: 14pt, weight: "bold", fill: black)[#session.title]
   ]
-  #v(0.55em)
+  #v(0.7em)
 
   #for block-data in session.blocks [
     #let kind = block-data.at("kind")
@@ -159,7 +153,6 @@
       #guidebook-section(
         block-data.label,
         duration: block-data.at("duration", default: none),
-        qr: none,
       )[
         #par[#block-data.instruction]
         #if block-data.at("qr", default: none) != none [
@@ -195,31 +188,21 @@
           #bullets(block-data.at("concepts", default: ()))
         ]
         #if block-data.at("tools_intro", default: "") != "" [
-          #v(0.35em)
+          #v(0.45em)
           #par[#block-data.tools_intro]
           #bullets(block-data.at("tools", default: ()))
         ]
       ]
     ] else if kind == "read" [
-      #let ps = block-data.at("paragraphs", default: ())
-      #let lead = {
-        text(weight: "bold", size: 9.5pt)[#block-data.title]
-        v(0.35em)
-        if ps.len() > 0 { par[#ps.at(0)] }
-        if ps.len() > 1 { par[#ps.at(1)] }
-      }
-      #let rest = if ps.len() > 2 {
-        for p in ps.slice(2) [
-          #par[#p]
-        ]
-      } else { none }
-      #guidebook-section-flow(
+      #guidebook-section-qr(
         block-data.label,
         duration: block-data.at("duration", default: none),
         qr: block-data.at("qr", default: none),
-        lead,
-        rest,
-      )
+      )[
+        #text(weight: "bold", size: 9.5pt)[#block-data.title]
+        #v(0.45em)
+        #paras(block-data.at("paragraphs", default: ()))
+      ]
     ] else if kind == "discuss" [
       #guidebook-section(
         block-data.label,
@@ -227,31 +210,28 @@
       )[
         #if block-data.at("intro", default: "") != "" [
           #par[#block-data.intro]
-          #v(0.2em)
+          #v(0.25em)
         ]
         #bullets(block-data.at("questions", default: ()))
       ]
     ] else if kind == "activity" [
-      #let lead = {
-        text(weight: "bold", size: 9.5pt)[#block-data.title]
-        v(0.3em)
-        bullets(block-data.at("instructions", default: ()))
-      }
-      #let body-paras = block-data.at("paragraphs", default: ())
-      #let rest = {
-        if body-paras.len() > 0 {
-          for p in body-paras [
-            #par[#p]
-          ]
-        }
-        if block-data.at("worksheet", default: none) == "listof100" [
-          #v(0.35em)
+      #guidebook-section-qr(
+        block-data.label,
+        duration: block-data.at("duration", default: none),
+        qr: block-data.at("qr", default: none),
+      )[
+        #text(weight: "bold", size: 9.5pt)[#block-data.title]
+        #v(0.4em)
+        #bullets(block-data.at("instructions", default: ()))
+        #paras(block-data.at("paragraphs", default: ()))
+        #if block-data.at("worksheet", default: none) == "listof100" [
+          #v(0.45em)
           #text(weight: "bold")[List of 100]
-          #v(0.2em)
+          #v(0.25em)
           #text(size: 8.5pt, fill: muted)[Write names below. Mark Disciple / Unbeliever / Unknown.]
           #let count = block-data.at("worksheet_count", default: 100)
           #for i in range(1, count + 1) [
-            #block(breakable: false, sticky: true, spacing: 0.2em, width: 100%)[
+            #block(breakable: false, sticky: true, spacing: 0.28em, width: 100%)[
               #grid(
                 columns: (1.5em, 1fr),
                 gutter: 0.25em,
@@ -264,44 +244,42 @@
             ]
           ]
         ]
-      }
-      #guidebook-section-flow(
-        block-data.label,
-        duration: block-data.at("duration", default: none),
-        qr: block-data.at("qr", default: none),
-        lead,
-        rest,
-      )
+      ]
     ] else if kind == "center" [
       #dashed-rule()
       #block(inset: (left: left-pad), width: 100%)[
         #content-panel[
           #if block-data.at("title", default: none) != none [
             #text(weight: "bold", size: 11pt)[#block-data.title]
-            #v(0.3em)
+            #v(0.35em)
           ]
           #paras(block-data.at("paragraphs", default: ()))
         ]
       ]
     ] else if kind == "image_note" [
-      #dashed-rule()
-      #block(breakable: false, sticky: true, width: 100%)[
-        #grid(
-          columns: (sidebar-w, 1fr),
-          column-gutter: col-gutter,
-          {
-            if block-data.at("qr", default: none) != none [
-              #align(center)[#image(block-data.qr, width: 1.2in)]
-            ]
-          },
-          content-panel[
+      #let qr = block-data.at("qr", default: none)
+      #if qr != none [
+        #guidebook-section-qr(
+          "",
+          qr: qr,
+        )[
+          #text(weight: "bold")[#block-data.title]
+          #v(0.3em)
+          #for p in block-data.at("paragraphs", default: ()) [
+            #text(style: "italic", fill: muted)[#p]
+          ]
+        ]
+      ] else [
+        #dashed-rule()
+        #block(inset: (left: left-pad), width: 100%)[
+          #content-panel[
             #text(weight: "bold")[#block-data.title]
-            #v(0.25em)
+            #v(0.3em)
             #for p in block-data.at("paragraphs", default: ()) [
               #text(style: "italic", fill: muted)[#p]
             ]
-          ],
-        )
+          ]
+        ]
       ]
     ] else if kind == "obey" [
       #guidebook-section(block-data.label)[
@@ -309,14 +287,14 @@
       ]
     ] else if kind == "congratulations" [
       #dashed-rule()
-      #v(0.8em)
+      #v(0.9em)
       #align(center)[
         #text(size: 16pt, weight: "bold", fill: accent)[#block-data.label]
-        #v(0.5em)
+        #v(0.55em)
         #for p in block-data.at("paragraphs", default: ()) [
           #par[#p]
         ]
-        #v(0.45em)
+        #v(0.5em)
         #if block-data.at("qr", default: none) != none [
           #image(block-data.qr, width: 1.35in)
         ]
