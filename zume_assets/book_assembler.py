@@ -497,8 +497,8 @@ def assemble_book(
     script_cache: dict[str, dict[str, Any] | None] = {}
     activity_cache: dict[str, dict[str, Any] | None] = {}
     locale = str(presenter.get("locale") or lang or "en")
-    # Known RTL locale codes on zume6 (site display_code). Layout columns stay
-    # LTR for now; Typst uses this for text direction / shaping only.
+    # Known RTL locale codes on zume6 (site display_code). Typst mirrors the
+    # two-column guidebook chrome when direction is rtl (QR/rail on the right).
     rtl_locales = {"ar", "ar_jo", "ar_tn", "fa", "ur", "ps", "pus", "he", "ckb", "ku"}
     text_direction = "rtl" if locale.lower() in rtl_locales or lang.lower() in rtl_locales else "ltr"
     # Typst #set text(lang: …) requires ISO 639-1/2/3; zume site codes like
