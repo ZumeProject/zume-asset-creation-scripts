@@ -11,14 +11,15 @@
 #let muted = rgb("#444444")
 
 #let sidebar-w = 1.65in
-// Near-zero gutter so right-aligned labels/QR sit against the blue bar (Chris tweak #1).
-// Breathing room for body text is content-inset on the far side of the bar.
-#let col-gutter = 0.04in
-// Padding between the blue vertical bar and right-column text (Chris tweak #2)
-#let content-inset = 0.42in
+// Balanced gutters around the blue bar: space left of the bar (QR/labels) ≈
+// space right of the bar (body text). Right inset is half of the prior 0.42in;
+// the freed space moves into col-gutter so content isn’t over-indented and
+// left-rail items aren’t flush against the stroke.
+#let col-gutter = 0.21in
+#let content-inset = 0.21in
 #let left-pad = sidebar-w + col-gutter
 #let qr-size = 1.35in
-// Session header breathing room (~3× prior ~0.55–0.7em top/bottom) (Chris tweak #3)
+// Session header breathing room (~3× prior ~0.55–0.7em top/bottom)
 #let session-header-pad = 3em
 #let para-gap = 1.75em
 #let rule-pad-y = 2.6em
