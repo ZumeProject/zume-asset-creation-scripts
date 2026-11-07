@@ -47,13 +47,31 @@ def html_to_text(html: str | None) -> str:
     return text.strip()
 
 
+# Markdown allows backslash-escaping these ASCII punctuation chars.
+# Scripts use e.g. `\-` / `\--` so hyphens aren't treated as list markers;
+# once we flatten to plain text for Typst, those backslashes must not remain.
+_MD_ESCAPABLE = r"""\\`*_{}[\]()#+.!|-"""
+
+
+def unescape_markdown(text: str) -> str:
+    """Remove Markdown backslash escapes so Typst never shows literal \\- etc."""
+    # Soft/hard line break: trailing backslash before newline → space
+    text = re.sub(r"\\\s*\n", " ", text)
+    # \X → X for Markdown-escapable punctuation (and \\ → \)
+    text = re.sub(rf"\\([{_MD_ESCAPABLE}])", r"\1", text)
+    return text
+
+
 def strip_markdown(text: str) -> str:
     """Scripts sometimes ship light Markdown; Typst should see plain text."""
+    text = unescape_markdown(text)
     text = re.sub(r"\*\*(.+?)\*\*", r"\1", text)
     text = re.sub(r"__(.+?)__", r"\1", text)
     text = re.sub(r"(?<!\*)\*(?!\*)(.+?)(?<!\*)\*(?!\*)", r"\1", text)
     text = re.sub(r"`([^`]+)`", r"\1", text)
     text = re.sub(r"^#{1,6}\s*", "", text, flags=re.M)
+    # Escapes may have protected markers inside emphasis; unescape again after strip.
+    text = unescape_markdown(text)
     return text
 
 

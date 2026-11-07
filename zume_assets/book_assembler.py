@@ -14,8 +14,19 @@ from .api import (
     fetch_script_by_video,
     load_repo_root,
 )
-from .html_text import html_to_text, paragraphs
+from .html_text import html_to_text, paragraphs, strip_markdown, unescape_markdown
 from .qr import activity_url, checkin_url, make_qr_png, video_url
+
+
+def _sanitize_plain(value: Any) -> Any:
+    """Drop Markdown backslash escapes from every string that lands in Typst."""
+    if isinstance(value, str):
+        return unescape_markdown(value)
+    if isinstance(value, list):
+        return [_sanitize_plain(v) for v in value]
+    if isinstance(value, dict):
+        return {k: _sanitize_plain(v) for k, v in value.items()}
+    return value
 
 UI_PREFIX = {
     "10": "s1",
@@ -163,17 +174,17 @@ def center_paragraphs(ui: dict[str, str], prefix: str, content_key: str) -> tupl
     if numbered:
         # first item often title-like short heading
         if len(numbered[0].split()) <= 6 and len(numbered) > 1:
-            title = numbered[0]
-            paras = numbered[1:]
+            title = strip_markdown(numbered[0])
+            paras = [strip_markdown(p) for p in numbered[1:]]
         else:
-            paras = numbered
+            paras = [strip_markdown(p) for p in numbered]
         # also pick up .list.*
         list_items = ui_list(ui, f"{base}.list.")
-        paras.extend(list_items)
+        paras.extend(strip_markdown(p) for p in list_items)
         return title, paras
     single = ui_get(ui, base)
     if single:
-        return None, [single]
+        return None, [strip_markdown(single)]
     return None, []
 
 
@@ -476,22 +487,24 @@ def assemble_book(
             build_dir / "cache" / "activities.json",
         )
 
-    book = {
-        "lang": lang,
-        "type": course_type,
-        "title": "Zúme Training",
-        "subtitle": COURSE_LABELS[course_type],
-        "version_label": f"v6.0 - {course_type}",
-        "site": SITE_BASE,
-        "direction": "ltr",
-        "output_name": OUTPUT_NAMES[course_type].format(lang=lang),
-        "sessions": sessions_out,
-        "meta": {
-            "source": "live api.zume.training + manifest/ten_session.json",
-            "presenter_locale": presenter.get("locale"),
-            "session_count": len(sessions_out),
-            "block_count": sum(len(s["blocks"]) for s in sessions_out),
-        },
-    }
+    book = _sanitize_plain(
+        {
+            "lang": lang,
+            "type": course_type,
+            "title": "Zúme Training",
+            "subtitle": COURSE_LABELS[course_type],
+            "version_label": f"v6.0 - {course_type}",
+            "site": SITE_BASE,
+            "direction": "ltr",
+            "output_name": OUTPUT_NAMES[course_type].format(lang=lang),
+            "sessions": sessions_out,
+            "meta": {
+                "source": "live api.zume.training + manifest/ten_session.json",
+                "presenter_locale": presenter.get("locale"),
+                "session_count": len(sessions_out),
+                "block_count": sum(len(s["blocks"]) for s in sessions_out),
+            },
+        }
+    )
     cache_json(book, build_dir / "book.json")
     return book
