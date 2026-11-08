@@ -46,6 +46,76 @@ OUTPUT_NAMES = {
     "intensive": "Zume-Training-Intensive-{lang}.pdf",
 }
 
+# Map zume site/API locale codes → Typst ISO 639 lang (+ optional region).
+_TYPST_LANG_MAP: dict[str, tuple[str, str | None]] = {
+    "zhtw": ("zh", "TW"),
+    "zh-tw": ("zh", "TW"),
+    "zh_tw": ("zh", "TW"),
+    "cntw": ("zh", "TW"),
+    "zhcn": ("zh", "CN"),
+    "zh-cn": ("zh", "CN"),
+    "zhhk": ("zh", "HK"),
+    "zh-hk": ("zh", "HK"),
+    "zh": ("zh", None),
+    "ar_jo": ("ar", "JO"),
+    "ar_tn": ("ar", "TN"),
+    "pa_pk": ("pa", "PK"),
+}
+
+
+def _typst_lang_region(lang: str) -> tuple[str, str | None]:
+    key = (lang or "en").strip().lower().replace(" ", "")
+    if key in _TYPST_LANG_MAP:
+        return _TYPST_LANG_MAP[key]
+    # Already ISO-ish (en, de, ar, …) — Typst accepts 2–3 letter codes.
+    if 2 <= len(key) <= 3 and key.isalpha():
+        return key, None
+    return "en", None
+
+
+def _listof100_worksheet_title(presenter: dict[str, Any], activity: dict[str, Any]) -> str:
+    """Short localized 'List of 100' heading for the printable worksheet."""
+    videos = presenter.get("videos") or {}
+    video_title = str((videos.get("8") or videos.get(8) or {}).get("title") or "")
+    for sep in ("──", "–", "—", " - ", "-"):
+        if sep in video_title:
+            short = video_title.split(sep)[-1].strip().strip("「」『』\"“”«»")
+            if short:
+                return short
+    # Fall back to activity title (e.g. «قائمة المئة» / 「百人關注名單」).
+    title = str(activity.get("title") or "")
+    for left, right in (("「", "」"), ("『", "』"), ("“", "”"), ("«", "»"), ('"', '"')):
+        if left in title and right in title:
+            inner = title.split(left, 1)[1].split(right, 1)[0].strip()
+            if inner:
+                return inner
+    return title or "List of 100"
+
+
+def _listof100_mark_labels(instruction: str) -> list[str]:
+    """Parse Disciple / Unbeliever / Unknown labels from the localized mark instruction."""
+    defaults = ["Disciple", "Unbeliever", "Unknown"]
+    text = (instruction or "").strip()
+    if not text:
+        return defaults
+    if "：" in text:
+        tail = text.rsplit("：", 1)[-1]
+    elif ":" in text:
+        tail = text.rsplit(":", 1)[-1]
+    else:
+        tail = text
+    tail = tail.strip().rstrip(".。")
+    for sep in ("، أو ", " أو ", ", or ", " or ", "、", "或", "، ", ", "):
+        tail = tail.replace(sep, "|")
+    parts = [p.strip().strip("«»\"“”「」") for p in tail.split("|") if p.strip()]
+    if len(parts) >= 3:
+        parts = parts[:3]
+        # Title-case Latin labels (instruction text is often lowercase).
+        if all(p.isascii() for p in parts):
+            parts = [p[:1].upper() + p[1:] for p in parts]
+        return parts
+    return defaults
+
 
 def _repo() -> Path:
     return load_repo_root()
@@ -158,6 +228,8 @@ def overview_block(
         tools_intro = ui_get(ui, "instruction.tools_intro")
 
     # Some sessions are tool-practice only (no concepts)
+    overview_label = ui_get(ui, "label.overview", default="OVERVIEW")
+
     if not concepts and tools:
         if len(tools) == 1:
             concepts_intro = ui_get(ui, "instruction.tool_session_intro", "instruction.tool_practice_session_intro")
@@ -165,6 +237,7 @@ def overview_block(
             concepts_intro = ui_get(ui, "instruction.tools_session_intro")
         return {
             "kind": "overview",
+            "label": overview_label,
             "duration": format_duration(duration),
             "concepts_intro": concepts_intro,
             "concepts": tools,
@@ -174,6 +247,7 @@ def overview_block(
 
     return {
         "kind": "overview",
+        "label": overview_label,
         "duration": format_duration(duration),
         "concepts_intro": concepts_intro if concepts else "",
         "concepts": concepts,
@@ -238,7 +312,8 @@ def assemble_session_blocks(
             blocks.append(
                 {
                     "kind": "break",
-                    "label": ui_get(ui, "label.break", default="BREAK"),
+                    # API key is label.take_a_break (label.break is absent).
+                    "label": ui_get(ui, "label.take_a_break", "label.break", default="BREAK"),
                     "paragraphs": [
                         ui_get(
                             ui,
@@ -312,15 +387,18 @@ def assemble_session_blocks(
             body = paragraphs(script.get("content") or "")
             qr_target = video_url(video_key, locale=locale)
             qr = ensure_qr(build_dir, f"video-{video_key}", qr_target)
+            # Workbook chrome historically said "READ"; zume6 UI has no label.read —
+            # only label.watch (the slide type being collapsed). Use that so locales translate.
+            watch_label = ui_get(ui, "label.watch", default="READ")
             blocks.append(
                 {
                     "kind": "read",
-                    "label": "READ",
+                    "label": watch_label,
                     "duration": format_duration(duration if duration and duration <= 10 else 5),
                     "title": title,
                     "paragraphs": body,
                     "qr": qr,
-                    "qr_caption": f"Watch: {title}",
+                    "qr_caption": f"{watch_label}: {title}",
                     "qr_url": qr_target,
                     "video_key": video_key,
                 }
@@ -375,6 +453,22 @@ def assemble_session_blocks(
             if activity_key == "listof100":
                 block["worksheet"] = "listof100"
                 block["worksheet_count"] = 100
+                # Typst worksheet heading was hard-coded "List of 100"; prefer the
+                # short tool name from video 8, else the localized activity title.
+                block["worksheet_title"] = _listof100_worksheet_title(presenter, activity)
+                # Session UI instruction.2 is the "mark disciple / unbeliever / unknown" line.
+                mark_src = instructions[2] if len(instructions) > 2 else (
+                    next(
+                        (
+                            s
+                            for s in instructions
+                            if "disciple" in s.lower() or "تلميذ" in s or "門徒" in s
+                        ),
+                        instructions[-1] if instructions else "",
+                    )
+                )
+                block["worksheet_hint"] = mark_src or "Write names below. Mark Disciple / Unbeliever / Unknown."
+                block["worksheet_marks"] = _listof100_mark_labels(mark_src)
             blocks.append(block)
             continue
 
@@ -471,6 +565,13 @@ def assemble_book(
     script_cache: dict[str, dict[str, Any] | None] = {}
     activity_cache: dict[str, dict[str, Any] | None] = {}
     locale = str(presenter.get("locale") or lang or "en")
+    # Known RTL locale codes on zume6 (site display_code). Typst mirrors the
+    # two-column guidebook chrome when direction is rtl (QR/rail on the right).
+    rtl_locales = {"ar", "ar_jo", "ar_tn", "fa", "ur", "ps", "pus", "he", "ckb", "ku"}
+    text_direction = "rtl" if locale.lower() in rtl_locales or lang.lower() in rtl_locales else "ltr"
+    # Typst #set text(lang: …) requires ISO 639-1/2/3; zume site codes like
+    # zhtw/zhcn are not valid. Keep book.lang as the site/API code for QR + filenames.
+    typst_lang, typst_region = _typst_lang_region(lang)
 
     sessions_out: list[dict[str, Any]] = []
     for session in sessions_manifest:
@@ -527,12 +628,14 @@ def assemble_book(
     book = _sanitize_plain(
         {
             "lang": lang,
+            "typst_lang": typst_lang,
+            "typst_region": typst_region,
             "type": course_type,
             "title": "Zúme Training",
             "subtitle": COURSE_LABELS[course_type],
             "version_label": f"v6.0 - {course_type}",
             "site": SITE_BASE,
-            "direction": "ltr",
+            "direction": text_direction,
             "output_name": OUTPUT_NAMES[course_type].format(lang=lang),
             "sessions": sessions_out,
             "meta": {

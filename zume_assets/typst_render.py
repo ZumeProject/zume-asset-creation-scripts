@@ -18,24 +18,48 @@ def find_typst() -> str:
     return path
 
 
-def preferred_font() -> str:
-    """Pick a widely available sans font on Linux."""
-    candidates = [
-        "Liberation Sans",
-        "DejaVu Sans",
-        "Noto Sans",
-        "FreeSans",
-        "Arial",
-    ]
+# Latin body first; script fallbacks cover Arabic / CJK when Liberation lacks glyphs.
+_LATIN_SANS = (
+    "Liberation Sans",
+    "DejaVu Sans",
+    "Noto Sans",
+    "FreeSans",
+    "Arial",
+)
+_SCRIPT_FALLBACKS = (
+    "Noto Sans Arabic",
+    "Noto Naskh Arabic",
+    "WenQuanYi Micro Hei",
+    "Noto Sans CJK TC",
+    "Noto Sans CJK SC",
+)
+
+
+def preferred_font_stack() -> list[str]:
+    """Ordered Typst font stack: Latin sans + available script fallbacks."""
     try:
         out = subprocess.check_output([find_typst(), "fonts"], text=True, stderr=subprocess.DEVNULL)
+        available = set(line.strip() for line in out.splitlines() if line.strip())
     except Exception:
-        return candidates[0]
-    available = set(line.strip() for line in out.splitlines() if line.strip())
-    for name in candidates:
-        if name in available:
-            return name
-    return candidates[0]
+        available = set()
+
+    stack: list[str] = []
+    for name in _LATIN_SANS:
+        if not available or name in available:
+            stack.append(name)
+            break
+    if not stack:
+        stack.append(_LATIN_SANS[0])
+    for name in _SCRIPT_FALLBACKS:
+        if not available or name in available:
+            if name not in stack:
+                stack.append(name)
+    return stack
+
+
+def preferred_font() -> str:
+    """Primary Latin sans (kept for callers that want a single name)."""
+    return preferred_font_stack()[0]
 
 
 def prepare_build_dir(build_dir: Path, book: dict) -> Path:
@@ -46,8 +70,9 @@ def prepare_build_dir(build_dir: Path, book: dict) -> Path:
     build_dir.mkdir(parents=True, exist_ok=True)
     typ_path = build_dir / "book.typ"
     text = template_src.read_text(encoding="utf-8")
-    font = preferred_font()
-    text = text.replace('font: "Liberation Sans"', f'font: "{font}"')
+    stack = preferred_font_stack()
+    font_expr = "(" + ", ".join(f'"{name}"' for name in stack) + ")"
+    text = text.replace('font: ("Liberation Sans",)', f"font: {font_expr}")
     typ_path.write_text(text, encoding="utf-8")
 
     for name in ("cover-10.png", "zume-logo.png"):
