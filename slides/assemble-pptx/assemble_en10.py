@@ -43,25 +43,46 @@ def load_manifest(pack: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+# Known thought-video keys the Mac capture pack sometimes marks kind=image
+# (type=video) without video_key/mp4. From ten_session.json / parts/10.json.
+THOUGHT_VIDEO_KEY_TO_ID: dict[str, str] = {
+    "t10_e": "10",
+    "t10_g": "33",
+}
+
+
 def normalize_manifest(manifest: dict[str, Any]) -> dict[str, Any]:
     """Normalize Mac or legacy manifest shapes into a common structure."""
     slides_in = list(manifest.get("slides") or [])
     slides: list[dict[str, Any]] = []
     for s in slides_in:
+        key = str(s.get("key") or "")
+        slide_type = s.get("type")
         kind = s.get("kind")
-        if not kind:
-            kind = "video" if s.get("type") == "video" and s.get("mp4") else "image"
         video_id = s.get("video_id") or s.get("video_key")
+        # Treat presenter "video" thoughts as embeds even if capture kind=image
+        if slide_type == "video" or key in THOUGHT_VIDEO_KEY_TO_ID:
+            kind = "video"
+        if not kind:
+            kind = "video" if slide_type == "video" else "image"
+        if not video_id and key in THOUGHT_VIDEO_KEY_TO_ID:
+            video_id = THOUGHT_VIDEO_KEY_TO_ID[key]
         if kind == "video" and not video_id and s.get("mp4"):
             video_id = Path(str(s["mp4"])).stem
+        # Derive t{N}_b → N when still missing
+        if kind == "video" and not video_id and key.startswith("t") and key.endswith("_b"):
+            mid = key[1:-2]
+            if mid.isdigit():
+                video_id = mid
         png = s.get("png") or ""
-        # Mac worker stores bare filenames; keep as-is (resolved later under pngs/)
+        mp4 = s.get("mp4") or (f"{video_id}.mp4" if video_id else None)
         slides.append(
             {
                 **s,
                 "kind": kind,
                 "video_id": str(video_id) if video_id else None,
                 "png": png,
+                "mp4": mp4,
             }
         )
     video_slots = [s for s in slides if s.get("kind") == "video"]
