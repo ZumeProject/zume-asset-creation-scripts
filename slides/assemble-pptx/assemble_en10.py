@@ -127,13 +127,20 @@ def make_placeholder_png(
     session: int,
     size: tuple[int, int] = PNG_PX,
 ) -> Path:
+    """Write a compact 16:9 placeholder (palette PNG) labeled with slide identity.
+
+    Full 3692×2068 RGB placeholders balloon partial decks past store size
+    limits; palette + optimize keeps smoke PPTXs small while preserving aspect.
+    """
     dest.parent.mkdir(parents=True, exist_ok=True)
-    img = Image.new("RGB", size, color=(32, 48, 72))
-    draw = ImageDraw.Draw(img)
+    # Draw at modest res then scale up for correct aspect without huge files
+    sketch = Image.new("RGB", (640, 360), color=(32, 48, 72))
+    draw = ImageDraw.Draw(sketch)
     label = f"PLACEHOLDER  #{index}  s{session}/{key}"
-    draw.rectangle([(40, 40), (size[0] - 40, size[1] - 40)], outline=(220, 220, 220), width=8)
-    draw.text((80, size[1] // 2 - 20), label, fill=(240, 240, 240))
-    img.save(dest, format="PNG")
+    draw.rectangle([(8, 8), (632, 352)], outline=(220, 220, 220), width=3)
+    draw.text((16, 170), label[:60], fill=(240, 240, 240))
+    img = sketch.resize(size, Image.Resampling.NEAREST).convert("P", palette=Image.Palette.ADAPTIVE)
+    img.save(dest, format="PNG", optimize=True)
     return dest
 
 
@@ -246,7 +253,9 @@ def build_pptx(
 
         if s.get("kind") == "video":
             vid = str(s.get("video_id") or "")
-            mp4 = videos.get(vid) or find_local_mp4(pack, Path("."), s)
+            mp4 = videos.get(vid)
+            if mp4 is None and not skip_missing_videos:
+                mp4 = find_local_mp4(pack, Path("."), s)
             if mp4 and mp4.exists() and mp4.stat().st_size > MIN_MP4_BYTES:
                 slide.shapes.add_movie(
                     str(mp4),
