@@ -14,14 +14,21 @@ from .api import (
     fetch_script_by_video,
     load_repo_root,
 )
-from .html_text import html_to_text, paragraphs, strip_markdown, unescape_markdown
+from .html_text import (
+    fix_zume_brand_spacing,
+    html_to_text,
+    paragraphs,
+    strip_markdown,
+    unescape_markdown,
+)
+from .images import ensure_image, resolve_image_key, resolve_paragraph_items
 from .qr import activity_url, checkin_url, make_qr_png, video_url
 
 
 def _sanitize_plain(value: Any) -> Any:
-    """Drop Markdown backslash escapes from every string that lands in Typst."""
+    """Drop Markdown escapes and fix Zúme brand gaps in every Typst string."""
     if isinstance(value, str):
-        return unescape_markdown(value)
+        return fix_zume_brand_spacing(unescape_markdown(value))
     if isinstance(value, list):
         return [_sanitize_plain(v) for v in value]
     if isinstance(value, dict):
@@ -384,7 +391,11 @@ def assemble_session_blocks(
                 script_cache[video_key] = fetch_script_by_video(video_key, presenter.get("locale") or "en")
             script = script_cache[video_key] or {}
             title = (videos.get(video_key) or {}).get("title") or concept_title(presenter, video_key)
-            body = paragraphs(script.get("content") or "")
+            body = resolve_paragraph_items(
+                paragraphs(script.get("content") or ""),
+                presenter.get("images") or {},
+                build_dir,
+            )
             qr_target = video_url(video_key, locale=locale)
             qr = ensure_qr(build_dir, f"video-{video_key}", qr_target)
             # Workbook chrome historically said "READ"; zume6 UI has no label.read —
@@ -444,7 +455,11 @@ def assemble_session_blocks(
                 "duration": format_duration(duration),
                 "title": body_title,
                 "instructions": instructions,
-                "paragraphs": paragraphs(activity_body),
+                "paragraphs": resolve_paragraph_items(
+                    paragraphs(activity_body),
+                    presenter.get("images") or {},
+                    build_dir,
+                ),
                 "qr": qr,
                 "qr_caption": body_title,
                 "qr_url": qr_target,
@@ -489,14 +504,29 @@ def assemble_session_blocks(
             content_key = str(slide.get("contentKey") or "")
             title = ui_get(ui, f"{prefix}.left_image.{content_key}.title", default=content_key)
             activity_key = slide.get("activityKey")
+            image_key = resolve_image_key(
+                content_key=content_key or None,
+                activity_key=str(activity_key) if activity_key else None,
+            )
+            image_item = (
+                ensure_image(build_dir, image_key, presenter.get("images") or {})
+                if image_key
+                else None
+            )
             block = {
                 "kind": "image_note",
                 "title": title,
-                "paragraphs": [
-                    f"(See the {title} diagram in the online workbook or activity resource.)"
-                ],
+                "paragraphs": [],
                 "content_key": content_key,
             }
+            if image_item:
+                block["image"] = image_item["image"]
+                block["image_alt"] = image_item.get("alt") or title
+            else:
+                # Fallback only when the presenter has no matching asset.
+                block["paragraphs"] = [
+                    f"(See the {title} diagram in the online workbook or activity resource.)"
+                ]
             if activity_key:
                 qr_target = activity_url(str(activity_key), locale=locale)
                 qr = ensure_qr(build_dir, f"activity-{activity_key}", qr_target)
