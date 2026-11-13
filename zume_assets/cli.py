@@ -42,7 +42,7 @@ def main(argv: list[str] | None = None) -> int:
     build.add_argument(
         "--targets",
         default="pdf",
-        help="Comma-separated targets (Phase 1 supports: pdf)",
+        help="Comma-separated targets (only pdf is implemented)",
     )
     build.add_argument(
         "--output",
