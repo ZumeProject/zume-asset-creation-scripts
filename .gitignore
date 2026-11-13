@@ -4,9 +4,6 @@ slide-builder/output/
 slide-builder/ar/
 slide-builder/pa/
 slide-builder/zhhk/
-pdf-numbering/unnumbered/
-pdf-numbering/numbered/
-pdf-creator/output/
 output/
 reference/**/*.pdf
 reference/**/*.pptx
@@ -27,6 +24,9 @@ slide-builder/.env
 __pycache__/
 *.py[cod]
 *$py.class
+.pytest_cache/
+.ruff_cache/
+.venv/
 
 # Distribution / packaging
 dist/
@@ -38,6 +38,7 @@ build/
 Thumbs.db
 
 # IDE specific files
+.cursor/
 .idea/
 .vscode/
 *.swp
