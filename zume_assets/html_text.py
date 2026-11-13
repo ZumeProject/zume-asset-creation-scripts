@@ -5,6 +5,16 @@ from __future__ import annotations
 import re
 from html.parser import HTMLParser
 
+# Live scripts sometimes ship "Z ÚME" (space before accented Ú) instead of "ZÚME".
+_ZUME_BRAND_GAP = re.compile(r"Z[\s\u00A0\u2000-\u200B\u202F]+([Úú])")
+
+
+def fix_zume_brand_spacing(text: str) -> str:
+    """Collapse a spurious gap between Z and ú/Ú in the Zúme brand."""
+    if not text or "Z" not in text:
+        return text
+    return _ZUME_BRAND_GAP.sub(r"Z\1", text)
+
 
 class _TextExtractor(HTMLParser):
     def __init__(self) -> None:
@@ -59,7 +69,7 @@ def unescape_markdown(text: str) -> str:
     text = re.sub(r"\\\s*\n", " ", text)
     # \X → X for Markdown-escapable punctuation (and \\ → \)
     text = re.sub(rf"\\([{_MD_ESCAPABLE}])", r"\1", text)
-    return text
+    return fix_zume_brand_spacing(text)
 
 
 def strip_markdown(text: str) -> str:
@@ -72,7 +82,7 @@ def strip_markdown(text: str) -> str:
     text = re.sub(r"^#{1,6}\s*", "", text, flags=re.M)
     # Escapes may have protected markers inside emphasis; unescape again after strip.
     text = unescape_markdown(text)
-    return text
+    return fix_zume_brand_spacing(text)
 
 
 def paragraphs(text: str | None) -> list[str]:
@@ -84,5 +94,5 @@ def paragraphs(text: str | None) -> list[str]:
     for chunk in chunks:
         line = re.sub(r"\s*\n\s*", " ", chunk).strip()
         if line:
-            out.append(line)
+            out.append(fix_zume_brand_spacing(line))
     return out

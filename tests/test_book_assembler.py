@@ -52,15 +52,49 @@ def _stub_fetches(monkeypatch, locale: str):
                 "label.watch": "READ",
                 "label.checkin": "CHECK-IN",
                 "s1.session.1.title": "Session One",
+                "s1.session.9.left_image.fourfields_example.title": "Four Fields Example",
+                "s1.session.9.left_image.genmapping_example.title": "Generational Mapping Example",
             },
             "videos": {"1": {"title": r"God's Story \- hyphen"}},
             "concepts": {},
+            "images": {
+                "image_fourfields": {
+                    "url": "https://example.test/fourfields.png",
+                    "alt": "Four Fields",
+                },
+                "image_genmap": {
+                    "url": "https://example.test/genmap.png",
+                    "alt": "Generational Mapping",
+                },
+                "image_pace1": {
+                    "url": "https://example.test/pace1.png",
+                    "alt": "Pace 1",
+                },
+            },
         }
+
+    def fake_urlopen(req, timeout=90):
+        class Resp:
+            def read(self):
+                return b"PNGDATA"
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *args):
+                return False
+
+        return Resp()
 
     monkeypatch.setattr("zume_assets.book_assembler.fetch_presenter_content", presenter)
     monkeypatch.setattr(
         "zume_assets.book_assembler.fetch_script_by_video",
-        lambda video_key, language_id="en": {"content": r"Line \- one.\n\n**Bold** line."},
+        lambda video_key, language_id="en": {
+            "content": (
+                "Line \\- one.\n\n**Bold** line.\n\n**Z ÚME COACHING TIP**\n\n"
+                "{{ pace1_image }}\n\nAfter image."
+            )
+        },
     )
     monkeypatch.setattr(
         "zume_assets.book_assembler.fetch_activity",
@@ -69,6 +103,7 @@ def _stub_fetches(monkeypatch, locale: str):
             "content": "<p>Body</p><script>skip()</script>",
         },
     )
+    monkeypatch.setattr("zume_assets.images.urlopen", fake_urlopen)
 
 
 def test_assemble_book_offline(tmp_path, monkeypatch):
@@ -89,10 +124,25 @@ def test_assemble_book_offline(tmp_path, monkeypatch):
     assert (tmp_path / checkins[0]["qr"]).exists()
 
     reads = [b for s in book["sessions"] for b in s["blocks"] if b["kind"] == "read"]
-    assert any("Bold" in " ".join(b["paragraphs"]) for b in reads)
+
+    def _text_bits(paras):
+        return " ".join(p if isinstance(p, str) else "" for p in paras)
+
+    assert any("Bold" in _text_bits(b["paragraphs"]) for b in reads)
+    assert any("ZÚME COACHING TIP" in _text_bits(b["paragraphs"]) for b in reads)
+    assert any(
+        isinstance(p, dict) and str(p.get("image", "")).startswith("images/image_pace1")
+        for b in reads
+        for p in b["paragraphs"]
+    )
+    image_notes = [b for s in book["sessions"] for b in s["blocks"] if b["kind"] == "image_note"]
+    assert any(b.get("image", "").startswith("images/image_fourfields") for b in image_notes)
+    assert any(b.get("image", "").startswith("images/image_genmap") for b in image_notes)
     dumped = json.dumps(book)
     assert r"\-" not in dumped
     assert "skip()" not in dumped
+    assert "{{" not in dumped
+    assert "Z ÚME" not in dumped
 
 
 def test_assemble_book_arabic_is_rtl(tmp_path, monkeypatch):

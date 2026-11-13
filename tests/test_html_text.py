@@ -1,4 +1,20 @@
-from zume_assets.html_text import html_to_text, paragraphs, strip_markdown, unescape_markdown
+from zume_assets.html_text import (
+    fix_zume_brand_spacing,
+    html_to_text,
+    paragraphs,
+    strip_markdown,
+    unescape_markdown,
+)
+
+
+def test_fix_zume_brand_spacing():
+    assert fix_zume_brand_spacing("**Z ÚME COACHING TIP**") == "**ZÚME COACHING TIP**"
+    assert fix_zume_brand_spacing("Zúme coaches") == "Zúme coaches"
+    assert fix_zume_brand_spacing("Z\u00A0úme") == "Zúme"
+    assert paragraphs("**Z ÚME COACHING TIP**\n\nNext.") == [
+        "ZÚME COACHING TIP",
+        "Next.",
+    ]
 
 
 def test_html_to_text_skips_scripts_and_marks_list_items():

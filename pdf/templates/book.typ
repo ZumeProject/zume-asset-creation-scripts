@@ -111,11 +111,30 @@
   v(para-gap)
 }
 
+/// Script/activity body item: plain string or `{image, alt}` from book.json.
+#let content-item(item) = {
+  if type(item) == str {
+    para-block[#item]
+  } else if type(item) == dictionary {
+    let src = item.at("image", default: none)
+    if src != none and src != "" {
+      block(width: 100%, breakable: false)[
+        #align(center)[
+          #image(src, width: 95%)
+        ]
+      ]
+      v(para-gap)
+    } else if item.at("text", default: none) != none {
+      para-block[#item.text]
+    }
+  }
+}
+
 #let paras(items) = {
   if items == none { return }
-  for p in items [
-    #para-block[#p]
-  ]
+  for item in items {
+    content-item(item)
+  }
 }
 
 #let bullets(items) = {
@@ -238,9 +257,9 @@
           #para-block[#text(weight: "bold", size: 9.5pt)[#title]]
         ]
         #if lead-extra != none [#lead-extra]
-        #for p in lead [
-          #para-block[#p]
-        ]
+        #for p in lead {
+          content-item(p)
+        }
       ],
     )
   ]
@@ -253,9 +272,9 @@
       above: 0em,
     )[
       #content-panel[
-        #for p in rest [
-          #para-block[#p]
-        ]
+        #for p in rest {
+          content-item(p)
+        }
         #if rest-extra != none [#rest-extra]
       ]
     ]
@@ -438,12 +457,23 @@
       ]
     ] else if kind == "image_note" [
       #let qr = block-data.at("qr", default: none)
+      #let diagram = block-data.at("image", default: none)
+      #let diagram-body = {
+        if diagram != none and diagram != "" {
+          (
+            (image: diagram, alt: block-data.at("image_alt", default: "")),
+            ..block-data.at("paragraphs", default: ()),
+          )
+        } else {
+          block-data.at("paragraphs", default: ())
+        }
+      }
       #if qr != none [
         #guidebook-section-qr(
           "",
           qr: qr,
           title: block-data.title,
-          paragraphs: block-data.at("paragraphs", default: ()),
+          paragraphs: diagram-body,
           beside-min: 3,
         )
       ] else [
@@ -454,6 +484,9 @@
         )[
           #content-panel[
             #para-block[#text(weight: "bold")[#block-data.title]]
+            #if diagram != none and diagram != "" [
+              #content-item((image: diagram, alt: block-data.at("image_alt", default: "")))
+            ]
             #for p in block-data.at("paragraphs", default: ()) [
               #para-block[#text(style: "italic", fill: muted)[#p]]
             ]
