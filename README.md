@@ -35,6 +35,10 @@ python3 build.py --lang en --type intensive --targets pdf
 python3 -m zume_assets build --lang en --type 10 --targets pdf
 ```
 
+All finished assets land under the repo `output/` tree (for example
+`/Users/chris/Documents/ZUME/zume-asset-creation-scripts-1/output/en/`).
+Do not copy final PDFs/PPTX/Keynote into Agent Store `docs/`.
+
 Output for the 10-session English book:
 
 - `output/en/Zume-Training-10-Session-en.pdf` — reviewable guidebook

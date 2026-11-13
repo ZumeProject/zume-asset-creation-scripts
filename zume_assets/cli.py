@@ -11,14 +11,24 @@ from .book_assembler import OUTPUT_NAMES, assemble_book
 from .typst_render import compile_pdf, prepare_build_dir
 
 
+def default_output_root(root: Path | None = None) -> Path:
+    """Canonical finished-asset root: <repo>/output (never Agent Store docs/)."""
+    return (root or load_repo_root()) / "output"
+
+
+def default_pdf_path(lang: str, course_type: str, root: Path | None = None) -> Path:
+    repo = root or load_repo_root()
+    out_name = OUTPUT_NAMES[course_type].format(lang=lang)
+    return default_output_root(repo) / lang / out_name
+
+
 def build_pdf(lang: str, course_type: str, output: Path | None = None) -> Path:
     root = load_repo_root()
-    build_dir = root / "output" / lang / f"build-{course_type}"
+    build_dir = default_output_root(root) / lang / f"build-{course_type}"
     book = assemble_book(lang=lang, course_type=course_type, build_dir=build_dir)
     prepare_build_dir(build_dir, book)
 
-    out_name = OUTPUT_NAMES[course_type].format(lang=lang)
-    output_pdf = output or (root / "output" / lang / out_name)
+    output_pdf = output or default_pdf_path(lang, course_type, root)
     compile_pdf(build_dir, output_pdf)
     return output_pdf
 
