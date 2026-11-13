@@ -303,17 +303,29 @@
     #let kind = block-data.at("kind")
 
     #if kind == "checkin" [
-      // QR lives in the rail (right for RTL) like READ/ACTIVITY — not inline in body.
-      #guidebook-section-qr(
-        block-data.label,
-        duration: block-data.at("duration", default: none),
-        qr: block-data.at("qr", default: none),
-        paragraphs: (block-data.instruction,),
-        lead-extra: {
-          para-block[#block-data.url_hint #text(weight: "bold")[#block-data.code]]
-        },
-        beside-min: 1,
-      )
+      // Presenter order in the body column: instruction, QR, then the URL and code.
+      // The rail keeps only the section label and duration.
+      #dashed-rule()
+      #block(breakable: false, sticky: true, width: 100%, below: 0.35em)[
+        #section-columns(
+          block(width: 100%)[
+            #sidebar-label-only(
+              block-data.label,
+              duration: block-data.at("duration", default: none),
+            )
+          ],
+          content-panel[
+            #para-block[#block-data.instruction]
+            #if block-data.at("qr", default: none) != none and block-data.qr != "" [
+              #align(if is-rtl { right } else { left })[
+                #image(block-data.qr, width: qr-size)
+              ]
+              #v(para-gap)
+            ]
+            #para-block[#block-data.url_hint #text(weight: "bold")[#block-data.code]]
+          ],
+        )
+      ]
     ] else if kind == "break" [
       #guidebook-section(block-data.label)[
         #paras(block-data.at("paragraphs", default: ()))
