@@ -49,9 +49,9 @@ class ManifestContractTests(unittest.TestCase):
 
     def test_video_slots_near_reference(self) -> None:
         slots = self.manifest["video_slots"]
-        # Reference PPSX has 28; Mac pack currently emits 27 kind=video
+        # Reference PPSX has 28; normalize also embeds t10_e/t10_g thoughts
         self.assertGreaterEqual(len(slots), 27)
-        self.assertLessEqual(len(slots), 28)
+        self.assertLessEqual(len(slots), 29)
         keys = [s["key"] for s in slots]
         self.assertEqual(keys[0], "t1_b")
         self.assertEqual(keys[-1], "t30_b")

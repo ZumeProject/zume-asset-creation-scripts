@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
-import os
 from pathlib import Path
 
 from playwright.sync_api import sync_playwright
