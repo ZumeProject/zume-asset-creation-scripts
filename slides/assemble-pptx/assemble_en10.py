@@ -28,9 +28,13 @@ SLIDE_WIDTH = Inches(26.666666666666668)
 SLIDE_HEIGHT = Inches(15.0)
 PNG_PX = (3692, 2068)
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PACK = Path(
     "/cursor/stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/media/en-10-presenter-captures"
 )
+# Finished decks always land under the repo checkout, never Agent Store docs/.
+DEFAULT_VIDEOS = REPO_ROOT / "output" / "en" / "videos"
+DEFAULT_OUTPUT = REPO_ROOT / "output" / "en" / "Zume-Training-10-Session-en.pptx"
 GCS_MP4 = "https://storage.googleapis.com/zume-file-mirror/en/{video_id}.mp4"
 MIN_PNG_BYTES = 1000
 MIN_MP4_BYTES = 100_000
@@ -382,18 +386,8 @@ def poll_and_assemble(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--pack", type=Path, default=DEFAULT_PACK)
-    parser.add_argument(
-        "--videos",
-        type=Path,
-        default=Path("/agent/repos/zume-asset-creation-scripts/output/en/videos"),
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=Path(
-            "/cursor/stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/docs/zume-10-session-en.pptx"
-        ),
-    )
+    parser.add_argument("--videos", type=Path, default=DEFAULT_VIDEOS)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--download-videos-only", action="store_true")
     parser.add_argument("--allow-placeholders", action="store_true")
     parser.add_argument("--skip-missing-videos", action="store_true")
