@@ -69,15 +69,16 @@ def normalize_manifest(manifest: dict[str, Any]) -> dict[str, Any]:
             kind = "video"
         if not kind:
             kind = "video" if slide_type == "video" else "image"
-        if not video_id and key in THOUGHT_VIDEO_KEY_TO_ID:
+        # Prefer key-derived ids (signed-off EN10): t20_b→20 even when
+        # session JSON alt_video_id is 19.
+        if key in THOUGHT_VIDEO_KEY_TO_ID:
             video_id = THOUGHT_VIDEO_KEY_TO_ID[key]
-        if kind == "video" and not video_id and s.get("mp4"):
-            video_id = Path(str(s["mp4"])).stem
-        # Derive t{N}_b → N when still missing
-        if kind == "video" and not video_id and key.startswith("t") and key.endswith("_b"):
+        elif kind == "video" and key.startswith("t") and key.endswith("_b"):
             mid = key[1:-2]
             if mid.isdigit():
                 video_id = mid
+        if kind == "video" and not video_id and s.get("mp4"):
+            video_id = Path(str(s["mp4"])).stem
         png = s.get("png") or ""
         mp4 = s.get("mp4") or (f"{video_id}.mp4" if video_id else None)
         slides.append(
