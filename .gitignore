@@ -5,6 +5,7 @@ slide-builder/ar/
 slide-builder/pa/
 slide-builder/zhhk/
 output/
+.worktrees/
 reference/**/*.pdf
 reference/**/*.pptx
 reference/**/*.ppsx

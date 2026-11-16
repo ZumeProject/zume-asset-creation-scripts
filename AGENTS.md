@@ -19,11 +19,17 @@ Requires Python 3.10+ and the [Typst](https://github.com/typst/typst/releases) C
 
 Content comes from `https://api.zume.training/api/v1`. QR payloads use `https://zume.training/app/qr/?l={locale}&{c|v|a}={id}`.
 
-Finished assets always land under the repo checkout:
+## Workspace paths
 
-`/Users/chris/Documents/ZUME/zume-asset-creation-scripts-1/output/{lang}/`
+Keep all work inside the active repo checkout. Do not create sibling folders under `~/Documents/ZUME/` (or elsewhere) for outputs, capture packs, worktrees, or scratch.
 
-Language subdirs are fine (`output/en/…`). Comparison downloads go in `reference/`. Both are gitignored. Do not commit PDFs.
+Canonical deliverable path:
+
+`<repo>/output/{lang}/`
+
+Language subdirs are fine (`output/en/…`). Comparison downloads go in `<repo>/reference/`. Both are gitignored. Do not commit PDFs.
+
+If a git worktree is needed, create it only as `<repo>/.worktrees/<name>` (gitignored). Never use `../<repo>-wt-*` or any other path next to the checkout.
 
 Do **not** write finished PDFs, PPTX, or Keynote files into Agent Store `docs/` (or any other store path). Store may keep `internal/` notes and short `FULL-PATH` / `OUTPUT-PATH.txt` pointers that point at the local `output/` tree.
 
@@ -31,6 +37,7 @@ Do **not** write finished PDFs, PPTX, or Keynote files into Agent Store `docs/` 
 
 - Do not publish to GCS or change downloads rows. `publish/` is a placeholder and stays unused until English PDFs are signed off.
 - Do not copy or save final deliverables into Agent Store `docs/` (use repo `output/` only).
+- Do not create output, worktree, or capture-pack directories outside the active repo root.
 - Do not add PowerPoint or Keynote targets. `slides/capture`, `slides/assemble-pptx`, and `slides/assemble-keynote` are placeholders. The CLI must keep rejecting `pptx` and `keynote`.
 - Do not bring back a Playwright or Chromium PDF printer. The old zume5 `/book/generator` path was removed.
 - Do not page-stamp PDFs with PyPDF or ReportLab. Typst owns guidebook layout.
