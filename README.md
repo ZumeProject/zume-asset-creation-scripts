@@ -36,7 +36,7 @@ python3 -m zume_assets build --lang en --type 10 --targets pdf
 ```
 
 All finished assets land under the repo `output/` tree (for example
-`/Users/chris/Documents/ZUME/zume-asset-creation-scripts-1/output/en/`).
+`<repo>/output/en/`). See [AGENTS.md](AGENTS.md) for workspace path rules.
 Do not copy final PDFs/PPTX/Keynote into Agent Store `docs/`.
 
 Output for the 10-session English book:
