@@ -11,15 +11,24 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import sys
 import time
 import zipfile
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import keynote_health as kh  # noqa: E402
 
 STORE = Path(
     "/Users/chris/Library/Application Support/Cursor/AgentStores/"
     "cursor_agent_stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/files"
 )
-MAIN_OUT = Path("/Users/chris/Documents/ZUME/zume-asset-creation-scripts-1/output")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+MAIN_OUT = REPO_ROOT / "output"
+VIDEO_ICON = REPO_ROOT / "slides" / "assets" / "video-play-icon.png"
+VIDEO_ICON_X = 211
+VIDEO_ICON_Y = 5
+VIDEO_ICON_SIZE = 113
 
 COURSE = {
     "10": {"stem": "Zume-Training-10-Session-{lang}", "expected_slides": 189},
@@ -41,18 +50,7 @@ def log(path: Path, msg: str) -> None:
 
 
 def run_osascript(script: str, timeout: int = 180) -> tuple[int, str, str]:
-    try:
-        r = subprocess.run(
-            ["osascript"],
-            input=script,
-            text=True,
-            capture_output=True,
-            timeout=timeout,
-        )
-        return r.returncode, (r.stdout or "").strip(), (r.stderr or "").strip()
-    except subprocess.TimeoutExpired:
-        subprocess.run(["pkill", "-f", "osascript"], check=False)
-        return 124, "", "TIMEOUT"
+    return kh.run_osascript(script, timeout=timeout)
 
 
 def dismiss_ui() -> None:
@@ -280,6 +278,11 @@ tell application "Keynote"
     try
       set movie volume of m to 100
     end try
+    -- Restore upper-left video/thumbnail chrome (legacy copy-paste icon).
+    set img to make new image with properties {{file:POSIX file "{VIDEO_ICON}"}}
+    set position of img to {{{VIDEO_ICON_X}, {VIDEO_ICON_Y}}}
+    set width of img to {VIDEO_ICON_SIZE}
+    set height of img to {VIDEO_ICON_SIZE}
     return (count of movies) as text
   end tell
 end tell
@@ -380,10 +383,36 @@ def main() -> int:
     if len(videos) != 29:
         log(logf, f"warn expected 29 videos got {len(videos)}")
 
+    if not VIDEO_ICON.exists():
+        raise SystemExit(f"missing video icon asset: {VIDEO_ICON}")
+
+    def _log(msg: str) -> None:
+        log(logf, msg)
+
+    health = kh.ensure_healthy(log=_log)
+    if not health.ok:
+        raise SystemExit(f"Keynote unhealthy before embed: {health.detail}")
+
     doc_name = with_videos.stem
     open_doc(with_videos, expected, doc_name, logf)
     failures: list[int] = []
     for i, item in enumerate(videos, start=1):
+        # Periodic health ping — recover instead of hammering a stuck app.
+        if i == 1 or i % 4 == 0:
+            ping = kh.ping(timeout=12)
+            if not ping.ok:
+                _log(f"health fail at slide loop i={i}: {ping.detail}")
+                try:
+                    save_doc(with_videos, doc_name, expected, logf)
+                except Exception as exc:  # noqa: BLE001
+                    _log(f"save before recovery failed: {exc}")
+                recovered = kh.ensure_healthy(log=_log, max_restarts=2)
+                if not recovered.ok:
+                    failures.append(int(item["index"]))
+                    _log("aborting embed loop; Keynote still unhealthy")
+                    break
+                open_doc(with_videos, expected, doc_name, logf)
+
         idx = int(item["index"])
         mp4 = Path(item["path"])
         if not mp4.exists() or mp4.stat().st_size < 1000:
@@ -398,6 +427,8 @@ def main() -> int:
                 f"skip slide={idx} already movies={existing} "
                 f"pkg={'yes' if mp4.name.split('.')[0] in pkg_bases else 'no'}",
             )
+            # Still ensure upper-left chrome exists on already-embedded slides.
+            # embed_one sizes+icons new inserts; skipped slides get icon via overlay path.
         else:
             ok = embed_one(
                 doc=with_videos,
@@ -410,6 +441,11 @@ def main() -> int:
             if not ok:
                 time.sleep(1)
                 dismiss_ui()
+                ping = kh.ping(timeout=10)
+                if not ping.ok:
+                    _log(f"embed retry after health recovery slide={idx}")
+                    kh.ensure_healthy(log=_log, max_restarts=1)
+                    open_doc(with_videos, expected, doc_name, logf)
                 ok = embed_one(
                     doc=with_videos,
                     doc_name=doc_name,
@@ -427,10 +463,32 @@ def main() -> int:
                 f"hb done={i}/{len(videos)} fails={failures} "
                 f"ts={time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())}",
             )
+            time.sleep(0.8)  # gentle pacing
 
     save_doc(with_videos, doc_name, expected, logf)
     pkg = len(package_mp4_names(with_videos))
     log(logf, f"FINAL package_mp4={pkg} failures={failures} out={with_videos}")
+    # Always run icon overlay so skipped-already-embedded slides get chrome too.
+    try:
+        from overlay_video_icons import main as overlay_main
+
+        overlay_rc = overlay_main(
+            [
+                "--type",
+                args.type,
+                "--lang",
+                lang,
+                "--doc",
+                str(with_videos),
+            ]
+        )
+        log(logf, f"overlay_video_icons rc={overlay_rc}")
+        if overlay_rc != 0 and not failures:
+            return 2
+    except Exception as exc:  # noqa: BLE001
+        log(logf, f"overlay_video_icons error: {exc}")
+        if not failures:
+            return 2
     if args.promote and not failures and pkg >= len(videos):
         dest = MAIN_OUT / lang / f"{stem}.key"
         dest.parent.mkdir(parents=True, exist_ok=True)

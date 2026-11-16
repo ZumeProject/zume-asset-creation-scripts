@@ -12,6 +12,7 @@ from assemble_en10 import (
     PNG_PX,
     SLIDE_HEIGHT,
     SLIDE_WIDTH,
+    VIDEO_ICON_PATH,
     build_pptx,
     count_present_pngs,
     make_placeholder_png,
@@ -19,11 +20,18 @@ from assemble_en10 import (
     pack_ready,
     resolve_slide_image,
     slide_png_path,
+    video_icon_box,
 )
 
 STORE_PACK = Path(
-    "/cursor/stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/media/en-10-presenter-captures"
+    "/Users/chris/Library/Application Support/Cursor/AgentStores/"
+    "cursor_agent_stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/files/"
+    "media/en-10-presenter-captures"
 )
+if not STORE_PACK.exists():
+    STORE_PACK = Path(
+        "/cursor/stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/media/en-10-presenter-captures"
+    )
 STORE_MANIFEST = STORE_PACK / "manifest.json"
 
 
@@ -139,8 +147,15 @@ class AssemblerUnitTests(unittest.TestCase):
             self.assertEqual(stats["slide_count"], 189)
             self.assertEqual(stats["placeholders"], 189)
             self.assertEqual(stats["video_embedded"], len(self.manifest["video_slots"]))
+            self.assertEqual(stats["video_icons"], len(self.manifest["video_slots"]))
             self.assertEqual(stats["slide_width_emu"], int(SLIDE_WIDTH))
             self.assertEqual(stats["slide_height_emu"], int(SLIDE_HEIGHT))
+            self.assertTrue(VIDEO_ICON_PATH.exists())
+            left, top, width, height = video_icon_box()
+            self.assertGreater(width, 0)
+            self.assertEqual(width, height)
+            self.assertLess(left, int(SLIDE_WIDTH) // 4)
+            self.assertLess(top, int(SLIDE_HEIGHT) // 4)
 
             with zipfile.ZipFile(out) as z:
                 slide_files = [
@@ -161,6 +176,10 @@ class AssemblerUnitTests(unittest.TestCase):
                         if "relationships/video" in z.read(n).decode("utf-8", "ignore"):
                             video_slides += 1
                 self.assertEqual(video_slides, len(self.manifest["video_slots"]))
+                # First video slide (index 6) should keep poster + icon images.
+                rel6 = z.read("ppt/slides/_rels/slide6.xml.rels").decode("utf-8", "ignore")
+                self.assertIn("relationships/video", rel6)
+                self.assertGreaterEqual(rel6.count("relationships/image"), 2)
 
     def test_pack_ready_counts_existing_store_pngs(self) -> None:
         present, total, missing = count_present_pngs(self.manifest, STORE_PACK)
