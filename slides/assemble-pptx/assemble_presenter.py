@@ -54,7 +54,15 @@ PACKS = {
 }
 DEFAULT_VIDEOS = REPO_ROOT / "output" / "en" / "videos"
 EN10_VIDEOS = STORE / "media" / "en-10-presenter-captures" / "videos"
+# Legacy mirror only — canonical EN source is Vimeo folder 21862752.
 GCS_MP4 = "https://storage.googleapis.com/zume-file-mirror/en/{video_id}.mp4"
+
+sys.path.insert(0, str(REPO_ROOT / "slides" / "videos"))
+from vimeo_folder import (  # noqa: E402
+    EN_VIMEO_FOLDER_ID,
+    EN_VIMEO_FOLDER_URL,
+    provenance_matches_folder,
+)
 
 
 def load_manifest(pack: Path) -> dict[str, Any]:
@@ -65,11 +73,21 @@ def load_manifest(pack: Path) -> dict[str, Any]:
 
 
 def seed_videos_from_en10(pack: Path, video_dir: Path) -> None:
-    """Copy shared EN MP4s from the EN10 pack when present."""
+    """Copy shared EN MP4s only when they carry Vimeo folder 21862752 provenance."""
+    if not provenance_matches_folder(video_dir, folder_id=EN_VIMEO_FOLDER_ID):
+        print(
+            f"skip seed: {video_dir} lacks SOURCE.json for folder {EN_VIMEO_FOLDER_ID} "
+            f"({EN_VIMEO_FOLDER_URL})",
+            flush=True,
+        )
+        return
     dest_videos = pack / "videos"
     dest_videos.mkdir(parents=True, exist_ok=True)
     video_dir.mkdir(parents=True, exist_ok=True)
-    sources = [EN10_VIDEOS, video_dir]
+    # Prefer repo output/en/videos (provenanced) over Agent Store cache.
+    sources = [video_dir]
+    if provenance_matches_folder(EN10_VIDEOS, folder_id=EN_VIMEO_FOLDER_ID):
+        sources.append(EN10_VIDEOS)
     for src_root in sources:
         if not src_root.exists():
             continue
@@ -155,14 +173,33 @@ def build_pptx(
     }
 
 
-def download_missing(video_ids: list[str], video_dir: Path) -> None:
+def download_missing(
+    video_ids: list[str],
+    video_dir: Path,
+    *,
+    allow_gcs_fallback: bool = False,
+) -> None:
+    """Fill missing MP4s. Default is no-op without GCS fallback (use Vimeo download)."""
     video_dir.mkdir(parents=True, exist_ok=True)
-    for vid in video_ids:
+    missing = [
+        vid
+        for vid in video_ids
+        if not ((video_dir / f"{vid}.mp4").exists()
+                and (video_dir / f"{vid}.mp4").stat().st_size > MIN_MP4_BYTES)
+    ]
+    if not missing:
+        return
+    if not allow_gcs_fallback:
+        print(
+            f"missing {len(missing)} MP4s under {video_dir}; "
+            f"run slides/videos/download_en_vimeo.py ({EN_VIMEO_FOLDER_URL})",
+            flush=True,
+        )
+        return
+    for vid in missing:
         dest = video_dir / f"{vid}.mp4"
-        if dest.exists() and dest.stat().st_size > MIN_MP4_BYTES:
-            continue
         url = GCS_MP4.format(video_id=vid)
-        print(f"download {url}", flush=True)
+        print(f"download {url} (legacy GCS fallback)", flush=True)
         with requests.get(url, stream=True, timeout=180) as r:
             r.raise_for_status()
             tmp = dest.with_suffix(".partial")
@@ -183,6 +220,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--allow-placeholders", action="store_true")
     parser.add_argument("--skip-missing-videos", action="store_true")
     parser.add_argument("--download-videos-only", action="store_true")
+    parser.add_argument(
+        "--allow-gcs-fallback",
+        action="store_true",
+        help="Legacy: fetch missing MP4s from zume-file-mirror (not canonical EN source)",
+    )
+    parser.add_argument(
+        "--skip-vimeo-provenance-check",
+        action="store_true",
+        help="Skip SOURCE.json folder-21862752 check (tests / emergency only)",
+    )
     args = parser.parse_args(argv)
 
     cfg = PACKS[args.type]
@@ -211,9 +258,16 @@ def main(argv: list[str] | None = None) -> int:
         for s in manifest["video_slots"]
         if s.get("video_id")
     ]
-    download_missing(vids, args.videos)
-    download_missing(vids, pack / "videos")
-    videos = ensure_videos(manifest, args.videos, pack=pack, download=True)
+    download_missing(vids, args.videos, allow_gcs_fallback=args.allow_gcs_fallback)
+    download_missing(vids, pack / "videos", allow_gcs_fallback=args.allow_gcs_fallback)
+    videos = ensure_videos(
+        manifest,
+        args.videos,
+        pack=pack,
+        download=True,
+        allow_gcs_fallback=args.allow_gcs_fallback,
+        require_vimeo_provenance=not args.skip_vimeo_provenance_check,
+    )
     print(f"videos ready: {len(videos)}", flush=True)
     if args.download_videos_only:
         return 0

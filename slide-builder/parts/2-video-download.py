@@ -64,8 +64,11 @@ def load_config(args=None):
 
 
 def load_vimeo_folders():
-    """Load vimeo-folders.json file"""
-    folders_file = Path('../vimeo-folders.json')
+    """Load vimeo-folders.json file (next to this script under parts/)."""
+    folders_file = Path(__file__).resolve().parent / "vimeo-folders.json"
+    if not folders_file.exists():
+        # Legacy cwd-relative fallback when invoked from slide-builder/
+        folders_file = Path("parts/vimeo-folders.json")
     if not folders_file.exists():
         print("❌ vimeo-folders.json file not found!")
         print("This file should contain the mapping between language codes and Vimeo folder IDs.")
