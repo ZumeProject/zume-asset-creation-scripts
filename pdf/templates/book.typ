@@ -145,8 +145,10 @@
 #let content-item(item) = {
   if type(item) == str {
     // Assembler turns markdown "- " / HTML <li> into "• …" paragraphs.
-    if item.starts-with("• ") {
-      bullet-row(item.slice(2))
+    // Strip with regex (• is multi-byte; str.slice indexes bytes in Typst).
+    let bullet = item.match(regex("^•\\s+(.+)$"))
+    if bullet != none {
+      bullet-row(bullet.captures.at(0))
     } else {
       para-block[#item]
     }
