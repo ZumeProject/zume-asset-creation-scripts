@@ -62,12 +62,12 @@ CONTEXT_POOLS: dict[str, list[str]] = {
         "A057-three-walking-disciples.png",
         "A071-jesus-sending-disciples.png",
         "A087-leader-holding-gear.png",
-        "A091-checklist-clipboard.png",
         "A072-welcoming-person.png",
         "A050-standing-speaker.png",
         "A060-looking-into-distance.png",
         "A083-cyclist-modeling.png",
         "A084-helping-someone-ride-bicycle.png",
+        "A017-jesus-and-disciple-holding-globe.png",
     ],
     "pray": [
         "A030-kneeling-prayer.png",
