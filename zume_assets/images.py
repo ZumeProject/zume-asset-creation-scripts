@@ -5,8 +5,12 @@ from __future__ import annotations
 import re
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
+
+# Relative presenter image paths (e.g. /uploads/training-images/…) are served
+# from the API host, not the public site origin.
+UPLOADS_BASE = "https://api.zume.training"
 
 # Manifest left_image contentKey → presenter.images key
 CONTENT_KEY_TO_IMAGE = {
@@ -62,6 +66,18 @@ def _extension_from_url(url: str) -> str:
     return ".png"
 
 
+def absolutize_image_url(url: str) -> str:
+    """Turn site-relative upload paths into absolute download URLs."""
+    url = (url or "").strip()
+    if not url:
+        return url
+    if url.startswith("//"):
+        return "https:" + url
+    if url.startswith("/"):
+        return urljoin(UPLOADS_BASE + "/", url.lstrip("/"))
+    return url
+
+
 def ensure_image(
     build_dir: Path,
     image_key: str,
@@ -69,7 +85,7 @@ def ensure_image(
 ) -> dict[str, str] | None:
     """Download presenter image into build_dir/images/ and return Typst segment dict."""
     meta = images.get(image_key) or {}
-    url = str(meta.get("url") or "").strip()
+    url = absolutize_image_url(str(meta.get("url") or ""))
     if not url:
         return None
     ext = _extension_from_url(url)

@@ -152,3 +152,11 @@ def test_assemble_book_arabic_is_rtl(tmp_path, monkeypatch):
     assert book["typst_lang"] == "ar"
     assert book["output_name"] == "Zume-Training-Intensive-ar.pdf"
     assert book["meta"]["session_count"] == len(load_course_manifest("intensive"))
+
+
+def test_assemble_book_dari_is_rtl(tmp_path, monkeypatch):
+    _stub_fetches(monkeypatch, "prs")
+    book = assemble_book(lang="prs", course_type="10", build_dir=tmp_path, cache_api=False)
+    assert book["direction"] == "rtl"
+    assert book["typst_lang"] == "prs"
+    assert book["output_name"] == "Zume-Training-10-Session-prs.pdf"
