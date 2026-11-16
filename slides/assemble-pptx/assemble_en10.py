@@ -35,9 +35,18 @@ DEFAULT_PACK = Path(
 # Finished decks always land under the repo checkout, never Agent Store docs/.
 DEFAULT_VIDEOS = REPO_ROOT / "output" / "en" / "videos"
 DEFAULT_OUTPUT = REPO_ROOT / "output" / "en" / "Zume-Training-10-Session-en.pptx"
+# Legacy mirror only — not the canonical EN training source. Prefer Vimeo folder
+# https://vimeo.com/user/75461893/folder/21862752 via slides/videos/download_en_vimeo.py.
 GCS_MP4 = "https://storage.googleapis.com/zume-file-mirror/en/{video_id}.mp4"
 MIN_PNG_BYTES = 1000
 MIN_MP4_BYTES = 100_000
+
+sys.path.insert(0, str(REPO_ROOT / "slides" / "videos"))
+from vimeo_folder import (  # noqa: E402
+    EN_VIMEO_FOLDER_ID,
+    EN_VIMEO_FOLDER_URL,
+    provenance_matches_folder,
+)
 
 # Upper-left video/thumbnail chrome from slide-builder Keynote copy-paste asset.
 # Geometry matches video-icon-for-copy-paste.key on a 1920×1080 slide.
@@ -224,8 +233,18 @@ def ensure_videos(
     *,
     pack: Path | None = None,
     download: bool = True,
+    allow_gcs_fallback: bool = False,
+    require_vimeo_provenance: bool = True,
 ) -> dict[str, Path]:
     video_dir.mkdir(parents=True, exist_ok=True)
+    if require_vimeo_provenance and not provenance_matches_folder(
+        video_dir, folder_id=EN_VIMEO_FOLDER_ID
+    ):
+        raise FileNotFoundError(
+            f"Missing Vimeo provenance for folder {EN_VIMEO_FOLDER_ID} in {video_dir}. "
+            f"Run: python3 slides/videos/download_en_vimeo.py --out {video_dir} "
+            f"(source {EN_VIMEO_FOLDER_URL})"
+        )
     mapping: dict[str, Path] = {}
     slots = manifest.get("video_slots") or [
         s for s in manifest.get("slides", []) if s.get("kind") == "video"
@@ -244,8 +263,14 @@ def ensure_videos(
         if not download:
             print(f"video missing (no download): {vid}", flush=True)
             continue
+        if not allow_gcs_fallback:
+            raise FileNotFoundError(
+                f"Missing MP4 for video_id={vid} under {video_dir} / {pack / 'videos'}. "
+                f"Download from {EN_VIMEO_FOLDER_URL} via slides/videos/download_en_vimeo.py "
+                "(GCS mirror is not the canonical EN source)."
+            )
         url = GCS_MP4.format(video_id=vid)
-        print(f"download {url}", flush=True)
+        print(f"download {url} (legacy GCS fallback)", flush=True)
         with requests.get(url, stream=True, timeout=180) as r:
             r.raise_for_status()
             tmp = dest.with_suffix(".partial")
@@ -374,7 +399,14 @@ def poll_and_assemble(
         present, total, _ = count_present_pngs(manifest, pack)
         ready, reason = pack_ready(manifest, pack)
         print(f"poll: {reason}", flush=True)
-        videos = ensure_videos(manifest, video_dir, pack=pack, download=True)
+        videos = ensure_videos(
+            manifest,
+            video_dir,
+            pack=pack,
+            download=True,
+            allow_gcs_fallback=False,
+            require_vimeo_provenance=True,
+        )
 
         if present != last_present and present >= 1:
             if ready:
@@ -429,6 +461,16 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--download-videos-only", action="store_true")
     parser.add_argument("--allow-placeholders", action="store_true")
     parser.add_argument("--skip-missing-videos", action="store_true")
+    parser.add_argument(
+        "--allow-gcs-fallback",
+        action="store_true",
+        help="Legacy: fetch missing MP4s from zume-file-mirror (not canonical EN source)",
+    )
+    parser.add_argument(
+        "--skip-vimeo-provenance-check",
+        action="store_true",
+        help="Skip SOURCE.json folder-21862752 check (tests / emergency only)",
+    )
     parser.add_argument("--require-ready", action="store_true")
     parser.add_argument("--poll", action="store_true")
     parser.add_argument("--poll-interval", type=float, default=30.0)
@@ -444,7 +486,14 @@ def main(argv: list[str] | None = None) -> int:
         flush=True,
     )
 
-    videos = ensure_videos(manifest, args.videos, pack=args.pack, download=True)
+    videos = ensure_videos(
+        manifest,
+        args.videos,
+        pack=args.pack,
+        download=True,
+        allow_gcs_fallback=args.allow_gcs_fallback,
+        require_vimeo_provenance=not args.skip_vimeo_provenance_check,
+    )
     print(f"videos ready: {len(videos)}", flush=True)
     if args.download_videos_only:
         return 0
