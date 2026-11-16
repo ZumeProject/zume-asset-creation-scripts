@@ -9,9 +9,8 @@ from __future__ import annotations
 
 import subprocess
 import time
+from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Callable
-
 
 APP_NAME = "Keynote"  # Creator Studio still scripts as "Keynote"
 PROCESS_NAMES = ("Keynote Creator Studio", "Keynote")
