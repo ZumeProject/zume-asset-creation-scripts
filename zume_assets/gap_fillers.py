@@ -129,6 +129,13 @@ CONTEXT_POOLS: dict[str, list[str]] = {
     ],
 }
 
+# Hard page → image overrides (1-based PDF page numbers). Used when a specific
+# motif must land on a known gap (e.g. Lord's Supper art after that activity).
+PAGE_IMAGE_OVERRIDES: dict[int, str] = {
+    # p51 is the large OBEY leftover immediately after Celebrate the Lord's Supper.
+    51: "A062-last-supper.png",
+}
+
 
 @dataclass(frozen=True)
 class GapSlot:
@@ -325,6 +332,11 @@ def _pick_image(
     images_dir: Path,
     use_counts: dict[str, int],
 ) -> Path | None:
+    override = PAGE_IMAGE_OVERRIDES.get(slot.page_number)
+    if override:
+        path = images_dir / override
+        if path.exists():
+            return path
     pool = CONTEXT_POOLS.get(slot.context, CONTEXT_POOLS["read_residual"])
     # Prefer least-used images; allow reuse only after the pool is exhausted.
     candidates = [name for name in pool if (images_dir / name).exists()]

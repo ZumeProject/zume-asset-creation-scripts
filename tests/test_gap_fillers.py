@@ -75,3 +75,26 @@ def test_plan_placements_picks_existing_images(tmp_path: Path):
     x0, y0, x1, y1 = placements[0].rect
     assert x1 > x0 and y1 > y0
     assert y1 <= 792.0 - 72.0
+
+
+def test_page_override_prefers_lords_supper(tmp_path: Path, monkeypatch):
+    from zume_assets import gap_fillers as gf
+
+    monkeypatch.setitem(gf.PAGE_IMAGE_OVERRIDES, 51, "A062-last-supper.png")
+    supper = Image.new("RGBA", (400, 200), (0, 0, 0, 0))
+    supper.save(tmp_path / "A062-last-supper.png")
+    # Pool decoy that would otherwise win for obey.
+    decoy = Image.new("RGBA", (200, 300), (0, 0, 0, 0))
+    decoy.save(tmp_path / "A103-jesus-pointing.png")
+
+    slot = GapSlot(
+        page_index=50,
+        page_number=51,
+        gap_in=8.0,
+        context="obey",
+        labels=("OBEY",),
+        content_bottom_pt=120.0,
+    )
+    placements = plan_placements([slot], tmp_path)
+    assert len(placements) == 1
+    assert placements[0].image_path.name == "A062-last-supper.png"
