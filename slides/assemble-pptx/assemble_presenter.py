@@ -15,17 +15,15 @@ from typing import Any
 
 import requests
 from pptx import Presentation
-from pptx.util import Emu, Inches
+from pptx.util import Emu
 
 # Import helpers from sibling assemble_en10 when available
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from assemble_en10 import (  # noqa: E402
     MIN_MP4_BYTES,
-    MIN_PNG_BYTES,
     PNG_PX,
     SLIDE_HEIGHT,
     SLIDE_WIDTH,
-    count_present_pngs,
     ensure_videos,
     find_local_mp4,
     normalize_manifest,
