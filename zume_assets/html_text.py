@@ -85,6 +85,39 @@ def strip_markdown(text: str) -> str:
     return fix_zume_brand_spacing(text)
 
 
+# Markdown unordered list item at line start (scripts use "- ", sometimes indented).
+# Mid-sentence ASCII hyphens like "Word - The Bible -" are not matched.
+_MD_LIST_ITEM = re.compile(r"^[ \t]*-[ \t]+(.*)$")
+# html_to_text already emits "• " for <li>; keep those as separate items too.
+_BULLET_ITEM = re.compile(r"^[ \t]*•[ \t]+(.*)$")
+
+
+def _flush_prose(buf: list[str], out: list[str]) -> None:
+    if not buf:
+        return
+    line = re.sub(r"\s+", " ", " ".join(buf)).strip()
+    buf.clear()
+    if line:
+        out.append(fix_zume_brand_spacing(line))
+
+
+def _chunk_to_paragraphs(chunk: str) -> list[str]:
+    """Split one blank-line chunk; keep markdown/HTML list lines as separate bullets."""
+    out: list[str] = []
+    prose: list[str] = []
+    for raw in chunk.split("\n"):
+        bullet = _MD_LIST_ITEM.match(raw) or _BULLET_ITEM.match(raw)
+        if bullet:
+            _flush_prose(prose, out)
+            item = bullet.group(1).strip()
+            if item:
+                out.append(fix_zume_brand_spacing(f"• {item}"))
+            continue
+        prose.append(raw)
+    _flush_prose(prose, out)
+    return out
+
+
 def paragraphs(text: str | None) -> list[str]:
     if not text:
         return []
@@ -92,7 +125,5 @@ def paragraphs(text: str | None) -> list[str]:
     chunks = re.split(r"\n\s*\n", text.strip())
     out: list[str] = []
     for chunk in chunks:
-        line = re.sub(r"\s*\n\s*", " ", chunk).strip()
-        if line:
-            out.append(fix_zume_brand_spacing(line))
+        out.extend(_chunk_to_paragraphs(chunk))
     return out

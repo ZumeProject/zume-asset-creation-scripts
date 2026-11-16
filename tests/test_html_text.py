@@ -48,3 +48,33 @@ def test_paragraphs_split_and_flatten():
         "Second still second.",
     ]
     assert paragraphs(None) == []
+
+
+def test_paragraphs_keeps_markdown_list_items_separate():
+    text = (
+        "Here are some ways to test what we hear:\n\n"
+        "  - When Jesus speaks - His voice will always be consistent "
+        "with what His Written Word - The Bible - has already told us.\n"
+        "  - When Jesus speaks - His voice will give our hearts hope.\n\n"
+        "The good news follows."
+    )
+    assert paragraphs(text) == [
+        "Here are some ways to test what we hear:",
+        "• When Jesus speaks - His voice will always be consistent "
+        "with what His Written Word - The Bible - has already told us.",
+        "• When Jesus speaks - His voice will give our hearts hope.",
+        "The good news follows.",
+    ]
+
+
+def test_paragraphs_does_not_treat_mid_sentence_hyphen_as_list():
+    assert paragraphs("Jesus said - follow Me.\n\nNext para.") == [
+        "Jesus said - follow Me.",
+        "Next para.",
+    ]
+
+
+def test_paragraphs_preserves_html_bullet_lines():
+    # html_to_text emits "• " for <li>; paragraphs must not rejoin them.
+    text = "Intro\n\n• One\n• Two\n\nOutro"
+    assert paragraphs(text) == ["Intro", "• One", "• Two", "Outro"]
