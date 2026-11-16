@@ -42,7 +42,8 @@ MIN_MP4_BYTES = 100_000
 # Upper-left video/thumbnail chrome from slide-builder Keynote copy-paste asset.
 # Geometry matches video-icon-for-copy-paste.key on a 1920×1080 slide.
 VIDEO_ICON_PATH = REPO_ROOT / "slides" / "assets" / "video-play-icon.png"
-VIDEO_ICON_X_1920 = 211
+# Match left inset to the tight top margin so the icon sits balanced in the corner.
+VIDEO_ICON_X_1920 = 5
 VIDEO_ICON_Y_1080 = 5
 VIDEO_ICON_SIZE_1920 = 113
 

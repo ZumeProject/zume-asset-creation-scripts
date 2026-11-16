@@ -26,7 +26,8 @@ STORE = Path(
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MAIN_OUT = REPO_ROOT / "output"
 VIDEO_ICON = REPO_ROOT / "slides" / "assets" / "video-play-icon.png"
-VIDEO_ICON_X = 211
+# Match left inset to the tight top margin so the icon sits balanced in the corner.
+VIDEO_ICON_X = 5
 VIDEO_ICON_Y = 5
 VIDEO_ICON_SIZE = 113
 

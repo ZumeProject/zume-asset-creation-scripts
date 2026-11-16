@@ -154,8 +154,9 @@ class AssemblerUnitTests(unittest.TestCase):
             left, top, width, height = video_icon_box()
             self.assertGreater(width, 0)
             self.assertEqual(width, height)
-            self.assertLess(left, int(SLIDE_WIDTH) // 4)
-            self.assertLess(top, int(SLIDE_HEIGHT) // 4)
+            # Left inset should stay in the tight corner range (matches top feel).
+            self.assertLess(left, int(SLIDE_WIDTH) * 40 / 1920)
+            self.assertLess(top, int(SLIDE_HEIGHT) * 20 / 1080)
 
             with zipfile.ZipFile(out) as z:
                 slide_files = [

@@ -27,8 +27,8 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 ICON = REPO_ROOT / "slides" / "assets" / "video-play-icon.png"
 MAIN_OUT = REPO_ROOT / "output"
 
-# Matches video-icon-for-copy-paste.key on a 1920×1080 slide.
-ICON_X = 211
+# Tight upper-left corner on a 1920×1080 slide (left inset matches top).
+ICON_X = 5
 ICON_Y = 5
 ICON_SIZE = 113
 
@@ -105,22 +105,27 @@ end tell
 
 
 def ensure_icon(slide_index: int) -> str:
-    """Return 'ok', 'skip', or 'fail'."""
+    """Return 'ok', 'moved', or 'fail'. Repositions an existing corner icon."""
     code, out, err = run_osascript(
         f'''
 tell application "Keynote"
   tell slide {slide_index} of front document
-    set already to false
+    set targetImg to missing value
     repeat with im in images
       try
         set p to position of im
         set w to width of im
-        if (item 1 of p) < 400 and (item 2 of p) < 200 and w <= 200 then
-          set already to true
+        if (item 1 of p) < 500 and (item 2 of p) < 200 and w <= 200 then
+          set targetImg to im
         end if
       end try
     end repeat
-    if already then return "skip"
+    if targetImg is not missing value then
+      set position of targetImg to {{{ICON_X}, {ICON_Y}}}
+      set width of targetImg to {ICON_SIZE}
+      set height of targetImg to {ICON_SIZE}
+      return "moved"
+    end if
     set img to make new image with properties {{file:POSIX file "{ICON}"}}
     set position of img to {{{ICON_X}, {ICON_Y}}}
     set width of img to {ICON_SIZE}
@@ -135,7 +140,7 @@ end tell
         print(f"fail slide={slide_index}: {err or out}", flush=True)
         return "fail"
     print(f"{out} slide={slide_index} images={image_count(slide_index)}", flush=True)
-    return out if out in {"ok", "skip"} else "fail"
+    return out if out in {"ok", "moved"} else "fail"
 
 
 def save_doc(doc: Path) -> None:
