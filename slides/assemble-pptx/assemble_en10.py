@@ -39,6 +39,13 @@ GCS_MP4 = "https://storage.googleapis.com/zume-file-mirror/en/{video_id}.mp4"
 MIN_PNG_BYTES = 1000
 MIN_MP4_BYTES = 100_000
 
+# Upper-left video/thumbnail chrome from slide-builder Keynote copy-paste asset.
+# Geometry matches video-icon-for-copy-paste.key on a 1920×1080 slide.
+VIDEO_ICON_PATH = REPO_ROOT / "slides" / "assets" / "video-play-icon.png"
+VIDEO_ICON_X_1920 = 211
+VIDEO_ICON_Y_1080 = 5
+VIDEO_ICON_SIZE_1920 = 113
+
 
 def load_manifest(pack: Path) -> dict[str, Any]:
     path = pack / "manifest.json"
@@ -251,6 +258,29 @@ def ensure_videos(
     return mapping
 
 
+def video_icon_box() -> tuple[int, int, int, int]:
+    """Return (left, top, width, height) EMUs for the upper-left play icon."""
+    left = int(int(SLIDE_WIDTH) * VIDEO_ICON_X_1920 / 1920)
+    top = int(int(SLIDE_HEIGHT) * VIDEO_ICON_Y_1080 / 1080)
+    size = int(int(SLIDE_WIDTH) * VIDEO_ICON_SIZE_1920 / 1920)
+    return left, top, size, size
+
+
+def add_video_icon(slide) -> bool:
+    """Overlay the usual upper-left video/thumbnail chrome on a video slide."""
+    if not VIDEO_ICON_PATH.exists():
+        return False
+    left, top, width, height = video_icon_box()
+    slide.shapes.add_picture(
+        str(VIDEO_ICON_PATH),
+        Emu(left),
+        Emu(top),
+        width=Emu(width),
+        height=Emu(height),
+    )
+    return True
+
+
 def build_pptx(
     manifest: dict[str, Any],
     pack: Path,
@@ -270,6 +300,7 @@ def build_pptx(
     placeholder_count = 0
     video_embedded = 0
     video_skipped = 0
+    video_icons = 0
 
     for s in slides:
         slide = prs.slides.add_slide(blank)
@@ -293,10 +324,14 @@ def build_pptx(
                     mime_type="video/mp4",
                 )
                 video_embedded += 1
+                if add_video_icon(slide):
+                    video_icons += 1
             elif skip_missing_videos or allow_placeholders:
                 slide.shapes.add_picture(
                     str(png_path), Emu(0), Emu(0), width=SLIDE_WIDTH, height=SLIDE_HEIGHT
                 )
+                if add_video_icon(slide):
+                    video_icons += 1
                 video_skipped += 1
             else:
                 raise FileNotFoundError(f"Missing MP4 for video_id={vid}")
@@ -314,6 +349,7 @@ def build_pptx(
         "placeholders": placeholder_count,
         "video_embedded": video_embedded,
         "video_skipped": video_skipped,
+        "video_icons": video_icons,
         "slide_width_emu": int(prs.slide_width),
         "slide_height_emu": int(prs.slide_height),
         "video_slot_count": len(manifest["video_slots"]),

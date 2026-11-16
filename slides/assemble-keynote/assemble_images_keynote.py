@@ -9,14 +9,19 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import sys
 import time
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import keynote_health as kh  # noqa: E402
 
 STORE = Path(
     "/Users/chris/Library/Application Support/Cursor/AgentStores/"
     "cursor_agent_stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/files"
 )
-MAIN_OUT = Path("/Users/chris/Documents/ZUME/zume-asset-creation-scripts-1/output")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+MAIN_OUT = REPO_ROOT / "output"
 
 COURSE = {
     "10": {"stem": "Zume-Training-10-Session-{lang}", "expected": 189},
@@ -30,25 +35,13 @@ def pack_dir(lang: str, course_type: str) -> Path:
 
 
 def run_osascript(script: str, timeout: int = 600) -> tuple[int, str, str]:
-    try:
-        r = subprocess.run(
-            ["osascript"],
-            input=script,
-            text=True,
-            capture_output=True,
-            timeout=timeout,
-        )
-        return r.returncode, (r.stdout or "").strip(), (r.stderr or "").strip()
-    except subprocess.TimeoutExpired:
-        subprocess.run(["pkill", "-f", "osascript"], check=False)
-        return 124, "", "TIMEOUT"
+    return kh.run_osascript(script, timeout=timeout)
 
 
 def relaunch_keynote() -> None:
-    subprocess.run(["pkill", "-f", "Keynote Creator Studio"], check=False)
-    time.sleep(2)
-    subprocess.run(["open", "-a", "Keynote Creator Studio"], check=False)
-    time.sleep(5)
+    result = kh.ensure_healthy(max_restarts=2)
+    if not result.ok:
+        raise RuntimeError(f"Keynote unhealthy: {result.detail}")
 
 
 def resolve_png(pack: Path, slide: dict) -> Path:
@@ -258,6 +251,9 @@ def main() -> int:
     slides = list(manifest.get("slides") or [])
     paths = [str(resolve_png(pack, s)) for s in slides]
     out = pack / "work" / f"{stem}-images.key"
+    health = kh.ensure_healthy()
+    if not health.ok:
+        raise SystemExit(f"Keynote unhealthy before assemble: {health.detail}")
     print(f"building {out} from {len(paths)} pngs", flush=True)
     assemble(paths, out, save_every=args.save_every)
     code, out_s, err = run_osascript(

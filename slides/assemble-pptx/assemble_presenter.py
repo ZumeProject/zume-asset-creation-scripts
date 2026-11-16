@@ -24,6 +24,7 @@ from assemble_en10 import (  # noqa: E402
     PNG_PX,
     SLIDE_HEIGHT,
     SLIDE_WIDTH,
+    add_video_icon,
     ensure_videos,
     find_local_mp4,
     normalize_manifest,
@@ -97,6 +98,7 @@ def build_pptx(
     placeholder_count = 0
     video_embedded = 0
     video_skipped = 0
+    video_icons = 0
 
     for s in slides:
         slide = prs.slides.add_slide(blank)
@@ -120,10 +122,14 @@ def build_pptx(
                     mime_type="video/mp4",
                 )
                 video_embedded += 1
+                if add_video_icon(slide):
+                    video_icons += 1
             elif skip_missing_videos or allow_placeholders:
                 slide.shapes.add_picture(
                     str(png_path), Emu(0), Emu(0), width=SLIDE_WIDTH, height=SLIDE_HEIGHT
                 )
+                if add_video_icon(slide):
+                    video_icons += 1
                 video_skipped += 1
             else:
                 raise FileNotFoundError(f"Missing MP4 for video_id={vid}")
@@ -141,6 +147,7 @@ def build_pptx(
         "placeholders": placeholder_count,
         "video_embedded": video_embedded,
         "video_skipped": video_skipped,
+        "video_icons": video_icons,
         "slide_width_emu": int(prs.slide_width),
         "slide_height_emu": int(prs.slide_height),
         "video_slot_count": len(manifest["video_slots"]),
@@ -226,7 +233,7 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"Wrote {stats['output']} ({stats['bytes']} bytes, "
         f"{stats['slide_count']} slides, placeholders={stats['placeholders']}, "
-        f"videos={stats['video_embedded']})",
+        f"videos={stats['video_embedded']}, icons={stats.get('video_icons', 0)})",
         flush=True,
     )
     return 0
