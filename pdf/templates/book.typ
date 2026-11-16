@@ -111,10 +111,47 @@
   v(para-gap)
 }
 
-/// Script/activity body item: plain string or `{image, alt}` from book.json.
+/// One bullet row with hanging indent (shared by structured lists and script "• …" paras).
+#let bullet-row(item) = {
+  block(breakable: false, sticky: true, width: 100%)[
+    // Lock grid to LTR column order so parent dir:rtl does not double-flip
+    // the marker. Explicitly place • on the reading-start side.
+    #{
+      set text(dir: ltr)
+      if is-rtl {
+        grid(
+          columns: (1fr, 0.85em),
+          gutter: 0.2em,
+          align(top + right, {
+            set text(dir: rtl)
+            item
+          }),
+          align(top + right)[•],
+        )
+      } else {
+        grid(
+          columns: (0.85em, 1fr),
+          gutter: 0.2em,
+          align(top + left)[•],
+          align(top + left, item),
+        )
+      }
+    }
+  ]
+  v(0.65em)
+}
+
+/// Script/activity body item: plain string, "• …" bullet line, or `{image, alt}` from book.json.
 #let content-item(item) = {
   if type(item) == str {
-    para-block[#item]
+    // Assembler turns markdown "- " / HTML <li> into "• …" paragraphs.
+    // Strip with regex (• is multi-byte; str.slice indexes bytes in Typst).
+    let bullet = item.match(regex("^•\\s+(.+)$"))
+    if bullet != none {
+      bullet-row(bullet.captures.at(0))
+    } else {
+      para-block[#item]
+    }
   } else if type(item) == dictionary {
     let src = item.at("image", default: none)
     if src != none and src != "" {
@@ -139,34 +176,9 @@
 
 #let bullets(items) = {
   if items == none or items.len() == 0 { return }
-  for item in items [
-    #block(breakable: false, sticky: true, width: 100%)[
-      // Lock grid to LTR column order so parent dir:rtl does not double-flip
-      // the marker. Explicitly place • on the reading-start side.
-      #{
-        set text(dir: ltr)
-        if is-rtl {
-          grid(
-            columns: (1fr, 0.85em),
-            gutter: 0.2em,
-            align(top + right, {
-              set text(dir: rtl)
-              item
-            }),
-            align(top + right)[•],
-          )
-        } else {
-          grid(
-            columns: (0.85em, 1fr),
-            gutter: 0.2em,
-            align(top + left)[•],
-            align(top + left, item),
-          )
-        }
-      }
-    ]
-    #v(0.65em)
-  ]
+  for item in items {
+    bullet-row(item)
+  }
 }
 
 /// Two-col section grid with explicit LTR/RTL column order (not auto-flipped).
