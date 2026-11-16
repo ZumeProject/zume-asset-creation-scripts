@@ -80,7 +80,9 @@ def test_plan_placements_picks_existing_images(tmp_path: Path):
 def test_page_override_prefers_lords_supper(tmp_path: Path, monkeypatch):
     from zume_assets import gap_fillers as gf
 
-    monkeypatch.setitem(gf.PAGE_IMAGE_OVERRIDES, 51, "A062-last-supper.png")
+    monkeypatch.setitem(
+        gf.PAGE_IMAGE_OVERRIDES, ("10", 51), "A062-last-supper.png"
+    )
     supper = Image.new("RGBA", (400, 200), (0, 0, 0, 0))
     supper.save(tmp_path / "A062-last-supper.png")
     # Pool decoy that would otherwise win for obey.
@@ -95,6 +97,9 @@ def test_page_override_prefers_lords_supper(tmp_path: Path, monkeypatch):
         labels=("OBEY",),
         content_bottom_pt=120.0,
     )
-    placements = plan_placements([slot], tmp_path)
+    placements = plan_placements([slot], tmp_path, course_type="10")
     assert len(placements) == 1
     assert placements[0].image_path.name == "A062-last-supper.png"
+    # Same page number on 20-session must not use the EN10 override.
+    placements_20 = plan_placements([slot], tmp_path, course_type="20")
+    assert placements_20[0].image_path.name == "A103-jesus-pointing.png"

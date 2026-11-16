@@ -7,6 +7,7 @@ This does not reflow content or change page breaks.
 
 from __future__ import annotations
 
+import tempfile
 from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
@@ -129,11 +130,11 @@ CONTEXT_POOLS: dict[str, list[str]] = {
     ],
 }
 
-# Hard page → image overrides (1-based PDF page numbers). Used when a specific
-# motif must land on a known gap (e.g. Lord's Supper art after that activity).
-PAGE_IMAGE_OVERRIDES: dict[int, str] = {
-    # p51 is the large OBEY leftover immediately after Celebrate the Lord's Supper.
-    51: "A062-last-supper.png",
+# Hard (course_type, page) → image overrides (1-based PDF page numbers).
+# course_type matches CLI --type: "10", "20", "intensive".
+PAGE_IMAGE_OVERRIDES: dict[tuple[str, int], str] = {
+    # EN 10: p51 is the large OBEY leftover after Celebrate the Lord's Supper.
+    ("10", 51): "A062-last-supper.png",
 }
 
 
@@ -331,12 +332,15 @@ def _pick_image(
     slot: GapSlot,
     images_dir: Path,
     use_counts: dict[str, int],
+    *,
+    course_type: str | None = None,
 ) -> Path | None:
-    override = PAGE_IMAGE_OVERRIDES.get(slot.page_number)
-    if override:
-        path = images_dir / override
-        if path.exists():
-            return path
+    if course_type:
+        override = PAGE_IMAGE_OVERRIDES.get((course_type, slot.page_number))
+        if override:
+            path = images_dir / override
+            if path.exists():
+                return path
     pool = CONTEXT_POOLS.get(slot.context, CONTEXT_POOLS["read_residual"])
     # Prefer least-used images; allow reuse only after the pool is exhausted.
     candidates = [name for name in pool if (images_dir / name).exists()]
@@ -371,6 +375,7 @@ def plan_placements(
     pad_in: float = DEFAULT_PAD_IN,
     max_width_in: float = DEFAULT_MAX_WIDTH_IN,
     page_width_pt: float = 612.0,
+    course_type: str | None = None,
 ) -> list[FillerPlacement]:
     use_counts: dict[str, int] = {}
     placements: list[FillerPlacement] = []
@@ -379,7 +384,9 @@ def plan_placements(
     footer_top = PAGE_HEIGHT_PT - FOOTER_MARGIN_PT
 
     for slot in slots:
-        image_path = _pick_image(slot, images_dir, use_counts)
+        image_path = _pick_image(
+            slot, images_dir, use_counts, course_type=course_type
+        )
         if image_path is None:
             continue
         use_counts[image_path.name] = use_counts.get(image_path.name, 0) + 1
@@ -430,6 +437,7 @@ def apply_gap_fillers(
     min_gap_in: float = DEFAULT_MIN_GAP_IN,
     include_blank_even: bool = False,
     pad_in: float = DEFAULT_PAD_IN,
+    course_type: str | None = None,
 ) -> list[FillerPlacement]:
     """Stamp decorative fillers into a copy of ``input_pdf``; return placements."""
     _require_fitz()
@@ -438,7 +446,9 @@ def apply_gap_fillers(
         min_gap_in=min_gap_in,
         include_blank_even=include_blank_even,
     )
-    placements = plan_placements(slots, images_dir, pad_in=pad_in)
+    placements = plan_placements(
+        slots, images_dir, pad_in=pad_in, course_type=course_type
+    )
     doc = fitz.open(input_pdf)
     try:
         for place in placements:
@@ -450,7 +460,18 @@ def apply_gap_fillers(
                 overlay=True,
             )
         output_pdf.parent.mkdir(parents=True, exist_ok=True)
-        doc.save(output_pdf, deflate=True, garbage=3)
+        # Always write via a temp path so in-place overwrite (input==output) works;
+        # PyMuPDF refuses non-incremental save to the original file.
+        with tempfile.NamedTemporaryFile(
+            suffix=".pdf", delete=False, dir=str(output_pdf.parent)
+        ) as tmp:
+            tmp_path = Path(tmp.name)
+        try:
+            doc.save(tmp_path, deflate=True, garbage=3)
+            tmp_path.replace(output_pdf)
+        except Exception:
+            tmp_path.unlink(missing_ok=True)
+            raise
     finally:
         doc.close()
     return placements

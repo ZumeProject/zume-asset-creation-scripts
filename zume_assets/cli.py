@@ -105,6 +105,13 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Also decorate blank even verso pages (off by default)",
     )
+    gap.add_argument(
+        "--type",
+        dest="course_type",
+        default=None,
+        choices=["10", "20", "intensive"],
+        help="Course format for page-image overrides (e.g. EN10 Lord's Supper on p51)",
+    )
 
     args = parser.parse_args(argv)
 
@@ -123,7 +130,12 @@ def main(argv: list[str] | None = None) -> int:
             if args.gap_fillers:
                 root = load_repo_root()
                 images_dir = args.images_dir or default_images_dir(root)
-                placements = apply_gap_fillers(pdf_path, pdf_path, images_dir)
+                placements = apply_gap_fillers(
+                    pdf_path,
+                    pdf_path,
+                    images_dir,
+                    course_type=args.course_type,
+                )
                 print(placements_report(placements), end="")
         except Exception as exc:
             print(f"Build failed: {exc}", file=sys.stderr)
@@ -141,6 +153,7 @@ def main(argv: list[str] | None = None) -> int:
                 images_dir,
                 min_gap_in=args.min_gap_in,
                 include_blank_even=args.include_blank_even,
+                course_type=args.course_type,
             )
         except Exception as exc:
             print(f"Gap fill failed: {exc}", file=sys.stderr)
