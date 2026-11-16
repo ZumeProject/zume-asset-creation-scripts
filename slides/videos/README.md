@@ -10,7 +10,7 @@ That folder ID (`21862752`) is also the `en` entry in
 ## Download
 
 ```bash
-# Needs VIMEO_ACCESS_TOKEN (+ client id/secret for PyVimeo) in env or slide-builder/.env
+# Needs VIMEO_ACCESS_TOKEN or VIMEO_PERSONAL_ACCESS_TOKEN (+ client id/secret aliases) in env or repo .env
 pip install -r slide-builder/requirements.txt
 python3 slides/videos/download_en_vimeo.py --out output/en/videos
 ```
