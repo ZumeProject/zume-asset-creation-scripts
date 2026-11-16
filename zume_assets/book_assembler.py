@@ -597,7 +597,19 @@ def assemble_book(
     locale = str(presenter.get("locale") or lang or "en")
     # Known RTL locale codes on zume6 (site display_code). Typst mirrors the
     # two-column guidebook chrome when direction is rtl (QR/rail on the right).
-    rtl_locales = {"ar", "ar_jo", "ar_tn", "fa", "ur", "ps", "pus", "he", "ckb", "ku"}
+    rtl_locales = {
+        "ar",
+        "ar_jo",
+        "ar_tn",
+        "fa",
+        "prs",  # Dari (Persian script)
+        "ur",
+        "ps",
+        "pus",
+        "he",
+        "ckb",
+        "ku",
+    }
     text_direction = "rtl" if locale.lower() in rtl_locales or lang.lower() in rtl_locales else "ltr"
     # Typst #set text(lang: …) requires ISO 639-1/2/3; zume site codes like
     # zhtw/zhcn are not valid. Keep book.lang as the site/API code for QR + filenames.

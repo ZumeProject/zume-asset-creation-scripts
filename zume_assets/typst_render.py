@@ -27,11 +27,20 @@ _LATIN_SANS = (
     "Arial",
 )
 _SCRIPT_FALLBACKS = (
+    # Arabic / Persian / Pashto (Noto first when installed; macOS fallbacks after)
     "Noto Sans Arabic",
     "Noto Naskh Arabic",
-    "WenQuanYi Micro Hei",
+    "Geeza Pro",
+    "SF Arabic",
+    "Noto Nastaliq Urdu",
+    # CJK — Traditional (zhhk / zhtw) then Simplified
     "Noto Sans CJK TC",
     "Noto Sans CJK SC",
+    "WenQuanYi Micro Hei",
+    "Heiti TC",
+    "Songti TC",
+    "Heiti SC",
+    "Hiragino Sans GB",
 )
 
 

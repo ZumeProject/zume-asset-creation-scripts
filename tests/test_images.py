@@ -1,4 +1,5 @@
 from zume_assets.images import (
+    absolutize_image_url,
     placeholder_to_image_key,
     resolve_image_key,
     resolve_paragraph_items,
@@ -9,6 +10,15 @@ def test_placeholder_to_image_key():
     assert placeholder_to_image_key("pace1_image") == "image_pace1"
     assert placeholder_to_image_key("image_fourfields") == "image_fourfields"
     assert placeholder_to_image_key("") is None
+
+
+def test_absolutize_image_url_relative_uploads():
+    assert (
+        absolutize_image_url("/uploads/training-images/ky_image_genmap.png")
+        == "https://api.zume.training/uploads/training-images/ky_image_genmap.png"
+    )
+    assert absolutize_image_url("https://cdn.example/a.png") == "https://cdn.example/a.png"
+    assert absolutize_image_url("//cdn.example/a.png") == "https://cdn.example/a.png"
 
 
 def test_resolve_image_key_from_manifest():
