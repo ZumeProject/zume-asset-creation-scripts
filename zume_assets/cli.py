@@ -8,6 +8,11 @@ from pathlib import Path
 
 from .api import load_repo_root
 from .book_assembler import OUTPUT_NAMES, assemble_book
+from .gap_fillers import (
+    apply_gap_fillers,
+    default_images_dir,
+    placements_report,
+)
 from .typst_render import compile_pdf, prepare_build_dir
 
 
@@ -60,6 +65,53 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="Optional PDF output path override",
     )
+    build.add_argument(
+        "--gap-fillers",
+        action="store_true",
+        help="Stamp decorative bottom-gap images from images/ after Typst compile",
+    )
+    build.add_argument(
+        "--images-dir",
+        type=Path,
+        default=None,
+        help="PNG library for --gap-fillers (default: <repo>/images)",
+    )
+
+    gap = sub.add_parser(
+        "gap-fill",
+        help="Stamp decorative bottom-gap fillers into an existing guidebook PDF",
+    )
+    gap.add_argument("--pdf", type=Path, required=True, help="Input Typst PDF")
+    gap.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="Output PDF path (may equal --pdf to overwrite)",
+    )
+    gap.add_argument(
+        "--images-dir",
+        type=Path,
+        default=None,
+        help="PNG library (default: <repo>/images)",
+    )
+    gap.add_argument(
+        "--min-gap-in",
+        type=float,
+        default=1.35,
+        help="Minimum leftover inches to fill (default: 1.35)",
+    )
+    gap.add_argument(
+        "--include-blank-even",
+        action="store_true",
+        help="Also decorate blank even verso pages (off by default)",
+    )
+    gap.add_argument(
+        "--type",
+        dest="course_type",
+        default=None,
+        choices=["10", "20", "intensive"],
+        help="Course format for page-image overrides (e.g. EN10 Lord's Supper on p51)",
+    )
 
     args = parser.parse_args(argv)
 
@@ -75,10 +127,39 @@ def main(argv: list[str] | None = None) -> int:
             return 2
         try:
             pdf_path = build_pdf(args.lang, args.course_type, args.output)
+            if args.gap_fillers:
+                root = load_repo_root()
+                images_dir = args.images_dir or default_images_dir(root)
+                placements = apply_gap_fillers(
+                    pdf_path,
+                    pdf_path,
+                    images_dir,
+                    course_type=args.course_type,
+                )
+                print(placements_report(placements), end="")
         except Exception as exc:
             print(f"Build failed: {exc}", file=sys.stderr)
             return 1
         print(f"Wrote {pdf_path}")
+        return 0
+
+    if args.command == "gap-fill":
+        root = load_repo_root()
+        images_dir = args.images_dir or default_images_dir(root)
+        try:
+            placements = apply_gap_fillers(
+                args.pdf,
+                args.output,
+                images_dir,
+                min_gap_in=args.min_gap_in,
+                include_blank_even=args.include_blank_even,
+                course_type=args.course_type,
+            )
+        except Exception as exc:
+            print(f"Gap fill failed: {exc}", file=sys.stderr)
+            return 1
+        print(placements_report(placements), end="")
+        print(f"Wrote {args.output}")
         return 0
 
     parser.print_help()
