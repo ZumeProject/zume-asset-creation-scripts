@@ -6,9 +6,9 @@ Source of truth:
   (also recorded as language_code=en in slide-builder/parts/vimeo-folders.json)
 
 Requires env (or slide-builder/.env / repo .env):
-  VIMEO_ACCESS_TOKEN
-  VIMEO_CLIENT_ID      (optional for token-only clients, required by PyVimeo)
-  VIMEO_CLIENT_SECRET  (optional for token-only clients, required by PyVimeo)
+  VIMEO_ACCESS_TOKEN (or VIMEO_PERSONAL_ACCESS_TOKEN)
+  VIMEO_CLIENT_ID (or VIMEO_CLIENT_IDENTIFIER)
+  VIMEO_CLIENT_SECRET (or VIMEO_CLIENT_SECRETS)
 
 Writes numbered files to --out (default: output/en/videos/{id}.mp4) plus SOURCE.json
 provenance so assemble can refuse GCS / stale caches.
@@ -62,15 +62,23 @@ def load_dotenv_files() -> None:
             os.environ[key] = value.strip().strip('"').strip("'")
 
 
+def _first_env(*names: str) -> str:
+    for name in names:
+        value = (os.getenv(name) or "").strip()
+        if value:
+            return value
+    return ""
+
+
 def require_credentials() -> tuple[str, str, str]:
     load_dotenv_files()
-    token = (os.getenv("VIMEO_ACCESS_TOKEN") or "").strip()
-    client_id = (os.getenv("VIMEO_CLIENT_ID") or "").strip()
-    client_secret = (os.getenv("VIMEO_CLIENT_SECRET") or "").strip()
+    token = _first_env("VIMEO_ACCESS_TOKEN", "VIMEO_PERSONAL_ACCESS_TOKEN")
+    client_id = _first_env("VIMEO_CLIENT_ID", "VIMEO_CLIENT_IDENTIFIER")
+    client_secret = _first_env("VIMEO_CLIENT_SECRET", "VIMEO_CLIENT_SECRETS")
     if not token:
         raise SystemExit(
-            "Missing VIMEO_ACCESS_TOKEN. Set it in the environment or "
-            f"{ENV_FILES[0]} (canonical EN folder {EN_VIMEO_FOLDER_URL})."
+            "Missing VIMEO_ACCESS_TOKEN / VIMEO_PERSONAL_ACCESS_TOKEN. Set it in "
+            f"the environment or repo .env (canonical EN folder {EN_VIMEO_FOLDER_URL})."
         )
     # PyVimeo wants all three; empty strings still instantiate for token-only.
     return client_id or "unused", client_secret or "unused", token
@@ -149,21 +157,30 @@ def highest_download_link(client, video_id: str) -> tuple[str, str]:
     return str(best["link"]), str(best.get("quality") or "unknown")
 
 
-def download_file(url: str, dest: Path) -> int:
+def download_file(url: str, dest: Path, *, attempts: int = 4) -> int:
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(".partial")
-    with requests.get(url, stream=True, timeout=300) as response:
-        response.raise_for_status()
-        with open(tmp, "wb") as handle:
-            for chunk in response.iter_content(chunk_size=1024 * 256):
-                if chunk:
-                    handle.write(chunk)
-    size = tmp.stat().st_size
-    if size < MIN_MP4_BYTES:
-        tmp.unlink(missing_ok=True)
-        raise RuntimeError(f"downloaded file too small ({size} bytes): {dest.name}")
-    tmp.replace(dest)
-    return size
+    last_error: Exception | None = None
+    for attempt in range(1, attempts + 1):
+        try:
+            with requests.get(url, stream=True, timeout=300) as response:
+                response.raise_for_status()
+                with open(tmp, "wb") as handle:
+                    for chunk in response.iter_content(chunk_size=1024 * 256):
+                        if chunk:
+                            handle.write(chunk)
+            size = tmp.stat().st_size
+            if size < MIN_MP4_BYTES:
+                tmp.unlink(missing_ok=True)
+                raise RuntimeError(f"downloaded file too small ({size} bytes): {dest.name}")
+            tmp.replace(dest)
+            return size
+        except (requests.RequestException, RuntimeError, OSError) as exc:
+            last_error = exc
+            tmp.unlink(missing_ok=True)
+            print(f"retry {attempt}/{attempts} {dest.name}: {exc}", flush=True)
+            time.sleep(min(30, 2 * attempt))
+    raise RuntimeError(f"download failed for {dest.name}: {last_error}")
 
 
 def process_one(
@@ -193,8 +210,17 @@ def process_one(
             "path": str(dest),
             "bytes": dest.stat().st_size,
         }
-    link, quality = highest_download_link(client, video_id)
-    size = download_file(link, dest)
+    try:
+        link, quality = highest_download_link(client, video_id)
+        size = download_file(link, dest)
+    except Exception as exc:  # noqa: BLE001 — surface as failed result for pool
+        return {
+            "status": "failed",
+            "training_id": number,
+            "vimeo_id": video_id,
+            "title": title,
+            "error": str(exc),
+        }
     return {
         "status": "downloaded",
         "training_id": number,
