@@ -16,12 +16,12 @@ python3 slides/videos/download_en_vimeo.py --out output/en/videos
 ```
 
 Writes numbered `output/en/videos/{id}.mp4` plus `SOURCE.json` provenance
-(`folder_id=21862752`). PPTX/Keynote assemble requires that provenance and will
+(`folder_id=21862752`). Keynote assemble requires that provenance and will
 not silently pull `zume-file-mirror` GCS MP4s unless you pass `--allow-gcs-fallback`.
 
 ## Assemble after download
 
 ```bash
-python3 slides/assemble-pptx/assemble_presenter.py --type 10
+python3 slides/assemble-keynote/assemble_images_keynote.py --type 10 --lang en
 python3 slides/assemble-keynote/embed_videos_choose.py --type 10 --lang en --promote
 ```

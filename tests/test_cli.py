@@ -8,7 +8,8 @@ def test_rejects_non_pdf_targets(capsys):
     err = capsys.readouterr().err
     assert "pptx" in err
     assert "keynote" in err
-    assert "only pdf is implemented" in err
+    assert "only pdf is supported" in err
+    assert "not a production target" in err
 
 
 def test_default_pdf_path_under_repo_output():

@@ -57,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
     build.add_argument(
         "--targets",
         default="pdf",
-        help="Comma-separated targets (only pdf is implemented)",
+        help="Comma-separated targets (only pdf; Keynote uses slides/assemble-keynote)",
     )
     build.add_argument(
         "--output",
@@ -120,8 +120,9 @@ def main(argv: list[str] | None = None) -> int:
         unsupported = [t for t in targets if t != "pdf"]
         if unsupported:
             print(
-                f"Unsupported targets in this phase: {', '.join(unsupported)} "
-                "(only pdf is implemented).",
+                f"Unsupported targets: {', '.join(unsupported)} "
+                "(only pdf is supported by this CLI; Keynote uses "
+                "slides/assemble-keynote; pptx is not a production target).",
                 file=sys.stderr,
             )
             return 2

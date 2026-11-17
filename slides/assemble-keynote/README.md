@@ -26,13 +26,8 @@ python3 slides/assemble-keynote/embed_videos_choose.py --type 10 --lang en --pro
 `--lang` / `--type` select the pack and `output/{lang}/Zume-Training-*-{lang}.key`.
 Other locales use the same commands with `--lang ky` (etc.) once that pack exists.
 
-PPTX counterpart (also adds the play icon automatically):
-
-```bash
-python3 slides/assemble-pptx/assemble_presenter.py --type 10   # or 20 / intensive
-```
-
-Shared icon asset: `slides/assets/video-play-icon.png` (from legacy
+Production deck format is Keynote only (PPTX assembly was removed). Shared icon
+asset: `slides/assets/video-play-icon.png` (from legacy
 `slide-builder/assets/video-icon-for-copy-paste.key`).
 
 ## Health / hang recovery
