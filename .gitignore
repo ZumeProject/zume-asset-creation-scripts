@@ -1,15 +1,27 @@
-# Ignore output directories
+# --- Downloads & build caches (never commit) ---
+# Video MP4s + provenance from Vimeo (or any cache under videos/)
+output/**/videos/
+output/**/*.mp4
+output/**/*.partial
+# Typst assemble intermediates (API cache, QR, book.json)
+output/**/build-*/
+# Legacy slide-builder language / packer outputs
 slide-builder/output/
-# Language build output folders (one per language: ar, pa, zhhk, en, etc.)
 slide-builder/ar/
 slide-builder/pa/
 slide-builder/zhhk/
-output/
+slide-builder/**/videos/
+
+# Worktrees and comparison downloads
 .worktrees/
 reference/**/*.pdf
 reference/**/*.pptx
 reference/**/*.ppsx
 reference/**/*.key
+
+# Finished PDFs / Keynote under output/{lang}/ are *not* blanket-ignored so
+# Chris can track them if desired. Prefer leaving large binaries local unless
+# explicitly asked to commit. Never commit videos/ or build-*/.
 
 # Python virtual environments
 venv/
@@ -39,9 +51,10 @@ build/
 Thumbs.db
 
 # IDE specific files
+# Note: committed agent skills live in repo-root skills/ (not under .cursor/)
 .cursor/
 .idea/
 .vscode/
 *.swp
-*.swo 
+*.swo
 .config.json

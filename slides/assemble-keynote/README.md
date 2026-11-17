@@ -27,8 +27,7 @@ python3 slides/assemble-keynote/embed_videos_choose.py --type 10 --lang en --pro
 Other locales use the same commands with `--lang ky` (etc.) once that pack exists.
 
 Production deck format is Keynote only (PPTX assembly was removed). Shared icon
-asset: `slides/assets/video-play-icon.png` (from legacy
-`slide-builder/assets/video-icon-for-copy-paste.key`).
+asset: `slides/assets/video-play-icon.png`.
 
 ## Health / hang recovery
 

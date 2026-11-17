@@ -19,4 +19,4 @@ Writes the capture pack (intermediate PNGs + manifest) to the Project store:
 Finished Keynote decks assembled from this pack belong under the repo
 `output/en/` directory — never Agent Store `docs/`.
 
-Viewport: 1846×1034 @ deviceScaleFactor 2 (3692×2068), matching reference PPSX media.
+Viewport: 1846×1034 @ deviceScaleFactor 2 (3692×2068), matching historical 16:9 reference media.

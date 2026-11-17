@@ -1,4 +1,9 @@
-# Zume Slide Full Builder
+# Zume Slide Full Builder (legacy packer)
+
+**Production EN path:** use `slides/videos/download_en_vimeo.py` and
+`slides/assemble-keynote/` instead of this interactive packer. This tree still
+supplies `parts/vimeo-folders.json` and `requirements.txt` (PyVimeo) for the
+production download helper.
 
 NOTE
 
