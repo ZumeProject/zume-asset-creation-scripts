@@ -9,13 +9,14 @@ Pipeline for regenerating offline Zúme training assets from live [zume6](https:
 
 PowerPoint / PPTX is not a production target.
 
-See [AGENTS.md](AGENTS.md) for the rules agents should follow in this repo.
+See [AGENTS.md](AGENTS.md) for agent rules and [skills/](skills/) for step-by-step agent skills.
 
 ## PDF guidebooks (Typst)
 
 1. Fetch live presenter, scripts, and activities APIs
 2. Assemble a normalized book JSON from the course manifest (`10`, `20`, or `intensive`)
 3. Emit QR images and compile a Typst template to PDF
+4. Optionally stamp decorative bottom-gap images (`--gap-fillers`)
 
 English is the review target. The same command builds other locales. Arabic and Traditional Chinese include font and direction handling.
 
@@ -40,6 +41,8 @@ python3 build.py --lang en --type 20 --targets pdf
 python3 build.py --lang en --type intensive --targets pdf
 # equivalent:
 python3 -m zume_assets build --lang en --type 10 --targets pdf
+# with decorative gap fillers:
+python3 -m zume_assets build --lang en --type 10 --targets pdf --gap-fillers
 ```
 
 All finished assets land under the repo `output/` tree (for example
@@ -56,6 +59,17 @@ Output for the 10-session English book:
 20-session and intensive files follow the same pattern (`Zume-Training-20-Session-en.pdf`, `Zume-Training-Intensive-en.pdf`).
 
 Reference PDFs (downloaded for comparison only; never uploaded over GCS) belong under `reference/`.
+
+## Videos (Vimeo → local MP4s)
+
+EN proven source: [Vimeo folder 21862752](https://vimeo.com/user/75461893/folder/21862752).
+
+```bash
+pip install -r slide-builder/requirements.txt
+python3 slides/videos/download_en_vimeo.py --out output/en/videos
+```
+
+Writes numbered `output/en/videos/{id}.mp4` plus `SOURCE.json`. Credentials come from env or repo `.env` (never commit or log tokens). See [slides/videos/README.md](slides/videos/README.md).
 
 ## Keynote decks (macOS)
 
@@ -87,9 +101,10 @@ pdf/templates/            # Typst book template
 pdf/assets/               # cover and logo
 zume_assets/              # assembler, QR, Typst compile, CLI
 tests/                    # offline unit tests
-slide-builder/            # current video download + slide screenshot packer
+skills/                   # in-repo agent skills
+slide-builder/            # legacy packer + vimeo-folders.json + PyVimeo deps
 slides/capture/           # presenter PNG capture
-slides/videos/            # EN Vimeo download helpers
+slides/videos/            # EN Vimeo download helpers (production video path)
 slides/assemble-keynote/  # macOS Keynote assembly
 publish/                  # future GCS upload
 ```
@@ -99,5 +114,5 @@ publish/                  # future GCS upload
 - Do **not** publish to GCS from this pipeline until English PDFs are signed off.
 - Production outputs are PDF + Keynote only. PPTX tooling was removed; do not restore it for production.
 - The CLI only builds PDF. Keynote uses `slides/assemble-keynote/` on macOS.
-- `slide-builder/` is still the only video and slide-screenshot path. Install it separately with `pip install -r slide-builder/requirements.txt`.
+- Video downloads: use `slides/videos/` (production). `slide-builder/` still holds `vimeo-folders.json` and shared requirements until a follow-up relocates them.
 - HTML workbook at `https://zume.training/workbook/10` remains the interactive preview; this PDF is a parallel renderer over the same APIs.
