@@ -1,4 +1,4 @@
-"""CLI for Zume asset builds."""
+"""CLI for Zume asset builds and pipeline review."""
 
 from __future__ import annotations
 
@@ -38,6 +38,226 @@ def build_pdf(lang: str, course_type: str, output: Path | None = None) -> Path:
     return output_pdf
 
 
+def _add_lang_type(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--lang", default="en", help="Locale code (default: en)")
+    parser.add_argument(
+        "--type",
+        dest="course_type",
+        default="10",
+        choices=["10", "20", "intensive"],
+        help="Course format: 10, 20, or intensive",
+    )
+
+
+def _cmd_review(argv: list[str] | None) -> int:
+    from .review.master import fetch_master
+    from .review.paths import report_dir
+    from .review.qr_check import check_qr
+    from .review.report import exit_code_for, utc_now_iso, write_report
+    from .review.video_check import check_videos
+
+    parser = argparse.ArgumentParser(
+        prog="zume-assets review",
+        description="Pipeline review: master list, QR decode, Keynote video mapping.",
+    )
+    sub = parser.add_subparsers(dest="review_command", required=True)
+
+    fetch_p = sub.add_parser(
+        "fetch-master",
+        help="Fetch on-demand master list from api.zume.training into manifest/review/",
+    )
+    _add_lang_type(fetch_p)
+    fetch_p.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Override master JSON path (default: manifest/review/{lang}-{type}.json)",
+    )
+    fetch_p.add_argument(
+        "--follow-redirects",
+        action="store_true",
+        help="Probe live QR redirect destinations (network)",
+    )
+
+    qr_p = sub.add_parser(
+        "qr",
+        help="Decode build QR PNGs and compare to master (+ optional --live redirects)",
+    )
+    _add_lang_type(qr_p)
+    qr_p.add_argument("--master", type=Path, default=None, help="Master JSON path")
+    qr_p.add_argument("--qr-dir", type=Path, default=None, help="Directory of QR PNGs")
+    qr_p.add_argument("--book", type=Path, default=None, help="book.json for assembler cross-check")
+    qr_p.add_argument(
+        "--report-dir",
+        type=Path,
+        default=None,
+        help="Report output dir (default: output/{lang}/review)",
+    )
+    qr_p.add_argument(
+        "--live",
+        action="store_true",
+        help="Follow decoded QR URLs and check destinations (network)",
+    )
+
+    vid_p = sub.add_parser(
+        "videos",
+        help="Compare pack/SOURCE video ids+titles to master online metadata",
+    )
+    _add_lang_type(vid_p)
+    vid_p.add_argument("--master", type=Path, default=None, help="Master JSON path")
+    vid_p.add_argument(
+        "--source",
+        type=Path,
+        default=None,
+        help="SOURCE.json path (default: output/{lang}/videos/SOURCE.json)",
+    )
+    vid_p.add_argument(
+        "--pack",
+        type=Path,
+        default=None,
+        help="Keynote capture pack dir (manifest.json / work/video-replace-list.json)",
+    )
+    vid_p.add_argument(
+        "--report-dir",
+        type=Path,
+        default=None,
+        help="Report output dir (default: output/{lang}/review)",
+    )
+
+    all_p = sub.add_parser(
+        "all",
+        help="Run QR + video checks (optionally fetch master first)",
+    )
+    _add_lang_type(all_p)
+    all_p.add_argument(
+        "--fetch",
+        action="store_true",
+        help="Refresh master from live API before checks (network)",
+    )
+    all_p.add_argument(
+        "--follow-redirects",
+        action="store_true",
+        help="With --fetch, also probe redirect destinations",
+    )
+    all_p.add_argument("--master", type=Path, default=None, help="Master JSON path")
+    all_p.add_argument("--qr-dir", type=Path, default=None)
+    all_p.add_argument("--book", type=Path, default=None)
+    all_p.add_argument("--source", type=Path, default=None)
+    all_p.add_argument("--pack", type=Path, default=None)
+    all_p.add_argument("--report-dir", type=Path, default=None)
+    all_p.add_argument("--live", action="store_true", help="Live QR redirect checks")
+
+    args = parser.parse_args(argv)
+
+    if args.review_command == "fetch-master":
+        try:
+            data, path = fetch_master(
+                args.lang,
+                args.course_type,
+                output=args.output,
+                follow_redirects=args.follow_redirects,
+            )
+        except Exception as exc:
+            print(f"fetch-master failed: {exc}", file=sys.stderr)
+            return 1
+        counts = data.get("counts") or {}
+        print(
+            f"Wrote {path} "
+            f"(checkins={counts.get('checkins')} videos={counts.get('videos')} "
+            f"activities={counts.get('activities')})"
+        )
+        return 0
+
+    if args.review_command == "qr":
+        report = check_qr(
+            args.lang,
+            args.course_type,
+            master_path=args.master,
+            qr_dir=args.qr_dir,
+            book_path=args.book,
+            report_dir=args.report_dir,
+            live=args.live,
+        )
+        out = args.report_dir or report_dir(args.lang)
+        print(f"QR review {report.get('status')}: {out / f'qr-{args.course_type}.json'}")
+        return exit_code_for(report)
+
+    if args.review_command == "videos":
+        report = check_videos(
+            args.lang,
+            args.course_type,
+            master_path=args.master,
+            source_path=args.source,
+            pack=args.pack,
+            report_dir_path=args.report_dir,
+        )
+        out = args.report_dir or report_dir(args.lang)
+        print(f"Video review {report.get('status')}: {out / f'videos-{args.course_type}.json'}")
+        return exit_code_for(report)
+
+    if args.review_command == "all":
+        if args.fetch:
+            try:
+                _data, path = fetch_master(
+                    args.lang,
+                    args.course_type,
+                    output=args.master,
+                    follow_redirects=args.follow_redirects,
+                )
+                print(f"Wrote master {path}")
+            except Exception as exc:
+                print(f"fetch-master failed: {exc}", file=sys.stderr)
+                return 1
+        qr_report = check_qr(
+            args.lang,
+            args.course_type,
+            master_path=args.master,
+            qr_dir=args.qr_dir,
+            book_path=args.book,
+            report_dir=args.report_dir,
+            live=args.live,
+        )
+        vid_report = check_videos(
+            args.lang,
+            args.course_type,
+            master_path=args.master,
+            source_path=args.source,
+            pack=args.pack,
+            report_dir_path=args.report_dir,
+        )
+        out = args.report_dir or report_dir(args.lang)
+        combined_status = (
+            "pass"
+            if qr_report.get("status") == "pass" and vid_report.get("status") == "pass"
+            else "fail"
+        )
+        if qr_report.get("status") == "error" or vid_report.get("status") == "error":
+            combined_status = "error"
+        combined = {
+            "kind": "all",
+            "status": combined_status,
+            "lang": args.lang,
+            "type": args.course_type,
+            "generated_at": utc_now_iso(),
+            "summary": {
+                "qr_status": qr_report.get("status"),
+                "videos_status": vid_report.get("status"),
+            },
+            "failures": list(qr_report.get("failures") or [])
+            + list(vid_report.get("failures") or []),
+            "notes": [
+                f"qr report: {out / f'qr-{args.course_type}.json'}",
+                f"videos report: {out / f'videos-{args.course_type}.json'}",
+            ],
+        }
+        write_report(combined, out, stem=f"all-{args.course_type}")
+        print(f"Review all {combined_status}: {out / f'all-{args.course_type}.json'}")
+        return exit_code_for(combined)
+
+    parser.print_help()
+    return 2
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="zume-assets",
@@ -46,14 +266,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
 
     build = sub.add_parser("build", help="Build one or more asset targets")
-    build.add_argument("--lang", default="en", help="Locale code (default: en)")
-    build.add_argument(
-        "--type",
-        dest="course_type",
-        default="10",
-        choices=["10", "20", "intensive"],
-        help="Course format: 10, 20, or intensive",
-    )
+    _add_lang_type(build)
     build.add_argument(
         "--targets",
         default="pdf",
@@ -112,6 +325,17 @@ def main(argv: list[str] | None = None) -> int:
         choices=["10", "20", "intensive"],
         help="Course format for page-image overrides (e.g. EN10 Lord's Supper on p51)",
     )
+
+    sub.add_parser(
+        "review",
+        help="Pipeline review (fetch-master / qr / videos / all); see: zume-assets review -h",
+        add_help=False,
+    )
+
+    # Peek at argv so `review …` can use its own subparser without eating flags.
+    raw = list(argv) if argv is not None else sys.argv[1:]
+    if raw and raw[0] == "review":
+        return _cmd_review(raw[1:])
 
     args = parser.parse_args(argv)
 

@@ -12,6 +12,7 @@ In-repo skills under [`skills/`](skills/). Cursor ignores `.cursor/`, so skills 
 | [skills/vimeo-download-provenance/SKILL.md](skills/vimeo-download-provenance/SKILL.md) | Downloading training MP4s from Vimeo, `SOURCE.json`, credentials |
 | [skills/mac-keynote-assemble/SKILL.md](skills/mac-keynote-assemble/SKILL.md) | macOS Keynote assemble, embed, play chrome, health recovery |
 | [skills/output-paths-worktrees/SKILL.md](skills/output-paths-worktrees/SKILL.md) | `output/{lang}/`, gitignore, worktrees, Agent Store boundaries |
+| [skills/pipeline-review/SKILL.md](skills/pipeline-review/SKILL.md) | Independent QR decode + Keynote video mapping vs online master |
 
 ## What works
 
@@ -57,6 +58,20 @@ python3 slides/assemble-keynote/embed_videos_choose.py --type 10 --lang en --pro
 
 See `slides/assemble-keynote/README.md` and the mac-keynote-assemble skill. Do not run Keynote assembly on Linux CI.
 
+### Pipeline review (QR + video)
+
+After a language build, refresh the on-demand master list and run independent checks (report only; non-zero exit on mismatch). CI stays offline by default — live fetch is opt-in.
+
+```bash
+pip install -e ".[dev]"   # includes zxing-cpp for QR decode
+python3 -m zume_assets review fetch-master --lang en --type 10
+python3 -m zume_assets review qr --lang en --type 10
+python3 -m zume_assets review videos --lang en --type 10
+python3 -m zume_assets review all --lang es --type 10 --fetch
+```
+
+Master cache: `manifest/review/{lang}-{type}.json`. Reports: `output/{lang}/review/`. See the pipeline-review skill.
+
 ## Workspace paths
 
 Keep all work inside the active repo checkout. Do not create sibling folders under `~/Documents/ZUME/` (or elsewhere) for outputs, capture packs, worktrees, or scratch.
@@ -89,9 +104,11 @@ Do **not** write finished PDFs or Keynote files into Agent Store `docs/` (or any
 
 ```
 manifest/                 course structure
+manifest/review/          on-demand review master lists ({lang}-{type}.json)
 pdf/templates/            Typst book template
 pdf/assets/               cover and logo
 zume_assets/              assembler, QR, Typst compile, CLI, gap fillers
+zume_assets/review/       pipeline review (master, QR decode, video check)
 tests/                    offline unit tests (no live API)
 skills/                   in-repo agent skills (linked above)
 slide-builder/            legacy multi-lang packer + shared vimeo-folders.json / requirements
