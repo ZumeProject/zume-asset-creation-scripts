@@ -56,7 +56,7 @@ With `--live`, most activity QRs must land on `/activities/{key}`. Intentional e
 | `join_the_community` | `…/{locale}/join-the-community` | marketing page |
 | `next_steps` | `…/{locale}/join-the-community` | same destination as join |
 
-**Not allowlisted:** `getacoach` (or other marketing keys) landing on bare `/{locale}` homepage. That means the locale marketing page is missing (site content gap), not a bad QR PNG — still **FAIL**, with an explicit message.
+**Allowlisted exception:** `getacoach` → bare `/{locale}` homepage for locales in `NO_COACH_LOCALES` (mirrored from zume6 `coach-availability.ts`) — intentional product gate when no Dispatch coaches speak that language (e.g. `pus`). **Not allowlisted:** the same homepage collapse for coach-offered locales, or for other marketing keys — that is a missing marketing page (still **FAIL**).
 
 ## Video review allowlist / noise
 
@@ -84,4 +84,5 @@ Default pack path: Agent Store `media/{lang}-{type}-presenter-captures/` when it
 | Failing pack `t20_b` / id 20 when SOURCE aliases 19 | Official allowlist — must PASS |
 | Failing SOURCE-only review on Vimeo extras | Extras are notes; only missing master ids FAIL |
 | Passing `--pack` every time on Mac | Default discovery should find Agent Store capture packs |
-| Treating `getacoach` → `/{lang}` homepage as OK | Still FAIL — missing marketing page |
+| Treating `getacoach` → `/{lang}` homepage as OK for coach-offered locales | Still FAIL — missing marketing page |
+| Treating `getacoach` → `/{lang}` homepage as FAIL for `NO_COACH_LOCALES` (e.g. `pus`) | PASS — intentional zume6 no-coach gate |
