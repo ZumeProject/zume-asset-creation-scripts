@@ -28,6 +28,7 @@ python3 -m zume_assets review qr --lang en --type 10
 python3 -m zume_assets review qr --lang es --type 10 --live
 
 # SOURCE.json + pack video-replace-list vs master videos
+# Default pack discovery: Agent Store media/{lang}-{type}-presenter-captures/, else output/{lang}/pack-{type}
 python3 -m zume_assets review videos --lang en --type 10
 python3 -m zume_assets review videos --lang en --type 10 --pack /path/to/pack
 
@@ -51,9 +52,11 @@ With `--live`, most activity QRs must land on `/activities/{key}`. Intentional e
 | Activity | Live final (expected) | Why |
 |---|---|---|
 | `3monthplan` | `…/{locale}/auth/login?redirect=…/create-your-plan` | create-your-plan requires login |
-| `getacoach` | `…/{locale}/get-a-coach` | marketing page |
+| `getacoach` | `…/get-a-coach` or `…/{locale}/get-a-coach` | marketing page |
 | `join_the_community` | `…/{locale}/join-the-community` | marketing page |
 | `next_steps` | `…/{locale}/join-the-community` | same destination as join |
+
+**Not allowlisted:** `getacoach` (or other marketing keys) landing on bare `/{locale}` homepage. That means the locale marketing page is missing (site content gap), not a bad QR PNG — still **FAIL**, with an explicit message.
 
 ## Video review allowlist / noise
 
@@ -61,8 +64,12 @@ With `--live`, most activity QRs must land on `/activities/{key}`. Intentional e
 |---|---|---|
 | Pack id **20** / `t20_b` when SOURCE aliases **20→19** and SOURCE `vimeo_id` matches online **19** | **PASS** | Course reformat: no distinct Vimeo for 20; download copies 19→20 |
 | SOURCE title (Vimeo filename) ≠ API display title | **note only** (not FAIL) | Same `vimeo_id` proves the embed; string formats differ by design |
+| SOURCE / Vimeo-folder ids **not** in course master (e.g. 31, 32, 68) | **note only** (not FAIL) | Full-folder download may include extras; pack embeds / master ids are the gate |
+| Master id missing from SOURCE | **FAIL** | Required course video absent |
 
 Official map: `OFFICIAL_VIDEO_ALIASES` in `zume_assets/review/video_check.py` (`20` → `19`). Require SOURCE evidence (`aliases["20"].from == "19"` and/or `videos["20"].status == "aliased"`).
+
+Default pack path: Agent Store `media/{lang}-{type}-presenter-captures/` when it has `work/video-replace-list.json` or `manifest.json`; else `output/{lang}/pack-{type}`.
 
 ## Common mistakes
 
@@ -75,3 +82,6 @@ Official map: `OFFICIAL_VIDEO_ALIASES` in `zume_assets/review/video_check.py` (`
 | Marking `3monthplan` → auth/login as FAIL | Allowed by design (login gate for create-your-plan) |
 | Failing video review on title string noise | Ignore titles; gate on `vimeo_id` only |
 | Failing pack `t20_b` / id 20 when SOURCE aliases 19 | Official allowlist — must PASS |
+| Failing SOURCE-only review on Vimeo extras | Extras are notes; only missing master ids FAIL |
+| Passing `--pack` every time on Mac | Default discovery should find Agent Store capture packs |
+| Treating `getacoach` → `/{lang}` homepage as OK | Still FAIL — missing marketing page |

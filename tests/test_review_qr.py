@@ -12,6 +12,8 @@ from zume_assets.review.decode import backend_name
 from zume_assets.review.qr_check import (
     activity_live_allowlisted,
     check_qr,
+    is_locale_homepage,
+    live_redirect_failure_message,
     live_redirect_ok,
     urls_equivalent,
 )
@@ -125,7 +127,9 @@ def test_live_redirect_ok_3monthplan_rejects_bare_login_or_homepage():
 def test_live_redirect_ok_marketing_activity_pages():
     """Prod QR finals for coaching/community land on locale marketing pages."""
     cases = (
+        ("getacoach", "/get-a-coach", "https://zume.training/get-a-coach"),
         ("getacoach", "/get-a-coach", "https://zume.training/es/get-a-coach"),
+        ("getacoach", "/get-a-coach", "https://zume.training/pus/get-a-coach"),
         (
             "join_the_community",
             "/join-the-community",
@@ -145,7 +149,7 @@ def test_live_redirect_ok_marketing_activity_pages():
 
 
 def test_live_redirect_ok_homepage_activities_still_fail():
-    """Homepage redirects for marketing activities stay FAIL."""
+    """Homepage redirects for marketing activities stay FAIL (no allowlist)."""
     cases = (
         ("getacoach", "/get-a-coach"),
         ("join_the_community", "/join-the-community"),
@@ -154,7 +158,28 @@ def test_live_redirect_ok_homepage_activities_still_fail():
     for key, expected in cases:
         entry = {"kind": "a", "key": key, "expected_redirect": expected}
         assert live_redirect_ok(entry, "https://zume.training/es") is False
+        assert live_redirect_ok(entry, "https://zume.training/pus") is False
         assert activity_live_allowlisted(key, "https://zume.training/es") is None
+
+
+def test_getacoach_homepage_failure_message_is_explicit():
+    """Missing locale marketing page → homepage; message says so (still FAIL)."""
+    entry = {
+        "kind": "a",
+        "key": "getacoach",
+        "expected_redirect": "/get-a-coach",
+        "png_stem": "activity-getacoach",
+    }
+    final = "https://zume.training/pus"
+    assert is_locale_homepage(final, "pus") is True
+    assert live_redirect_ok(entry, final) is False
+    msg = live_redirect_failure_message(
+        entry, final, label="activity-getacoach.png"
+    )
+    assert "locale homepage" in msg
+    assert "marketing page missing" in msg
+    assert "getacoach" in msg
+    assert "not a bad QR PNG" in msg
 
 
 def test_live_redirect_ok_normal_activity_path():
