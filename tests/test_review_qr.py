@@ -149,7 +149,7 @@ def test_live_redirect_ok_marketing_activity_pages():
 
 
 def test_live_redirect_ok_homepage_activities_still_fail():
-    """Homepage redirects for marketing activities stay FAIL (no allowlist)."""
+    """Homepage redirects stay FAIL except getacoach on NO_COACH_LOCALES."""
     cases = (
         ("getacoach", "/get-a-coach"),
         ("join_the_community", "/join-the-community"),
@@ -157,24 +157,40 @@ def test_live_redirect_ok_homepage_activities_still_fail():
     )
     for key, expected in cases:
         entry = {"kind": "a", "key": key, "expected_redirect": expected}
-        assert live_redirect_ok(entry, "https://zume.training/es") is False
-        assert live_redirect_ok(entry, "https://zume.training/pus") is False
-        assert activity_live_allowlisted(key, "https://zume.training/es") is None
+        # Spanish has coaches — homepage is still FAIL for getacoach.
+        assert live_redirect_ok(entry, "https://zume.training/es", locale="es") is False
+        assert activity_live_allowlisted(key, "https://zume.training/es", locale="es") is None
+        if key != "getacoach":
+            assert live_redirect_ok(entry, "https://zume.training/pus", locale="pus") is False
+
+
+def test_getacoach_no_coach_locale_homepage_is_ok():
+    """zume6 NO_COACH_LOCALES (e.g. pus) intentionally 307 → /{lang}."""
+    entry = {
+        "kind": "a",
+        "key": "getacoach",
+        "expected_redirect": "/get-a-coach",
+    }
+    final = "https://zume.training/pus"
+    assert live_redirect_ok(entry, final, locale="pus") is True
+    assert activity_live_allowlisted("getacoach", final, locale="pus") is True
+    # Still FAIL when locale is offered coaches but page collapsed.
+    assert live_redirect_ok(entry, "https://zume.training/es", locale="es") is False
 
 
 def test_getacoach_homepage_failure_message_is_explicit():
-    """Missing locale marketing page → homepage; message says so (still FAIL)."""
+    """Unexpected homepage for a coach-offered locale → explicit FAIL message."""
     entry = {
         "kind": "a",
         "key": "getacoach",
         "expected_redirect": "/get-a-coach",
         "png_stem": "activity-getacoach",
     }
-    final = "https://zume.training/pus"
-    assert is_locale_homepage(final, "pus") is True
-    assert live_redirect_ok(entry, final) is False
+    final = "https://zume.training/es"
+    assert is_locale_homepage(final, "es") is True
+    assert live_redirect_ok(entry, final, locale="es") is False
     msg = live_redirect_failure_message(
-        entry, final, label="activity-getacoach.png"
+        entry, final, label="activity-getacoach.png", locale="es"
     )
     assert "locale homepage" in msg
     assert "marketing page missing" in msg

@@ -11,6 +11,7 @@ from ..api import load_repo_root
 from .decode import QrDecodeError, backend_name, decode_qr_png
 from .master import (
     ACTIVITY_EXPECTED_REDIRECT_OVERRIDES,
+    NO_COACH_LOCALES,
     default_master_path,
     load_master,
     master_entries_by_png_stem,
@@ -49,13 +50,18 @@ def book_qr_urls(book: dict[str, Any]) -> dict[str, str]:
     return out
 
 
-def activity_live_allowlisted(key: str, final_url: str) -> bool | None:
+def activity_live_allowlisted(
+    key: str,
+    final_url: str,
+    *,
+    locale: str | None = None,
+) -> bool | None:
     """Return True/False for activity keys with a special live rule; else None.
 
     ``3monthplan`` needs auth/login + create-your-plan in the query (stricter than
-    the generic expected_redirect substring). Other override keys fall through to
-    ``live_redirect_ok``'s expected_redirect path match (get-a-coach /
-    join-the-community). Homepage redirects stay FAIL.
+    the generic expected_redirect substring). ``getacoach`` may land on the locale
+    homepage for ``NO_COACH_LOCALES`` (zume6 intentional gate). Other override keys
+    fall through to ``live_redirect_ok``'s expected_redirect path match.
     """
     if key not in ACTIVITY_EXPECTED_REDIRECT_OVERRIDES:
         return None
@@ -65,6 +71,8 @@ def activity_live_allowlisted(key: str, final_url: str) -> bool | None:
         query = unquote(parsed.query or "")
         # create-your-plan requires login; QR lands on auth/login with redirect back.
         return "/auth/login" in path and "create-your-plan" in query
+    if key == "getacoach" and locale and locale.casefold() in NO_COACH_LOCALES:
+        return is_locale_homepage(final_url, locale)
     return None
 
 
@@ -97,15 +105,21 @@ def is_locale_homepage(final_url: str, locale: str | None = None) -> bool:
     return len(parts) == 1
 
 
-def live_redirect_ok(entry: dict[str, Any], final_url: str | None) -> bool:
+def live_redirect_ok(
+    entry: dict[str, Any],
+    final_url: str | None,
+    *,
+    locale: str | None = None,
+) -> bool:
     if not final_url:
         return False
     kind = entry.get("kind")
     key = str(entry.get("key") or "")
+    locale = locale or (str(entry.get("locale") or "") or None)
 
     # Intentional alternate destinations (checked before generic expected_redirect).
     if kind == "a":
-        special = activity_live_allowlisted(key, final_url)
+        special = activity_live_allowlisted(key, final_url, locale=locale)
         if special is not None:
             return special
 
@@ -137,6 +151,7 @@ def live_redirect_failure_message(
     final_url: str | None,
     *,
     label: str | None = None,
+    locale: str | None = None,
 ) -> str:
     """Human-readable live FAIL reason (homepage collapse called out explicitly)."""
     expected = entry.get("expected_redirect")
@@ -147,7 +162,7 @@ def live_redirect_failure_message(
         and key in ACTIVITY_EXPECTED_REDIRECT_OVERRIDES
         and key != "3monthplan"
         and final_url
-        and is_locale_homepage(final_url)
+        and is_locale_homepage(final_url, locale)
     ):
         return (
             f"{prefix}: live redirect {final_url!r} is locale homepage — "
@@ -302,14 +317,14 @@ def check_qr(
         if live:
             final = probe_final_url(decoded)
             row["live_final_url"] = final
-            ok_live = live_redirect_ok(entry, final)
+            ok_live = live_redirect_ok(entry, final, locale=lang)
             row["live_ok"] = ok_live
             if not ok_live:
                 failures.append(
                     {
                         "id": f"{stem}:live",
                         "message": live_redirect_failure_message(
-                            entry, final, label=png.name
+                            entry, final, label=png.name, locale=lang
                         ),
                     }
                 )

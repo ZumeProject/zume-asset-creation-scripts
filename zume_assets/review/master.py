@@ -32,6 +32,42 @@ ACTIVITY_EXPECTED_REDIRECT_OVERRIDES = {
     "next_steps": "/join-the-community",
 }
 
+# Locales where zume6 intentionally hides Get a Coach (no Dispatch coaches).
+# Source of truth: ChrisChasm/zume6 platform/frontend/src/lib/coach-availability.ts
+# NO_COACH_LOCALES — coachOfferedFor() is false → /{locale}/get-a-coach 307→ /{locale}.
+# Keep in sync when that set changes. Fail-open for locales not listed.
+NO_COACH_LOCALES: frozenset[str] = frozenset(
+    {
+        "de",
+        "bn",
+        "gu",
+        "pa",
+        "pa_pk",
+        "ja",
+        "ha",
+        "mr",
+        "tr",
+        "ko",
+        "th",
+        "fa",
+        "mai",
+        "or",
+        "kn",
+        "yo",
+        "pl",
+        "bho",
+        "ku",
+        "ro",
+        "hr",
+        "hy",
+        "lo",
+        "bs",
+        "prs",
+        "ky",
+        "pus",
+    }
+)
+
 
 def default_master_path(lang: str, course_type: str, root: Path | None = None) -> Path:
     repo = root or load_repo_root()
