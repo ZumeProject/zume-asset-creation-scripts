@@ -15,12 +15,12 @@ Keynote decks are built only on **macOS** with Keynote Creator Studio. Drivers l
 python3 -m zume_assets prereqs --lang <lang>
 ```
 
-Must be clean for:
+`assemble_images_keynote.py` auto-runs the **full** readiness gate and aborts on any BLOCK. Must be clean for:
 
 1. Vimeo map entry + local `output/{lang}/videos/` MP4s (`SOURCE.json`)
 2. Capture pack: Agent Store `media/{lang}-{10|20|intensive}-presenter-captures/` (PNGs + `manifest.json`; sync MP4s into pack `videos/`)
 
-Missing pack → assemble exits with an explicit path. Missing Vimeo map → download cannot run; escalate to Chris (do not invent folder ids). PDF-only success does **not** mean Keynote is ready.
+Missing map/pack/videos → assemble exits with next steps. Escalate missing folder ids to Chris (do not invent). PDF-only success does **not** mean Keynote is ready.
 
 ## Normal rebuild
 
