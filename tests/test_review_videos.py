@@ -242,4 +242,129 @@ def test_video_check_id_20_without_alias_still_fails(tmp_path: Path):
         report_dir_path=tmp_path / "review",
     )
     assert report["status"] == "fail"
-    assert any(f.get("id") == "20" for f in report["failures"])
+    # SOURCE-only iterates master ids: missing 19 fails; bare 20 is an ignored extra.
+    assert any(f.get("id") == "19:source-missing" for f in report["failures"])
+    assert not any(f.get("id") == "20" for f in report["failures"])
+    assert any("not in course master (ignored)" in n for n in report["notes"])
+
+
+def test_video_check_source_extras_are_notes_not_fail(tmp_path: Path):
+    """Vimeo-folder extras (31/32/68) must not FAIL SOURCE-only review."""
+    master = tmp_path / "master.json"
+    shutil.copy(FIXTURES / "master-en-10.json", master)
+    source_data = json.loads((FIXTURES / "SOURCE.json").read_text(encoding="utf-8"))
+    for extra_id, vimeo in (("31", "111"), ("32", "222"), ("68", "333")):
+        source_data["videos"][extra_id] = {
+            "vimeo_id": vimeo,
+            "title": f"extra-{extra_id}",
+            "status": "cached",
+        }
+    source = tmp_path / "SOURCE.json"
+    source.write_text(json.dumps(source_data), encoding="utf-8")
+
+    report = check_videos(
+        "en",
+        "10",
+        master_path=master,
+        source_path=source,
+        pack=tmp_path / "missing-pack",
+        report_dir_path=tmp_path / "review",
+    )
+    assert report["status"] == "pass", report["failures"]
+    assert report["summary"]["checked"] == 2
+    assert not any(f.get("id") in {"31", "32", "68"} for f in report["failures"])
+    assert any(
+        "SOURCE.json keys not in course master (ignored): 31, 32, 68" in n
+        for n in report["notes"]
+    )
+
+
+def test_video_check_source_missing_master_id_still_fails(tmp_path: Path):
+    master = tmp_path / "master.json"
+    shutil.copy(FIXTURES / "master-en-10.json", master)
+    source_data = json.loads((FIXTURES / "SOURCE.json").read_text(encoding="utf-8"))
+    del source_data["videos"]["2"]
+    source_data["videos"]["68"] = {
+        "vimeo_id": "999",
+        "title": "extra",
+        "status": "cached",
+    }
+    source = tmp_path / "SOURCE.json"
+    source.write_text(json.dumps(source_data), encoding="utf-8")
+
+    report = check_videos(
+        "en",
+        "10",
+        master_path=master,
+        source_path=source,
+        pack=tmp_path / "missing-pack",
+        report_dir_path=tmp_path / "review",
+    )
+    assert report["status"] == "fail"
+    assert any(f.get("id") == "2:source-missing" for f in report["failures"])
+    assert not any(f.get("id") == "68" for f in report["failures"])
+
+
+def test_video_check_pack_extras_remain_notes(tmp_path: Path):
+    master = tmp_path / "master.json"
+    shutil.copy(FIXTURES / "master-en-10.json", master)
+    source_data = json.loads((FIXTURES / "SOURCE.json").read_text(encoding="utf-8"))
+    source_data["videos"]["31"] = {
+        "vimeo_id": "111",
+        "title": "overview",
+        "status": "cached",
+    }
+    source = tmp_path / "SOURCE.json"
+    source.write_text(json.dumps(source_data), encoding="utf-8")
+
+    pack = tmp_path / "pack"
+    (pack / "work").mkdir(parents=True)
+    (pack / "videos").mkdir()
+    shutil.copy(FIXTURES / "video-replace-list.json", pack / "work" / "video-replace-list.json")
+    replace = json.loads((pack / "work" / "video-replace-list.json").read_text(encoding="utf-8"))
+    for item in replace:
+        mp4 = pack / "videos" / f"{item['video_id']}.mp4"
+        mp4.write_bytes(b"\x00" * 16)
+        item["path"] = str(mp4)
+    (pack / "work" / "video-replace-list.json").write_text(json.dumps(replace), encoding="utf-8")
+
+    report = check_videos(
+        "en",
+        "10",
+        master_path=master,
+        source_path=source,
+        pack=pack,
+        report_dir_path=tmp_path / "review",
+    )
+    assert report["status"] == "pass", report["failures"]
+    assert any("not in embed list (ignored): 31" in n for n in report["notes"])
+
+
+def test_default_pack_dir_prefers_agent_store_capture(tmp_path: Path):
+    from zume_assets.review.paths import default_pack_dir
+
+    root = tmp_path / "repo"
+    store = tmp_path / "store"
+    capture = store / "media" / "pus-10-presenter-captures"
+    (capture / "work").mkdir(parents=True)
+    (capture / "work" / "video-replace-list.json").write_text("[]", encoding="utf-8")
+    local = root / "output" / "pus" / "pack-10"
+    local.mkdir(parents=True)
+    (local / "manifest.json").write_text("{}", encoding="utf-8")
+
+    chosen = default_pack_dir("pus", "10", root=root, store=store)
+    assert chosen == capture
+
+
+def test_default_pack_dir_falls_back_to_local_output(tmp_path: Path):
+    from zume_assets.review.paths import default_pack_dir
+
+    root = tmp_path / "repo"
+    store = tmp_path / "store"
+    store.mkdir()
+    local = root / "output" / "en" / "pack-10"
+    (local / "work").mkdir(parents=True)
+    (local / "work" / "video-replace-list.json").write_text("[]", encoding="utf-8")
+
+    chosen = default_pack_dir("en", "10", root=root, store=store)
+    assert chosen == local

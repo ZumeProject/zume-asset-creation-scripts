@@ -68,6 +68,35 @@ def activity_live_allowlisted(key: str, final_url: str) -> bool | None:
     return None
 
 
+def _path_matches_expected_redirect(path: str, expected: str) -> bool:
+    """Match expected path as exact or locale-prefixed final (…/{lang}/get-a-coach)."""
+    if not expected:
+        return False
+    cleaned = (path or "/").rstrip("/") or "/"
+    expected_clean = expected.rstrip("/") or "/"
+    if cleaned == expected_clean:
+        return True
+    # Non-EN marketing pages: /es/get-a-coach, /pus/join-the-community, …
+    if expected_clean.startswith("/") and cleaned.endswith(expected_clean):
+        prefix = cleaned[: -len(expected_clean)]
+        # Require a single locale segment before the expected path.
+        return bool(prefix) and prefix.startswith("/") and "/" not in prefix[1:]
+    return False
+
+
+def is_locale_homepage(final_url: str, locale: str | None = None) -> bool:
+    """True when final URL is bare site root or /{locale} (marketing page collapsed)."""
+    parsed = urlparse(final_url)
+    path = (parsed.path or "/").rstrip("/") or "/"
+    if path == "/":
+        return True
+    if locale:
+        return path == f"/{str(locale).strip('/')}"
+    # Single path segment like /pus or /es with no further page.
+    parts = [p for p in path.split("/") if p]
+    return len(parts) == 1
+
+
 def live_redirect_ok(entry: dict[str, Any], final_url: str | None) -> bool:
     if not final_url:
         return False
@@ -82,23 +111,53 @@ def live_redirect_ok(entry: dict[str, Any], final_url: str | None) -> bool:
 
     expected = str(entry.get("expected_redirect") or "")
     parsed = urlparse(final_url)
-    path_q = parsed.path
+    path = parsed.path or "/"
+    path_q = path
     if parsed.query:
-        path_q = f"{parsed.path}?{parsed.query}"
-    # Allow expected as suffix match on path+query (hosts may vary www vs apex).
-    if expected and expected in path_q:
+        path_q = f"{path}?{parsed.query}"
+    # Exact / locale-prefixed path, or expected substring on path+query (checkin query).
+    if expected and (
+        _path_matches_expected_redirect(path, expected) or expected in path_q
+    ):
         return True
     # Fallback: checkin / video / activity patterns.
     if kind == "c":
         code = str(entry.get("code") or "")
-        return "/checkin" in parsed.path and (not code or code in (parsed.query or ""))
+        return "/checkin" in path and (not code or code in (parsed.query or ""))
     if kind == "v":
         qs = parse_qs(parsed.query)
-        return "/app/video" in parsed.path and key in (qs.get("v") or [])
+        return "/app/video" in path and key in (qs.get("v") or [])
     if kind == "a":
-        return f"/activities/{key}" in parsed.path or parsed.path.rstrip("/").endswith(f"/{key}")
+        return f"/activities/{key}" in path or path.rstrip("/").endswith(f"/{key}")
     return False
 
+
+def live_redirect_failure_message(
+    entry: dict[str, Any],
+    final_url: str | None,
+    *,
+    label: str | None = None,
+) -> str:
+    """Human-readable live FAIL reason (homepage collapse called out explicitly)."""
+    expected = entry.get("expected_redirect")
+    key = str(entry.get("key") or "")
+    prefix = label or str(entry.get("png_stem") or key or "qr")
+    if (
+        entry.get("kind") == "a"
+        and key in ACTIVITY_EXPECTED_REDIRECT_OVERRIDES
+        and key != "3monthplan"
+        and final_url
+        and is_locale_homepage(final_url)
+    ):
+        return (
+            f"{prefix}: live redirect {final_url!r} is locale homepage — "
+            f"marketing page missing for {key} (expected {expected!r}); "
+            f"not a bad QR PNG"
+        )
+    return (
+        f"{prefix}: live redirect {final_url!r} does not match "
+        f"expected {expected!r}"
+    )
 
 def check_qr(
     lang: str,
@@ -249,9 +308,8 @@ def check_qr(
                 failures.append(
                     {
                         "id": f"{stem}:live",
-                        "message": (
-                            f"{png.name}: live redirect {final!r} does not match "
-                            f"expected {entry.get('expected_redirect')!r}"
+                        "message": live_redirect_failure_message(
+                            entry, final, label=png.name
                         ),
                     }
                 )

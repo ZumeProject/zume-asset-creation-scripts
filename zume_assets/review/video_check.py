@@ -138,12 +138,17 @@ def check_videos(
     pack: Path | None = None,
     report_dir_path: Path | None = None,
     root: Path | None = None,
+    store: Path | None = None,
 ) -> dict[str, Any]:
     """Compare pack/SOURCE video ids + titles to the online master video map."""
     repo = root or load_repo_root()
     master_path = master_path or default_master_path(lang, course_type, repo)
     source_path = source_path or source_json(lang, repo)
-    pack = pack if pack is not None else default_pack_dir(lang, course_type, repo)
+    pack = (
+        pack
+        if pack is not None
+        else default_pack_dir(lang, course_type, repo, store=store)
+    )
     report_dir_path = report_dir_path or report_dir(lang, repo)
 
     failures: list[dict[str, Any]] = []
@@ -312,6 +317,9 @@ def check_videos(
         row["status"] = "pass" if ok else "fail"
         results.append(row)
 
+    def _id_sort_key(k: str) -> tuple[int, int | str]:
+        return (0, int(k)) if k.isdigit() else (1, k)
+
     if embed_items:
         for item in embed_items:
             tid = str(item.get("video_id") or "")
@@ -330,11 +338,13 @@ def check_videos(
             mp4_path = Path(str(item.get("path") or "")) if item.get("path") else None
             check_one(tid, slide_key=key or None, mp4=mp4_path)
     elif source_videos:
-        for tid in sorted(source_videos, key=lambda k: (0, int(k)) if k.isdigit() else (1, k)):
+        # SOURCE-only: gate on course master ids. Vimeo-folder extras (e.g. 31/32/68)
+        # are notes only — never FAIL solely for ids outside the course master.
+        for tid in sorted(online, key=_id_sort_key):
             check_one(tid)
     else:
         # Still verify master has videos; nothing local to compare.
-        for tid in sorted(online, key=lambda k: (0, int(k)) if k.isdigit() else (1, k)):
+        for tid in sorted(online, key=_id_sort_key):
             failures.append(
                 {
                     "id": f"{tid}:no-local",
@@ -342,11 +352,20 @@ def check_videos(
                 }
             )
 
-    # SOURCE keys not referenced by pack (informational note only if pack present).
-    if embed_items and source_videos:
-        extra = sorted(set(source_videos) - checked_ids)
-        if extra:
-            notes.append(f"SOURCE.json keys not in embed list: {', '.join(extra)}")
+    # SOURCE keys beyond pack embeds / course master are informational only.
+    if source_videos:
+        if embed_items:
+            extra = sorted(set(source_videos) - checked_ids, key=_id_sort_key)
+            if extra:
+                notes.append(
+                    f"SOURCE.json keys not in embed list (ignored): {', '.join(extra)}"
+                )
+        else:
+            extra = sorted(set(source_videos) - set(online), key=_id_sort_key)
+            if extra:
+                notes.append(
+                    f"SOURCE.json keys not in course master (ignored): {', '.join(extra)}"
+                )
 
     status = "pass" if not failures else "fail"
     report = {
