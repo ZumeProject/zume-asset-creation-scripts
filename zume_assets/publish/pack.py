@@ -22,7 +22,7 @@ def discover_pack(
     root: Path | None = None,
 ) -> list[UploadItem]:
     """
-    List PDF + Keynote (and optionally videos/) files to publish.
+    List PDF + Keynote + PPTX (and optionally videos/) files to publish.
 
     Missing production files are included with missing=True so dry-run / verify
     can report them; upload --execute refuses missing required assets.

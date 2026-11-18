@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 from .gcs import UploadItem, gcloud_available, storage_cp
+from .names import REQUIRED_KINDS
 from .pack import discover_pack, plan_uploads
 
 CpFn = Callable[[Path, str], None]
@@ -24,10 +25,11 @@ def upload_pack(
     root: Path | None = None,
 ) -> dict[str, Any]:
     """
-    Plan or execute upload of PDF + Keynote (optionally videos) for a language.
+    Plan or execute upload of PDF + Keynote + PPTX (optionally videos) for a language.
 
     Dry-run is the default (execute=False): returns the plan and commands that
     would run. With execute=True, copies via gcloud storage cp (or cp_fn).
+    Existing gs:// objects at the same path are overwritten (permitted).
     """
     items = discover_pack(
         lang,
@@ -37,9 +39,7 @@ def upload_pack(
         root=root,
     )
     plan = plan_uploads(items)
-    missing_required = [
-        i for i in items if i.missing and i.kind in {"pdf", "keynote"}
-    ]
+    missing_required = [i for i in items if i.missing and i.kind in REQUIRED_KINDS]
 
     result: dict[str, Any] = {
         "lang": lang,

@@ -6,8 +6,7 @@ Pipeline for regenerating offline Zúme training assets from live [zume6](https:
 
 - Typst **PDF** guidebooks (this CLI)
 - **Keynote** decks via `slides/assemble-keynote/` (macOS)
-
-PowerPoint / PPTX is not a production target.
+- **PPTX** via Keynote export during review (required for publish; do not restore `slides/assemble-pptx/`)
 
 See [AGENTS.md](AGENTS.md) for agent rules and [skills/](skills/) for step-by-step agent skills.
 
@@ -111,7 +110,7 @@ publish/                  # GCS publish notes (CLI: zume_assets publish)
 
 ## Publish (GCS)
 
-After a language pack is approved, upload PDF + Keynote to `gs://zume-file-mirror/{lang}/` and verify Downloads:
+After a language pack is approved, upload PDF + Keynote + PPTX to `gs://zume-file-mirror/{lang}/` and verify Downloads:
 
 ```bash
 python3 -m zume_assets publish upload --lang es
@@ -119,12 +118,11 @@ python3 -m zume_assets publish upload --lang es --execute
 python3 -m zume_assets publish verify-downloads --lang es
 ```
 
-Requires `gcloud` + auth on the machine. Dry-run by default. See [publish/README.md](publish/README.md) and [skills/publish-gcs-assets/SKILL.md](skills/publish-gcs-assets/SKILL.md).
+Requires `gcloud` + auth on the machine. Dry-run by default; `--execute` overwrites same-named GCS objects. See [publish/README.md](publish/README.md) and [skills/publish-gcs-assets/SKILL.md](skills/publish-gcs-assets/SKILL.md).
 
 ### Notes
 
-- Only publish after human sign-off for that language; use `--execute` only after a dry-run looks right.
-- Production outputs are PDF + Keynote only. PPTX tooling was removed; do not restore it for production.
-- The CLI only builds PDF. Keynote uses `slides/assemble-keynote/` on macOS.
+- Only publish after human sign-off for that language; use `--execute` only after a dry-run looks right. Overwrite is then the default (no second prompt).
+- Build CLI only builds PDF. Keynote uses `slides/assemble-keynote/` on macOS; PPTX for publish is Keynote export (do not restore `slides/assemble-pptx/`).
 - Video downloads: use `slides/videos/` (production). `slide-builder/` still holds `vimeo-folders.json` and shared requirements until a follow-up relocates them.
 - HTML workbook at `https://zume.training/workbook/10` remains the interactive preview; this PDF is a parallel renderer over the same APIs.

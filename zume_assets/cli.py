@@ -277,15 +277,16 @@ def _cmd_publish(argv: list[str] | None) -> int:
     parser = argparse.ArgumentParser(
         prog="zume-assets publish",
         description=(
-            "Upload approved PDF + Keynote packs to gs://zume-file-mirror/{lang}/ "
-            "and verify the language downloads listing on api.zume.training."
+            "Upload approved PDF + Keynote + PPTX packs to gs://zume-file-mirror/{lang}/ "
+            "(overwrites same-named objects on --execute) and verify downloads on "
+            "api.zume.training."
         ),
     )
     sub = parser.add_subparsers(dest="publish_command", required=True)
 
     up = sub.add_parser(
         "upload",
-        help="Upload local output/{lang}/ PDF + Keynote (dry-run by default)",
+        help="Upload local output/{lang}/ PDF + Keynote + PPTX (dry-run by default)",
     )
     up.add_argument("--lang", required=True, help="Locale code (e.g. es)")
     up.add_argument(
@@ -312,7 +313,7 @@ def _cmd_publish(argv: list[str] | None) -> int:
     up.add_argument(
         "--allow-missing",
         action="store_true",
-        help="Dry-run even when some PDF/Keynote files are missing",
+        help="Dry-run even when some PDF/Keynote/PPTX files are missing",
     )
     up.add_argument(
         "--json",
@@ -322,7 +323,10 @@ def _cmd_publish(argv: list[str] | None) -> int:
 
     ver = sub.add_parser(
         "verify-downloads",
-        help="Assert api.zume.training downloads/{lang} lists expected PDF/Keynote names",
+        help=(
+            "Assert downloads/{lang} lists expected PDF/Keynote/PPTX names "
+            "(guidebook_*/keynote_*/powerpoint_*)"
+        ),
     )
     ver.add_argument("--lang", required=True, help="Locale code (e.g. es)")
     ver.add_argument(
