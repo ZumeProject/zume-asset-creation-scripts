@@ -1,6 +1,8 @@
 # Training videos (Vimeo)
 
-Folder IDs live in `slide-builder/parts/vimeo-folders.json`.
+Folder IDs live in `slide-builder/parts/vimeo-folders.json`. Languages without a
+map entry cannot download — run `python3 -m zume_assets prereqs --lang <lang>`
+and ask Chris for a real folder id (never invent one). Known production:
 
 | Lang | Folder | URL |
 |---|---|---|

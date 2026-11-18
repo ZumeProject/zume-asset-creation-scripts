@@ -3,6 +3,7 @@ import json
 from zume_assets.book_assembler import (
     _typst_lang_region,
     assemble_book,
+    congratulations_block,
     format_duration,
     load_course_manifest,
     overview_block,
@@ -160,3 +161,37 @@ def test_assemble_book_dari_is_rtl(tmp_path, monkeypatch):
     assert book["direction"] == "rtl"
     assert book["typst_lang"] == "prs"
     assert book["output_name"] == "Zume-Training-10-Session-prs.pdf"
+
+
+def test_congratulations_uses_presenter_ui(tmp_path):
+    ui = {
+        "label.congratulations": "مبارک شه.",
+        "final.congratulations": "مبارک شه چې تاسو د زومى روزنه بشپړه کړه!",
+        "s1.session.10.activity.next_steps.1.instruction.2": "د QR کوډ په وسيله د زومى ټولنې سره يو ځای شئ.",
+    }
+    block = congratulations_block(
+        ui,
+        course_type="10",
+        locale="pus",
+        build_dir=tmp_path,
+        text_direction="rtl",
+    )
+    assert block["label"] == "مبارک شه."
+    assert block["paragraphs"][0] == "مبارک شه چې تاسو د زومى روزنه بشپړه کړه!"
+    assert block["paragraphs"][1] == "د QR کوډ په وسيله د زومى ټولنې سره يو ځای شئ."
+
+
+def test_congratulations_english_fallback_marked_ltr_on_rtl(tmp_path):
+    block = congratulations_block(
+        {},
+        course_type="10",
+        locale="pus",
+        build_dir=tmp_path,
+        text_direction="rtl",
+    )
+    assert block["label"] == "CONGRATULATIONS"
+    assert block["paragraphs"][0] == {
+        "text": "CONGRATULATIONS on completing Zume Training!",
+        "dir": "ltr",
+    }
+    assert block["paragraphs"][1]["dir"] == "ltr"

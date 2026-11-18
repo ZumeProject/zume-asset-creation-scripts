@@ -28,6 +28,41 @@ ACTIVITY_KEY_TO_IMAGE = {
 _IMAGE_PLACEHOLDER = re.compile(r"^\{\{\s*([A-Za-z0-9_]+)\s*\}\}$")
 
 
+def is_image_shortcode(text: str) -> bool:
+    return bool(_IMAGE_PLACEHOLDER.match((text or "").strip()))
+
+
+def merge_script_paragraphs_with_en_shortcodes(
+    locale_paras: list[str],
+    en_paras: list[str],
+) -> list[str]:
+    """Restore ``{{ *_image }}`` slots from English when a locale script omitted them.
+
+    Translated scripts (e.g. Pashto video 24) often drop pace shortcodes. Keep
+    locale prose and splice EN shortcode paragraphs in EN order so Typst still
+    gets the same diagram slots as English.
+    """
+    if any(is_image_shortcode(p) for p in locale_paras):
+        return locale_paras
+    if not any(is_image_shortcode(p) for p in en_paras):
+        return locale_paras
+
+    locale_text = [p for p in locale_paras if (p or "").strip()]
+    out: list[str] = []
+    text_i = 0
+    for en_p in en_paras:
+        if is_image_shortcode(en_p):
+            out.append(en_p.strip())
+            continue
+        if text_i < len(locale_text):
+            out.append(locale_text[text_i])
+            text_i += 1
+    while text_i < len(locale_text):
+        out.append(locale_text[text_i])
+        text_i += 1
+    return out
+
+
 def placeholder_to_image_key(name: str) -> str | None:
     """Map shortcode name to presenter.images key.
 
@@ -106,8 +141,15 @@ def resolve_paragraph_items(
     paragraphs: list[str],
     images: dict[str, Any],
     build_dir: Path,
+    *,
+    missing: list[str] | None = None,
 ) -> list[str | dict[str, str]]:
-    """Turn text paragraphs and ``{{ *_image }}`` shortcodes into Typst content items."""
+    """Turn text paragraphs and ``{{ *_image }}`` shortcodes into Typst content items.
+
+    Unresolved shortcodes are never leaked as literal ``{{ … }}``. When
+    ``missing`` is provided, image keys that cannot be downloaded are appended
+    so the caller can hard-fail instead of leaving blank slots.
+    """
     out: list[str | dict[str, str]] = []
     for para in paragraphs:
         text = (para or "").strip()
@@ -122,5 +164,6 @@ def resolve_paragraph_items(
         item = ensure_image(build_dir, key, images)
         if item:
             out.append(item)
-        # Drop unresolved shortcodes so they never leak as literal {{ … }}
+        elif missing is not None:
+            missing.append(key)
     return out

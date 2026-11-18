@@ -246,7 +246,15 @@ def main() -> int:
     cfg = COURSE[args.type]
     pack = pack_dir(lang, args.type)
     stem = cfg["stem"].format(lang=lang)
-    manifest = json.loads((pack / "manifest.json").read_text(encoding="utf-8"))
+    manifest_path = pack / "manifest.json"
+    if not manifest_path.exists():
+        raise SystemExit(
+            f"Missing presenter capture pack for {lang}/{args.type}: {manifest_path}. "
+            "Capture via slides/capture/capture_presenter.py or copy an approved pack to "
+            f"Agent Store media/{lang}-{args.type}-presenter-captures/. "
+            f"Also run: python3 -m zume_assets prereqs --lang {lang}"
+        )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     slides = list(manifest.get("slides") or [])
     paths = [str(resolve_png(pack, s)) for s in slides]
     out = pack / "work" / f"{stem}-images.key"

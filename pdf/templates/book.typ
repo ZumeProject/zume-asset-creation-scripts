@@ -141,7 +141,7 @@
   v(0.65em)
 }
 
-/// Script/activity body item: plain string, "• …" bullet line, or `{image, alt}` from book.json.
+/// Script/activity body item: plain string, "• …" bullet line, `{image, alt}`, or `{text, dir}`.
 #let content-item(item) = {
   if type(item) == str {
     // Assembler turns markdown "- " / HTML <li> into "• …" paragraphs.
@@ -162,7 +162,15 @@
       ]
       v(para-gap)
     } else if item.at("text", default: none) != none {
-      para-block[#item.text]
+      // English fallback copy on RTL pages sets dir=ltr so punctuation does not flip.
+      let item-dir = item.at("dir", default: none)
+      if item-dir == "ltr" {
+        para-block[#text(dir: ltr)[#item.text]]
+      } else if item-dir == "rtl" {
+        para-block[#text(dir: rtl)[#item.text]]
+      } else {
+        para-block[#item.text]
+      }
     }
   }
 }
@@ -515,9 +523,8 @@
       #align(center)[
         #text(size: 16pt, weight: "bold", fill: accent)[#block-data.label]
         #v(0.55em)
-        #for p in block-data.at("paragraphs", default: ()) [
-          #para-block[#p]
-        ]
+        // paragraphs may be plain strings (locale) or {text, dir} for LTR English fallback
+        #paras(block-data.at("paragraphs", default: ()))
         #v(0.45em)
         #if block-data.at("qr", default: none) != none [
           #image(block-data.qr, width: 1.35in)

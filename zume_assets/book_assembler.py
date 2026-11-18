@@ -21,8 +21,23 @@ from .html_text import (
     strip_markdown,
     unescape_markdown,
 )
-from .images import ensure_image, resolve_image_key, resolve_paragraph_items
+from .images import (
+    ensure_image,
+    merge_script_paragraphs_with_en_shortcodes,
+    resolve_image_key,
+    resolve_paragraph_items,
+)
 from .qr import activity_url, checkin_url, make_qr_png, video_url
+
+# Presenter UI keys for the congratulations / join-community closing copy.
+# Course-specific join lines mirror the final next_steps / join_the_community slide.
+_JOIN_COMMUNITY_QR_KEYS = {
+    "10": "s1.session.10.activity.next_steps.1.instruction.2",
+    "20": "s2.session.20.activity.join_the_community.1.instruction.2",
+    "intensive": "s3.session.5.activity.next_steps.1.next_steps.instruction.2",
+}
+_EN_CONGRATS_BODY = "CONGRATULATIONS on completing Zume Training!"
+_EN_JOIN_QR_BODY = "Join Zume community using the QR code."
 
 
 def _sanitize_plain(value: Any) -> Any:
@@ -292,6 +307,54 @@ def ensure_qr(build_dir: Path, name: str, url: str) -> str:
     return rel
 
 
+def _localized_or_ltr_fallback(
+    ui: dict[str, str],
+    *keys: str,
+    default: str,
+    text_direction: str,
+) -> str | dict[str, str]:
+    """Prefer locale UI text; mark English fallback as LTR so RTL pages keep punctuation."""
+    value = ui_get(ui, *keys, default="")
+    if value:
+        return value
+    if text_direction == "rtl":
+        return {"text": default, "dir": "ltr"}
+    return default
+
+
+def congratulations_block(
+    ui: dict[str, str],
+    *,
+    course_type: str,
+    locale: str,
+    build_dir: Path,
+    text_direction: str = "ltr",
+) -> dict[str, Any]:
+    """Last-page congratulations + join-community QR, sourced from presenter UI."""
+    join_key = _JOIN_COMMUNITY_QR_KEYS.get(course_type, _JOIN_COMMUNITY_QR_KEYS["10"])
+    qr_target = activity_url("join_the_community", locale=locale)
+    return {
+        "kind": "congratulations",
+        "label": ui_get(ui, "label.congratulations", default="CONGRATULATIONS"),
+        "paragraphs": [
+            _localized_or_ltr_fallback(
+                ui,
+                "final.congratulations",
+                default=_EN_CONGRATS_BODY,
+                text_direction=text_direction,
+            ),
+            _localized_or_ltr_fallback(
+                ui,
+                join_key,
+                default=_EN_JOIN_QR_BODY,
+                text_direction=text_direction,
+            ),
+        ],
+        "qr": ensure_qr(build_dir, "activity-join_the_community", qr_target),
+        "qr_url": qr_target,
+    }
+
+
 def assemble_session_blocks(
     session: dict[str, Any],
     *,
@@ -300,6 +363,8 @@ def assemble_session_blocks(
     build_dir: Path,
     script_cache: dict[str, dict[str, Any] | None],
     activity_cache: dict[str, dict[str, Any] | None],
+    text_direction: str = "ltr",
+    missing_images: list[str] | None = None,
 ) -> list[dict[str, Any]]:
     ui: dict[str, str] = presenter.get("ui") or {}
     videos: dict[str, Any] = presenter.get("videos") or {}
@@ -307,6 +372,7 @@ def assemble_session_blocks(
     prefix = f"{UI_PREFIX[course_type]}.session.{session['session']}"
     blocks: list[dict[str, Any]] = []
     pending_video: str | None = None
+    missing = missing_images if missing_images is not None else []
 
     for slide in session.get("slides") or []:
         stype = slide.get("type")
@@ -387,14 +453,27 @@ def assemble_session_blocks(
             pending_video = None
             if not video_key:
                 continue
+            script_lang = str(presenter.get("locale") or "en")
             if video_key not in script_cache:
-                script_cache[video_key] = fetch_script_by_video(video_key, presenter.get("locale") or "en")
+                script_cache[video_key] = fetch_script_by_video(video_key, script_lang)
             script = script_cache[video_key] or {}
             title = (videos.get(video_key) or {}).get("title") or concept_title(presenter, video_key)
+            script_paras = paragraphs(script.get("content") or "")
+            # Locale translations often drop {{ paceN_image }} shortcodes; splice from EN.
+            if script_lang.lower() not in {"en", "en_us"}:
+                en_cache_key = f"en:{video_key}"
+                if en_cache_key not in script_cache:
+                    script_cache[en_cache_key] = fetch_script_by_video(video_key, "en")
+                en_script = script_cache[en_cache_key] or {}
+                script_paras = merge_script_paragraphs_with_en_shortcodes(
+                    script_paras,
+                    paragraphs(en_script.get("content") or ""),
+                )
             body = resolve_paragraph_items(
-                paragraphs(script.get("content") or ""),
+                script_paras,
                 presenter.get("images") or {},
                 build_dir,
+                missing=missing,
             )
             qr_target = video_url(video_key, locale=locale)
             qr = ensure_qr(build_dir, f"video-{video_key}", qr_target)
@@ -459,6 +538,7 @@ def assemble_session_blocks(
                     paragraphs(activity_body),
                     presenter.get("images") or {},
                     build_dir,
+                    missing=missing,
                 ),
                 "qr": qr,
                 "qr_caption": body_title,
@@ -522,11 +602,11 @@ def assemble_session_blocks(
             if image_item:
                 block["image"] = image_item["image"]
                 block["image_alt"] = image_item.get("alt") or title
+            elif image_key:
+                # Do not silently leave a blank diagram slot or English placeholder note.
+                missing.append(image_key)
             else:
-                # Fallback only when the presenter has no matching asset.
-                block["paragraphs"] = [
-                    f"(See the {title} diagram in the online workbook or activity resource.)"
-                ]
+                missing.append(f"unmapped_left_image:{content_key or activity_key or '?'}")
             if activity_key:
                 qr_target = activity_url(str(activity_key), locale=locale)
                 qr = ensure_qr(build_dir, f"activity-{activity_key}", qr_target)
@@ -553,18 +633,14 @@ def assemble_session_blocks(
             continue
 
         if stype == "congratulations":
-            qr_target = activity_url("join_the_community", locale=locale)
             blocks.append(
-                {
-                    "kind": "congratulations",
-                    "label": ui_get(ui, "label.congratulations", default="CONGRATULATIONS"),
-                    "paragraphs": [
-                        "Congratulations on completing Zúme Training!",
-                        "Join the Zúme community using the QR code.",
-                    ],
-                    "qr": ensure_qr(build_dir, "activity-join_the_community", qr_target),
-                    "qr_url": qr_target,
-                }
+                congratulations_block(
+                    ui,
+                    course_type=course_type,
+                    locale=locale,
+                    build_dir=build_dir,
+                    text_direction=text_direction,
+                )
             )
             continue
 
@@ -616,6 +692,7 @@ def assemble_book(
     typst_lang, typst_region = _typst_lang_region(lang)
 
     sessions_out: list[dict[str, Any]] = []
+    missing_images: list[str] = []
     for session in sessions_manifest:
         title = ui_get(
             presenter.get("ui") or {},
@@ -629,6 +706,8 @@ def assemble_book(
             build_dir=build_dir,
             script_cache=script_cache,
             activity_cache=activity_cache,
+            text_direction=text_direction,
+            missing_images=missing_images,
         )
         sessions_out.append(
             {
@@ -643,18 +722,23 @@ def assemble_book(
 
     # Append congratulations after final session if not already present
     if sessions_out and not any(b.get("kind") == "congratulations" for b in sessions_out[-1]["blocks"]):
-        qr_target = activity_url("join_the_community", locale=locale)
         sessions_out[-1]["blocks"].append(
-            {
-                "kind": "congratulations",
-                "label": ui_get(presenter.get("ui") or {}, "label.congratulations", default="CONGRATULATIONS"),
-                "paragraphs": [
-                    "Congratulations on completing Zúme Training!",
-                    "Join the Zúme community using the QR code.",
-                ],
-                "qr": ensure_qr(build_dir, "activity-join_the_community", qr_target),
-                "qr_url": qr_target,
-            }
+            congratulations_block(
+                presenter.get("ui") or {},
+                course_type=course_type,
+                locale=locale,
+                build_dir=build_dir,
+                text_direction=text_direction,
+            )
+        )
+
+    if missing_images:
+        unique = sorted(set(missing_images))
+        raise RuntimeError(
+            "Required guidebook diagram image(s) missing from presenter content or download "
+            f"failed for lang={lang!r}: {', '.join(unique)}. "
+            "Fix presenter.images URLs for this locale (or EN fallback assets), then rebuild. "
+            "Do not ship PDFs with blank pace / Four Fields / Gen Mapping slots."
         )
 
     if cache_api:
