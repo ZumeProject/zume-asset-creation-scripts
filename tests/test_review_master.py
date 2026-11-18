@@ -37,7 +37,10 @@ def test_expected_redirect_patterns():
     assert expected_redirect_path("a", "soaps", "en") == "/activities/soaps"
     # 3monthplan intentionally lands on auth/login (create-your-plan requires login).
     assert expected_redirect_path("a", "3monthplan", "en") == "/auth/login"
-    assert expected_redirect_path("a", "getacoach", "en") == "/activities/getacoach"
+    # Coaching/community QR land on marketing pages, not /activities/{key}.
+    assert expected_redirect_path("a", "getacoach", "en") == "/get-a-coach"
+    assert expected_redirect_path("a", "join_the_community", "es") == "/join-the-community"
+    assert expected_redirect_path("a", "next_steps", "es") == "/join-the-community"
 
 
 def test_build_master_offline_from_presenter_stub(tmp_path: Path):
