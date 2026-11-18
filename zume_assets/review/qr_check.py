@@ -52,8 +52,10 @@ def book_qr_urls(book: dict[str, Any]) -> dict[str, str]:
 def activity_live_allowlisted(key: str, final_url: str) -> bool | None:
     """Return True/False for activity keys with a special live rule; else None.
 
-    Only ``3monthplan`` is allowlisted today (auth/login → create-your-plan).
-    Homepage redirects for getacoach / join_the_community / next_steps stay FAIL.
+    ``3monthplan`` needs auth/login + create-your-plan in the query (stricter than
+    the generic expected_redirect substring). Other override keys fall through to
+    ``live_redirect_ok``'s expected_redirect path match (get-a-coach /
+    join-the-community). Homepage redirects stay FAIL.
     """
     if key not in ACTIVITY_EXPECTED_REDIRECT_OVERRIDES:
         return None

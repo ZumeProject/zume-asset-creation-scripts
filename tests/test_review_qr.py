@@ -122,14 +122,37 @@ def test_live_redirect_ok_3monthplan_rejects_bare_login_or_homepage():
     assert live_redirect_ok(entry, "https://zume.training/es") is False
 
 
+def test_live_redirect_ok_marketing_activity_pages():
+    """Prod QR finals for coaching/community land on locale marketing pages."""
+    cases = (
+        ("getacoach", "/get-a-coach", "https://zume.training/es/get-a-coach"),
+        (
+            "join_the_community",
+            "/join-the-community",
+            "https://zume.training/es/join-the-community",
+        ),
+        (
+            "next_steps",
+            "/join-the-community",
+            "https://zume.training/es/join-the-community",
+        ),
+    )
+    for key, expected, final in cases:
+        entry = {"kind": "a", "key": key, "expected_redirect": expected}
+        assert live_redirect_ok(entry, final) is True
+        # Fall through to expected_redirect path match (not 3monthplan-strict).
+        assert activity_live_allowlisted(key, final) is None
+
+
 def test_live_redirect_ok_homepage_activities_still_fail():
-    """getacoach / join_the_community / next_steps homepage redirects stay FAIL."""
-    for key in ("getacoach", "join_the_community", "next_steps"):
-        entry = {
-            "kind": "a",
-            "key": key,
-            "expected_redirect": f"/activities/{key}",
-        }
+    """Homepage redirects for marketing activities stay FAIL."""
+    cases = (
+        ("getacoach", "/get-a-coach"),
+        ("join_the_community", "/join-the-community"),
+        ("next_steps", "/join-the-community"),
+    )
+    for key, expected in cases:
+        entry = {"kind": "a", "key": key, "expected_redirect": expected}
         assert live_redirect_ok(entry, "https://zume.training/es") is False
         assert activity_live_allowlisted(key, "https://zume.training/es") is None
 

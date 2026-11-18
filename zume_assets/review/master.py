@@ -22,10 +22,14 @@ EXPECTED_REDIRECT = {
 
 # Activities whose live destination is intentionally not /activities/{id}.
 # Live QR checks use a stricter allowlist in qr_check.live_redirect_ok (path + query).
-# Do not add getacoach / join_the_community / next_steps here without evidence.
+# Evidence (production 2026-11-18): getacoach / join_the_community / next_steps land on
+# locale marketing pages, not /activities/{key} and not the homepage.
 ACTIVITY_EXPECTED_REDIRECT_OVERRIDES = {
     # create-your-plan requires login → …/auth/login?redirect=…/create-your-plan
     "3monthplan": "/auth/login",
+    "getacoach": "/get-a-coach",
+    "join_the_community": "/join-the-community",
+    "next_steps": "/join-the-community",
 }
 
 
