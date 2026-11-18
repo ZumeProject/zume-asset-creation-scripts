@@ -23,13 +23,20 @@ In-repo skills under [`skills/`](skills/). Cursor ignores `.cursor/`, so skills 
 2. **Keynote decks (`.key`)** — via `slides/assemble-keynote/` on macOS (not a CLI `--targets` value)
 3. **PPTX** — Keynote export during review (`File → Export To → PowerPoint`); required for publish. Do **not** restore `slides/assemble-pptx/`.
 
+**First step of every language build** is the readiness checklist. Agents must not skip it. `zume-assets build` / `build.py` auto-run it and **abort before Typst** when the Vimeo folder map is missing.
+
 ```bash
 pip install -e ".[dev]"
+# Explicit checklist (also embedded in build):
+python3 -m zume_assets prereqs --lang <lang>
+python3 -m zume_assets prereqs --lang <lang> --pdf-only   # map BLOCK; videos/packs NOTE
 python3 build.py --lang en --type 10 --targets pdf
 python3 -m zume_assets build --lang en --type 20 --targets pdf
 python3 -m zume_assets build --lang en --type intensive --targets pdf
 # Production PDFs include decorative bottom-gap images (required for signed-off packs):
 python3 -m zume_assets build --lang en --type 10 --targets pdf --gap-fillers
+# Hard-fail on missing local videos + capture packs too:
+python3 -m zume_assets build --lang en --type 10 --targets pdf --full-pack --gap-fillers
 ```
 
 Course types are `10`, `20`, and `intensive`. English is the signed-off target. The same PDF renderer also builds other locales (Arabic and Traditional Chinese have font and direction support).
@@ -40,9 +47,14 @@ Content comes from `https://api.zume.training/api/v1`. QR payloads use `https://
 
 **PDF diagram images** (pace timelines, Four Fields, Generational Mapping) come from presenter `images.*` URLs plus script `{{ paceN_image }}` shortcodes. Locale scripts that omit shortcodes are merged with English shortcode slots at assemble time. Missing required diagram assets hard-fail the build — do not ship blank slots. Decorative fillers are separate (`--gap-fillers` / `images/`).
 
-### Full pack prerequisites (before Keynote / videos)
+### Full pack prerequisites (before PDF / Keynote / videos)
 
-A Typst PDF-only run is **not** a finished language pack. When the user expects Keynote + videos, run the checklist first and treat any `BLOCK` as stop-ship (do not invent Vimeo folder ids):
+Readiness runs at the **start** of the process so a missing Vimeo folder is corrected before Typst or Keynote work. Do not invent Vimeo folder ids.
+
+| Mode | Vimeo map | Local MP4s | Capture packs |
+|---|---|---|---|
+| Default `build` / `prereqs --pdf-only` | **BLOCK** (abort) | NOTE warning | NOTE warning |
+| `build --full-pack` / `prereqs` / Keynote assemble | **BLOCK** | **BLOCK** | **BLOCK** |
 
 ```bash
 python3 -m zume_assets prereqs --lang <lang>
@@ -62,7 +74,7 @@ Proven production folder ids (do not guess others):
 | `es` | `269525` | https://vimeo.com/user/75461893/folder/269525 |
 | `pus` | `29862924` | https://vimeo.com/user/75461893/folder/29862924 |
 
-If a language is **not** in the map, Keynote cannot proceed until Chris provides the Vimeo folder and the map entry is added. Missing map/pack/folder is a required setup step, not an optional skip.
+If a language is **not** in the map, stop and ask Chris for the folder URL/id, add the map entry, then continue. Missing map/pack/folder is a required setup step, not an optional skip.
 
 ### Videos (production path)
 
@@ -80,12 +92,12 @@ Writes numbered MP4s plus `SOURCE.json` provenance. Keynote assemble reads pack 
 ### Keynote (macOS / Creator Studio)
 
 ```bash
-python3 -m zume_assets prereqs --lang en   # must be clean before assemble
+python3 -m zume_assets prereqs --lang en   # must be clean; assemble also re-checks
 python3 slides/assemble-keynote/assemble_images_keynote.py --type 10 --lang en
 python3 slides/assemble-keynote/embed_videos_choose.py --type 10 --lang en --promote
 ```
 
-See `slides/assemble-keynote/README.md` and the mac-keynote-assemble skill. Do not run Keynote assembly on Linux CI. Missing capture packs fail loudly (no silent PDF-only “success” when Keynote was requested).
+See `slides/assemble-keynote/README.md` and the mac-keynote-assemble skill. Do not run Keynote assembly on Linux CI. Missing map/videos/capture packs abort assemble (no silent success).
 
 ### Pipeline review (QR + video)
 

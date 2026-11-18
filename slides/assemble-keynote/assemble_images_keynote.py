@@ -244,6 +244,22 @@ def main() -> int:
     args = ap.parse_args()
     lang = args.lang.strip().lower()
     cfg = COURSE[args.type]
+    # Full-pack readiness before Keynote (map / videos / capture pack).
+    sys.path.insert(0, str(REPO_ROOT))
+    from zume_assets.lang_prereqs import (  # noqa: E402
+        blocking_issues,
+        check_build_readiness,
+        format_prereq_report,
+    )
+
+    issues = check_build_readiness(lang, mode="full", course_type=args.type)
+    blocked = blocking_issues(issues)
+    if blocked:
+        raise SystemExit(
+            format_prereq_report(lang, issues, aborted=True, mode="full").rstrip()
+            + "\nKeynote assemble aborted."
+        )
+
     pack = pack_dir(lang, args.type)
     stem = cfg["stem"].format(lang=lang)
     manifest_path = pack / "manifest.json"
