@@ -14,6 +14,13 @@ from .report import exit_code_for, utc_now_iso, write_report
 
 _SLIDE_KEY_RE = re.compile(r"^t(\d+)_b$")
 
+# Pack training ids that officially reuse another online video (course reformat).
+# Download writes SOURCE.json aliases + copies the MP4; review must PASS these.
+# Evidence (2026-11-18): t20_b / Faithfulness — no distinct Vimeo for 20; alias of 19.
+OFFICIAL_VIDEO_ALIASES: dict[str, str] = {
+    "20": "19",
+}
+
 
 def training_id_from_slide_key(key: str) -> str | None:
     """Map Keynote slide keys like t3_b → training id 3; special-cases t10_e / t10_g."""
@@ -23,6 +30,40 @@ def training_id_from_slide_key(key: str) -> str | None:
     match = _SLIDE_KEY_RE.match(key)
     if match:
         return match.group(1)
+    return None
+
+
+def source_alias_target(
+    training_id: str,
+    source_videos: dict[str, Any],
+    provenance_aliases: dict[str, Any] | None,
+) -> str | None:
+    """Return canonical training id if SOURCE records an official allowlisted alias.
+
+    Accepts either top-level ``aliases`` (``{"20": {"from": "19", ...}}``) or a
+    ``videos[id].status == "aliased"`` entry whose ``from`` / implied target matches
+    :data:`OFFICIAL_VIDEO_ALIASES`.
+    """
+    expected = OFFICIAL_VIDEO_ALIASES.get(training_id)
+    if expected is None:
+        return None
+
+    aliases = provenance_aliases or {}
+    entry = aliases.get(training_id)
+    if isinstance(entry, dict):
+        from_id = str(entry.get("from") or "").strip()
+        if from_id == expected:
+            return expected
+
+    meta = source_videos.get(training_id)
+    if isinstance(meta, dict) and str(meta.get("status") or "").casefold() == "aliased":
+        from_id = str(meta.get("from") or "").strip()
+        # Download copies into videos[20] without embedding "from"; top-level
+        # aliases carry it. If status is aliased and no conflicting from, trust
+        # the official map when expected target is present in SOURCE.
+        if from_id == expected or (not from_id and expected in source_videos):
+            return expected
+
     return None
 
 
@@ -133,11 +174,15 @@ def check_videos(
     online = master_video_map(master)
 
     source_videos: dict[str, Any] = {}
+    provenance_aliases: dict[str, Any] = {}
     if source_path.is_file():
         provenance = json.loads(source_path.read_text(encoding="utf-8"))
         raw = provenance.get("videos") or {}
         if isinstance(raw, dict):
             source_videos = {str(k): v for k, v in raw.items()}
+        raw_aliases = provenance.get("aliases") or {}
+        if isinstance(raw_aliases, dict):
+            provenance_aliases = {str(k): v for k, v in raw_aliases.items()}
         notes.append(f"SOURCE.json: {source_path}")
     else:
         notes.append(f"SOURCE.json not found at {source_path}")
@@ -165,16 +210,42 @@ def check_videos(
             "mp4": str(mp4) if mp4 else None,
         }
 
+        alias_of = None
         if online_meta is None:
-            failures.append(
-                {
-                    "id": training_id,
-                    "message": f"training id {training_id} not in master videos for {lang}/{course_type}",
-                }
-            )
-            row["status"] = "fail"
-            results.append(row)
-            return
+            alias_of = source_alias_target(training_id, source_videos, provenance_aliases)
+            if alias_of is not None:
+                online_meta = online.get(alias_of)
+                row["alias_of"] = alias_of
+                if online_meta is None:
+                    failures.append(
+                        {
+                            "id": f"{training_id}:alias-target-missing",
+                            "message": (
+                                f"training id {training_id} aliases {alias_of}, "
+                                f"but {alias_of} is not in master videos for {lang}/{course_type}"
+                            ),
+                        }
+                    )
+                    row["status"] = "fail"
+                    results.append(row)
+                    return
+                notes.append(
+                    f"id {training_id}: official alias of {alias_of} "
+                    f"(SOURCE + OFFICIAL_VIDEO_ALIASES)"
+                )
+            else:
+                failures.append(
+                    {
+                        "id": training_id,
+                        "message": (
+                            f"training id {training_id} not in master videos "
+                            f"for {lang}/{course_type}"
+                        ),
+                    }
+                )
+                row["status"] = "fail"
+                results.append(row)
+                return
 
         online_vimeo = _norm_vimeo(online_meta.get("vimeoId"))
         online_title = online_meta.get("title")
@@ -185,6 +256,8 @@ def check_videos(
         row["online_title"] = online_title
         row["source_vimeo_id"] = source_vimeo or None
         row["source_title"] = source_title
+        if alias_of is not None:
+            row["compared_to_training_id"] = alias_of
 
         ok = True
         if source_path.is_file():
@@ -198,30 +271,33 @@ def check_videos(
                 )
             elif online_vimeo and source_vimeo and online_vimeo != source_vimeo:
                 ok = False
+                compare_label = (
+                    f"online {alias_of} vimeoId" if alias_of else "online vimeoId"
+                )
                 failures.append(
                     {
                         "id": f"{training_id}:vimeo",
                         "message": (
                             f"id {training_id}: SOURCE vimeo_id {source_vimeo!r} "
-                            f"!= online vimeoId {online_vimeo!r}"
+                            f"!= {compare_label} {online_vimeo!r}"
                         ),
                     }
                 )
-            if source_title and online_title and _norm_title(source_title) != _norm_title(online_title):
-                # Titles from Vimeo folder often include "(01) …" while API is short;
-                # only fail when neither contains the other.
+            # Title strings are informational only: SOURCE uses Vimeo filenames;
+            # the API returns display titles. Matching vimeo_id is the embed gate.
+            elif (
+                source_title
+                and online_title
+                and _norm_title(source_title) != _norm_title(online_title)
+            ):
                 st = _norm_title(source_title)
                 ot = _norm_title(online_title)
                 if ot not in st and st not in ot:
-                    ok = False
-                    failures.append(
-                        {
-                            "id": f"{training_id}:title",
-                            "message": (
-                                f"id {training_id}: SOURCE title {source_title!r} "
-                                f"does not match online {online_title!r}"
-                            ),
-                        }
+                    row["title_note"] = "mismatch"
+                    notes.append(
+                        f"id {training_id}: title differs "
+                        f"(SOURCE {source_title!r} vs online {online_title!r}); "
+                        f"ignored — vimeo_id is authoritative"
                     )
 
         if mp4 is not None and not mp4.is_file():
