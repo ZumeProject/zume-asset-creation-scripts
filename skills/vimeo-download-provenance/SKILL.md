@@ -15,10 +15,11 @@ Production videos come from **per-language Vimeo folders** mapped in `slide-buil
 |---|---|---|
 | `en` | `21862752` | https://vimeo.com/user/75461893/folder/21862752 |
 | `es` | `269525` | https://vimeo.com/user/75461893/folder/269525 |
+| `pus` | `29862924` | https://vimeo.com/user/75461893/folder/29862924 |
 
 Helpers: `slides/videos/download_lang_vimeo.py`, `slides/videos/download_en_vimeo.py`, `slides/videos/vimeo_folder.py`.
 
-**Unmapped languages** (e.g. Pashto `pus` as of 2026-11): download scripts exit with next steps. Creating a folder and adding the map entry is a **required setup step before Keynote**, not an optional skip. Never invent a folder id.
+**Unmapped languages:** download scripts exit with next steps. Creating a folder and adding the map entry is a **required setup step before Keynote**, not an optional skip. Never invent a folder id.
 
 ```bash
 python3 -m zume_assets prereqs --lang <lang>

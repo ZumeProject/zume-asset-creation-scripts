@@ -60,8 +60,9 @@ Proven production folder ids (do not guess others):
 |---|---|---|
 | `en` | `21862752` | https://vimeo.com/user/75461893/folder/21862752 |
 | `es` | `269525` | https://vimeo.com/user/75461893/folder/269525 |
+| `pus` | `29862924` | https://vimeo.com/user/75461893/folder/29862924 |
 
-If a language (e.g. Pashto `pus`) is **not** in the map, Keynote cannot proceed until Chris provides the Vimeo folder and the map entry is added. Missing map/pack/folder is a required setup step, not an optional skip.
+If a language is **not** in the map, Keynote cannot proceed until Chris provides the Vimeo folder and the map entry is added. Missing map/pack/folder is a required setup step, not an optional skip.
 
 ### Videos (production path)
 

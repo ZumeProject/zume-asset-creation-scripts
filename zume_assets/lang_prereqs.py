@@ -21,6 +21,7 @@ EN_VIMEO_USER_ID = "75461893"
 KNOWN_FOLDER_IDS = {
     "en": "21862752",
     "es": "269525",
+    "pus": "29862924",
 }
 
 

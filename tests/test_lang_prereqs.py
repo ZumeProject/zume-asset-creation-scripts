@@ -12,11 +12,12 @@ def test_known_folder_ids():
     assert en is not None and en[0] == "21862752"
     es = folder_id_for_language("es")
     assert es is not None and es[0] == "269525"
-    assert folder_id_for_language("pus") is None
+    pus = folder_id_for_language("pus")
+    assert pus is not None and pus[0] == "29862924"
 
 
-def test_pus_prereqs_block_without_vimeo_map(tmp_path):
-    # Empty store so capture packs are also missing; focus on map block.
+def test_pus_prereqs_blocks_on_videos_not_map(tmp_path):
+    # Capture packs absent in empty store; map is present so BLOCK is local_videos.
     store = tmp_path / "store"
     store.mkdir()
     issues = check_language_pack_prereqs(
@@ -27,12 +28,12 @@ def test_pus_prereqs_block_without_vimeo_map(tmp_path):
         require_capture_packs=True,
     )
     ids = {i.id for i in issues}
-    assert "vimeo_folder_map" in ids
+    assert "vimeo_folder_map" not in ids
+    assert "local_videos" in ids
     assert any(i.id.startswith("capture_pack_") for i in issues)
     report = format_prereq_report("pus", issues)
     assert "BLOCK" in report
-    assert "21862752" in report
-    assert "269525" in report
+    assert "29862924" in report
 
 
 def test_pdf_only_skips_video_and_pack_checks():

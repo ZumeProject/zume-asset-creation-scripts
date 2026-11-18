@@ -19,11 +19,11 @@ python3 -m zume_assets prereqs --lang <lang>
 
 | Check | Where | If missing |
 |---|---|---|
-| Vimeo folder map | `slide-builder/parts/vimeo-folders.json` | Ask Chris for folder id (user `75461893`); **do not invent**. Add map entry. Known: `en`→`21862752`, `es`→`269525`. |
+| Vimeo folder map | `slide-builder/parts/vimeo-folders.json` | Ask Chris for folder id (user `75461893`); **do not invent**. Add map entry. Known: `en`→`21862752`, `es`→`269525`, `pus`→`29862924`. |
 | Local MP4s + `SOURCE.json` | `output/{lang}/videos/` | `python3 slides/videos/download_lang_vimeo.py --lang <lang>` (needs credentials) |
 | Capture packs | Agent Store `media/{lang}-{10\|20\|intensive}-presenter-captures/` | Capture via `slides/capture/capture_presenter.py` or obtain approved pack |
 
-Pashto (`pus`) historically had capture packs but **no Vimeo map entry** — Keynote stays blocked until a folder exists and is mapped.
+Pashto (`pus`) is mapped to folder `29862924`; Keynote still needs a local Vimeo download into `output/pus/videos/` (and pack `videos/` sync) before embed.
 
 ## Quick path
 
