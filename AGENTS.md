@@ -70,7 +70,7 @@ python3 -m zume_assets review videos --lang en --type 10
 python3 -m zume_assets review all --lang es --type 10 --fetch
 ```
 
-Master cache: `manifest/review/{lang}-{type}.json`. Reports: `output/{lang}/review/`. See the pipeline-review skill. With `--live`, activity `3monthplan` → `auth/login` (create-your-plan) is an allowed destination; do not treat homepage redirects for `getacoach` / `join_the_community` / `next_steps` as OK without evidence.
+Master cache: `manifest/review/{lang}-{type}.json`. Reports: `output/{lang}/review/`. See the pipeline-review skill. With `--live`, allowlisted activity redirects include `3monthplan` → `auth/login` and marketing pages for `getacoach` / `join_the_community` / `next_steps`. Video review gates on `vimeo_id` (title string mismatches are notes only). Pack training id `20` / `t20_b` may alias online `19` when SOURCE records that alias — treat as PASS.
 
 ## Workspace paths
 
