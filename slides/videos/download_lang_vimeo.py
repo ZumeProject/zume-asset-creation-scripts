@@ -276,7 +276,17 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     lang = args.lang.strip().lower()
-    folder_id, display_name = folder_id_for_language(lang)
+    try:
+        folder_id, display_name = folder_id_for_language(lang)
+    except KeyError:
+        raise SystemExit(
+            f"No Vimeo folder mapped for language_code={lang!r} in "
+            "slide-builder/parts/vimeo-folders.json. "
+            "Known production ids: en→21862752, es→269525, pus→29862924. "
+            "Do not invent a folder id. Ask Chris for this language’s Vimeo folder "
+            f"(user 75461893), add the map entry, then re-run. "
+            f"Checklist: python3 -m zume_assets prereqs --lang {lang}"
+        ) from None
     if lang == "en":
         assert_en_folder_id()
         folder_id = EN_VIMEO_FOLDER_ID

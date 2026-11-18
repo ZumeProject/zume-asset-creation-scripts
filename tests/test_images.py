@@ -1,5 +1,6 @@
 from zume_assets.images import (
     absolutize_image_url,
+    merge_script_paragraphs_with_en_shortcodes,
     placeholder_to_image_key,
     resolve_image_key,
     resolve_paragraph_items,
@@ -27,6 +28,27 @@ def test_resolve_image_key_from_manifest():
     assert resolve_image_key(placeholder="pace2_image") == "image_pace2"
 
 
+def test_merge_script_paragraphs_with_en_shortcodes():
+    locale = ["پښتو متن یو.", "پښتو متن دوه."]
+    en = [
+        "English one.",
+        "{{ pace1_image }}",
+        "English two.",
+        "{{ pace2_image }}",
+    ]
+    merged = merge_script_paragraphs_with_en_shortcodes(locale, en)
+    assert merged == [
+        "پښتو متن یو.",
+        "{{ pace1_image }}",
+        "پښتو متن دوه.",
+        "{{ pace2_image }}",
+    ]
+    # Locale that already has shortcodes is left alone.
+    assert merge_script_paragraphs_with_en_shortcodes(
+        ["a", "{{ pace1_image }}"], en
+    ) == ["a", "{{ pace1_image }}"]
+
+
 def test_resolve_paragraph_items_downloads(tmp_path, monkeypatch):
     images = {
         "image_pace1": {
@@ -49,13 +71,16 @@ def test_resolve_paragraph_items_downloads(tmp_path, monkeypatch):
         return Resp()
 
     monkeypatch.setattr("zume_assets.images.urlopen", fake_urlopen)
+    missing: list[str] = []
     items = resolve_paragraph_items(
         ["Intro text.", "{{ pace1_image }}", "{{ missing_image }}"],
         images,
         tmp_path,
+        missing=missing,
     )
     assert items[0] == "Intro text."
     assert items[1]["image"].startswith("images/image_pace1")
     assert items[1]["alt"] == "Pace 1"
     assert len(items) == 2
+    assert missing == ["image_missing"]
     assert (tmp_path / items[1]["image"]).read_bytes() == b"PNGDATA"

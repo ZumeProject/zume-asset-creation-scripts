@@ -9,9 +9,20 @@ description: Use when assembling or repairing Zúme Keynote decks on macOS — i
 
 Keynote decks are built only on **macOS** with Keynote Creator Studio. Drivers live under `slides/assemble-keynote/` and use `keynote_health` to recover from hangs.
 
-## Normal rebuild
+## Before assemble (loud blockers)
 
-Capture pack: Agent Store `media/{lang}-{10|20|intensive}-presenter-captures/` (PNGs + `manifest.json` + `videos/`).
+```bash
+python3 -m zume_assets prereqs --lang <lang>
+```
+
+Must be clean for:
+
+1. Vimeo map entry + local `output/{lang}/videos/` MP4s (`SOURCE.json`)
+2. Capture pack: Agent Store `media/{lang}-{10|20|intensive}-presenter-captures/` (PNGs + `manifest.json`; sync MP4s into pack `videos/`)
+
+Missing pack → assemble exits with an explicit path. Missing Vimeo map → download cannot run; escalate to Chris (do not invent folder ids). PDF-only success does **not** mean Keynote is ready.
+
+## Normal rebuild
 
 ```bash
 python3 slides/assemble-keynote/assemble_images_keynote.py --type <type> --lang <lang>
@@ -40,7 +51,7 @@ Icon asset: `slides/assets/video-play-icon.png` (tight left/top inset).
 ## Requirements
 
 - Keynote Creator Studio (scripted as application `"Keynote"`)
-- Local MP4s for every manifest video slide (EN: from Vimeo download skill)
+- Local MP4s for every manifest video slide (from Vimeo download skill for that language)
 - Never run these drivers on Linux CI
 
 ## Common mistakes
@@ -51,3 +62,4 @@ Icon asset: `slides/assets/video-play-icon.png` (tight left/top inset).
 | Skipping overlay / play chrome | Embed driver should run overlay; verify upper-left icons |
 | Writing `.key` into Agent Store `docs/` | Promote to repo `output/{lang}/` only |
 | Ignoring hang instead of `keynote_health` | Recover via health helper, then resume |
+| Assembling without videos/map and calling it done | Run `prereqs`; fix BLOCKs or stop for Chris |

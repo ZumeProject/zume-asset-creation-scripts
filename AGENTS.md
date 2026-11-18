@@ -28,7 +28,7 @@ pip install -e ".[dev]"
 python3 build.py --lang en --type 10 --targets pdf
 python3 -m zume_assets build --lang en --type 20 --targets pdf
 python3 -m zume_assets build --lang en --type intensive --targets pdf
-# optional decorative bottom-gap images after Typst:
+# Production PDFs include decorative bottom-gap images (required for signed-off packs):
 python3 -m zume_assets build --lang en --type 10 --targets pdf --gap-fillers
 ```
 
@@ -38,25 +38,54 @@ Requires Python 3.10+ and the [Typst](https://github.com/typst/typst/releases) C
 
 Content comes from `https://api.zume.training/api/v1`. QR payloads use `https://zume.training/app/qr/?l={locale}&{c|v|a}={id}`.
 
-### Videos (EN proven path)
+**PDF diagram images** (pace timelines, Four Fields, Generational Mapping) come from presenter `images.*` URLs plus script `{{ paceN_image }}` shortcodes. Locale scripts that omit shortcodes are merged with English shortcode slots at assemble time. Missing required diagram assets hard-fail the build — do not ship blank slots. Decorative fillers are separate (`--gap-fillers` / `images/`).
 
-Canonical EN Vimeo folder: `https://vimeo.com/user/75461893/folder/21862752` (also `en` in `slide-builder/parts/vimeo-folders.json`).
+### Full pack prerequisites (before Keynote / videos)
+
+A Typst PDF-only run is **not** a finished language pack. When the user expects Keynote + videos, run the checklist first and treat any `BLOCK` as stop-ship (do not invent Vimeo folder ids):
+
+```bash
+python3 -m zume_assets prereqs --lang <lang>
+```
+
+Checks:
+
+1. **Vimeo folder map** — `slide-builder/parts/vimeo-folders.json` must list `language_code` → `folder_id`
+2. **Local MP4s** — `output/{lang}/videos/` + `SOURCE.json` from the download script
+3. **Presenter capture packs** — Agent Store `media/{lang}-{10|20|intensive}-presenter-captures/` (`manifest.json` + PNGs)
+
+Proven production folder ids (do not guess others):
+
+| Lang | Folder | URL |
+|---|---|---|
+| `en` | `21862752` | https://vimeo.com/user/75461893/folder/21862752 |
+| `es` | `269525` | https://vimeo.com/user/75461893/folder/269525 |
+| `pus` | `29862924` | https://vimeo.com/user/75461893/folder/29862924 |
+
+If a language is **not** in the map, Keynote cannot proceed until Chris provides the Vimeo folder and the map entry is added. Missing map/pack/folder is a required setup step, not an optional skip.
+
+### Videos (production path)
 
 ```bash
 pip install -r slide-builder/requirements.txt
+# Any mapped language (writes output/{lang}/videos + SOURCE.json; gitignored)
+python3 slides/videos/download_lang_vimeo.py --lang es
+python3 slides/videos/download_lang_vimeo.py --lang en
+# EN-only wrapper (same folder; kept for older docs/scripts)
 python3 slides/videos/download_en_vimeo.py --out output/en/videos
 ```
 
-Writes numbered MP4s plus `SOURCE.json` provenance. Keynote assemble reads pack videos (typically synced from that download). Do **not** default to GCS / `zume-file-mirror`. Never log or commit Vimeo tokens from `.env`.
+Writes numbered MP4s plus `SOURCE.json` provenance. Keynote assemble reads pack videos (typically synced from that download). Do **not** default to GCS / `zume-file-mirror`. Never log or commit Vimeo tokens from `.env`. Unmapped languages exit with explicit next steps (see `prereqs`).
 
 ### Keynote (macOS / Creator Studio)
 
 ```bash
+python3 -m zume_assets prereqs --lang en   # must be clean before assemble
 python3 slides/assemble-keynote/assemble_images_keynote.py --type 10 --lang en
 python3 slides/assemble-keynote/embed_videos_choose.py --type 10 --lang en --promote
 ```
 
-See `slides/assemble-keynote/README.md` and the mac-keynote-assemble skill. Do not run Keynote assembly on Linux CI.
+See `slides/assemble-keynote/README.md` and the mac-keynote-assemble skill. Do not run Keynote assembly on Linux CI. Missing capture packs fail loudly (no silent PDF-only “success” when Keynote was requested).
 
 ### Pipeline review (QR + video)
 

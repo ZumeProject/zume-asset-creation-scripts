@@ -486,6 +486,21 @@ def main(argv: list[str] | None = None) -> int:
         help="GCS upload + downloads verify; see: zume-assets publish -h",
         add_help=False,
     )
+    prereqs = sub.add_parser(
+        "prereqs",
+        help="Checklist Vimeo map / local videos / capture packs before Keynote",
+    )
+    prereqs.add_argument("--lang", required=True, help="Locale code (e.g. en, es, pus)")
+    prereqs.add_argument(
+        "--types",
+        default="10,20,intensive",
+        help="Comma-separated course types for capture-pack checks",
+    )
+    prereqs.add_argument(
+        "--pdf-only",
+        action="store_true",
+        help="Skip video/capture checks when only Typst PDF is requested",
+    )
 
     # Peek at argv so nested commands use their own subparsers.
     raw = list(argv) if argv is not None else sys.argv[1:]
@@ -495,6 +510,19 @@ def main(argv: list[str] | None = None) -> int:
         return _cmd_publish(raw[1:])
 
     args = parser.parse_args(argv)
+
+    if args.command == "prereqs":
+        from .lang_prereqs import check_language_pack_prereqs, format_prereq_report
+
+        types = tuple(t.strip() for t in args.types.split(",") if t.strip())
+        issues = check_language_pack_prereqs(
+            args.lang,
+            course_types=types or ("10", "20", "intensive"),
+            require_videos=not args.pdf_only,
+            require_capture_packs=not args.pdf_only,
+        )
+        print(format_prereq_report(args.lang, issues), end="")
+        return 1 if any(i.blocking for i in issues) else 0
 
     if args.command == "build":
         targets = [t.strip() for t in args.targets.split(",") if t.strip()]
@@ -519,6 +547,13 @@ def main(argv: list[str] | None = None) -> int:
                     course_type=args.course_type,
                 )
                 print(placements_report(placements), end="")
+            else:
+                print(
+                    "Note: built without --gap-fillers. Production PDFs (EN/ES) stamp "
+                    "decorative bottom-gap images from images/; re-run with --gap-fillers "
+                    "or: zume-assets gap-fill --pdf … --output …",
+                    file=sys.stderr,
+                )
         except Exception as exc:
             print(f"Build failed: {exc}", file=sys.stderr)
             return 1

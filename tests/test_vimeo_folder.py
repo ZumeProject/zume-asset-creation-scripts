@@ -25,6 +25,11 @@ class VimeoFolderTests(unittest.TestCase):
         self.assertEqual(assert_en_folder_id(), EN_VIMEO_FOLDER_ID)
         self.assertTrue(name)
 
+    def test_pus_folder_id_is_29862924(self) -> None:
+        folder_id, name = folder_id_for_language("pus")
+        self.assertEqual(folder_id, "29862924")
+        self.assertTrue(name)
+
     def test_numeric_id_from_title(self) -> None:
         self.assertEqual(numeric_id_from_title("(01) God Uses Ordinary People"), 1)
         self.assertEqual(numeric_id_from_title("01_God Uses Ordinary People"), 1)
