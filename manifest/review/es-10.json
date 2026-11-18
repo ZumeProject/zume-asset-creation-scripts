@@ -1,0 +1,535 @@
+{
+  "lang": "es",
+  "type": "10",
+  "locale": "es",
+  "fetched_at": "2026-11-17T22:17:58Z",
+  "api_base": "https://api.zume.training/api/v1",
+  "site_base": "https://zume.training",
+  "manifest": "ten_session.json",
+  "follow_redirects": false,
+  "checkins": [
+    {
+      "session": 1,
+      "code": "5678",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=es&c=5678",
+      "expected_redirect": "/checkin?code=5678",
+      "png_stem": "checkin-5678"
+    },
+    {
+      "session": 2,
+      "code": "2468",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=es&c=2468",
+      "expected_redirect": "/checkin?code=2468",
+      "png_stem": "checkin-2468"
+    },
+    {
+      "session": 3,
+      "code": "6543",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=es&c=6543",
+      "expected_redirect": "/checkin?code=6543",
+      "png_stem": "checkin-6543"
+    },
+    {
+      "session": 4,
+      "code": "8764",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=es&c=8764",
+      "expected_redirect": "/checkin?code=8764",
+      "png_stem": "checkin-8764"
+    },
+    {
+      "session": 5,
+      "code": "6542",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=es&c=6542",
+      "expected_redirect": "/checkin?code=6542",
+      "png_stem": "checkin-6542"
+    },
+    {
+      "session": 6,
+      "code": "1235",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=es&c=1235",
+      "expected_redirect": "/checkin?code=1235",
+      "png_stem": "checkin-1235"
+    },
+    {
+      "session": 7,
+      "code": "4322",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=es&c=4322",
+      "expected_redirect": "/checkin?code=4322",
+      "png_stem": "checkin-4322"
+    },
+    {
+      "session": 8,
+      "code": "9870",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=es&c=9870",
+      "expected_redirect": "/checkin?code=9870",
+      "png_stem": "checkin-9870"
+    },
+    {
+      "session": 9,
+      "code": "1355",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=es&c=1355",
+      "expected_redirect": "/checkin?code=1355",
+      "png_stem": "checkin-1355"
+    },
+    {
+      "session": 10,
+      "code": "5430",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=es&c=5430",
+      "expected_redirect": "/checkin?code=5430",
+      "png_stem": "checkin-5430"
+    }
+  ],
+  "videos": [
+    {
+      "key": "1",
+      "kind": "v",
+      "title": "Dios Utiliza a Personas Comunes",
+      "vimeoId": "287691638",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=1",
+      "expected_redirect": "/app/video?v=1&l=es",
+      "png_stem": "video-1"
+    },
+    {
+      "key": "2",
+      "kind": "v",
+      "title": "Definición Simple de Discípulo e Iglesia",
+      "vimeoId": "287691648",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=2",
+      "expected_redirect": "/app/video?v=2&l=es",
+      "png_stem": "video-2"
+    },
+    {
+      "key": "3",
+      "kind": "v",
+      "title": "La Respiración Espiritual es Escuchar y Obedecer a Dios",
+      "vimeoId": "287691660",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=3",
+      "expected_redirect": "/app/video?v=3&l=es",
+      "png_stem": "video-3"
+    },
+    {
+      "key": "4",
+      "kind": "v",
+      "title": "Lectura Bíblica SOAPS",
+      "vimeoId": "1067207730",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=4",
+      "expected_redirect": "/app/video?v=4&l=es",
+      "png_stem": "video-4"
+    },
+    {
+      "key": "5",
+      "kind": "v",
+      "title": "Grupos de Rendición de Cuentas",
+      "vimeoId": "1067207738",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=5",
+      "expected_redirect": "/app/video?v=5&l=es",
+      "png_stem": "video-5"
+    },
+    {
+      "key": "6",
+      "kind": "v",
+      "title": "Estilo de Vida Consumidor vs Productor",
+      "vimeoId": "287691666",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=6",
+      "expected_redirect": "/app/video?v=6&l=es",
+      "png_stem": "video-6"
+    },
+    {
+      "key": "7",
+      "kind": "v",
+      "title": "Cómo Pasar una Hora en Oración",
+      "vimeoId": "1067207742",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=7",
+      "expected_redirect": "/app/video?v=7&l=es",
+      "png_stem": "video-7"
+    },
+    {
+      "key": "8",
+      "kind": "v",
+      "title": "Mayordomía Relacional - Lista de 100",
+      "vimeoId": "1067207749",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=8",
+      "expected_redirect": "/app/video?v=8&l=es",
+      "png_stem": "video-8"
+    },
+    {
+      "key": "9",
+      "kind": "v",
+      "title": "La Economía del Reino",
+      "vimeoId": "287691675",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=9",
+      "expected_redirect": "/app/video?v=9&l=es",
+      "png_stem": "video-9"
+    },
+    {
+      "key": "10",
+      "kind": "v",
+      "title": "El Evangelio y Cómo Compartirlo",
+      "vimeoId": "287691682",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=10",
+      "expected_redirect": "/app/video?v=10&l=es",
+      "png_stem": "video-10"
+    },
+    {
+      "key": "11",
+      "kind": "v",
+      "title": "Bautizo y Cómo Hacerlo",
+      "vimeoId": "1067207755",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=11",
+      "expected_redirect": "/app/video?v=11&l=es",
+      "png_stem": "video-11"
+    },
+    {
+      "key": "12",
+      "kind": "v",
+      "title": "Preparando tu Testimonio de 3 Minutos",
+      "vimeoId": "1067207761",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=12",
+      "expected_redirect": "/app/video?v=12&l=es",
+      "png_stem": "video-12"
+    },
+    {
+      "key": "13",
+      "kind": "v",
+      "title": "Compartiendo la Visión de La Bendición Más Grande",
+      "vimeoId": "288109677",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=13",
+      "expected_redirect": "/app/video?v=13&l=es",
+      "png_stem": "video-13"
+    },
+    {
+      "key": "14",
+      "kind": "v",
+      "title": "Discipulado Patito - Liderando Inmediatamente",
+      "vimeoId": "287882043",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=14",
+      "expected_redirect": "/app/video?v=14&l=es",
+      "png_stem": "video-14"
+    },
+    {
+      "key": "15",
+      "kind": "v",
+      "title": "Ojos para Ver Donde el Reino no Está",
+      "vimeoId": "287928505",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=15",
+      "expected_redirect": "/app/video?v=15&l=es",
+      "png_stem": "video-15"
+    },
+    {
+      "key": "16",
+      "kind": "v",
+      "title": "La Cena del Señor y Cómo Liderar",
+      "vimeoId": "1067207770",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=16",
+      "expected_redirect": "/app/video?v=16&l=es",
+      "png_stem": "video-16"
+    },
+    {
+      "key": "17",
+      "kind": "v",
+      "title": "Caminatas de Oración y Cómo Hacerlo",
+      "vimeoId": "1067207783",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=17",
+      "expected_redirect": "/app/video?v=17&l=es",
+      "png_stem": "video-17"
+    },
+    {
+      "key": "18",
+      "kind": "v",
+      "title": "Una Persona de Paz y Cómo Encontrar Una",
+      "vimeoId": "288078879",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=18",
+      "expected_redirect": "/app/video?v=18&l=es",
+      "png_stem": "video-18"
+    },
+    {
+      "key": "19",
+      "kind": "v",
+      "title": "La Fidelidad es Mejor que el Conocimiento",
+      "vimeoId": "287853699",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=19",
+      "expected_redirect": "/app/video?v=19&l=es",
+      "png_stem": "video-19"
+    },
+    {
+      "key": "21",
+      "kind": "v",
+      "title": "Patron de Reunion de un Grupo 3/3",
+      "vimeoId": "444484508",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=21",
+      "expected_redirect": "/app/video?v=21&l=es",
+      "png_stem": "video-21"
+    },
+    {
+      "key": "22",
+      "kind": "v",
+      "title": "Ciclo de formación para discípulos en proceso de maduración",
+      "vimeoId": "288112741",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=22",
+      "expected_redirect": "/app/video?v=22&l=es",
+      "png_stem": "video-22"
+    },
+    {
+      "key": "23",
+      "kind": "v",
+      "title": "Células de liderazgo",
+      "vimeoId": "287848898",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=23",
+      "expected_redirect": "/app/video?v=23&l=es",
+      "png_stem": "video-23"
+    },
+    {
+      "key": "24",
+      "kind": "v",
+      "title": "Espera un Crecimiento No Secuencial",
+      "vimeoId": "287836339",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=24",
+      "expected_redirect": "/app/video?v=24&l=es",
+      "png_stem": "video-24"
+    },
+    {
+      "key": "25",
+      "kind": "v",
+      "title": "El Ritmo en la Multiplicación Importa",
+      "vimeoId": "287763484",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=25",
+      "expected_redirect": "/app/video?v=25&l=es",
+      "png_stem": "video-25"
+    },
+    {
+      "key": "26",
+      "kind": "v",
+      "title": "Siempre Parte de Dos Iglesias",
+      "vimeoId": "287836341",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=26",
+      "expected_redirect": "/app/video?v=26&l=es",
+      "png_stem": "video-26"
+    },
+    {
+      "key": "28",
+      "kind": "v",
+      "title": "Lista de Verificación de Entrenamiento",
+      "vimeoId": "1067207788",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=28",
+      "expected_redirect": "/app/video?v=28&l=es",
+      "png_stem": "video-28"
+    },
+    {
+      "key": "29",
+      "kind": "v",
+      "title": "Liderazgo en Redes",
+      "vimeoId": "287763489",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=29",
+      "expected_redirect": "/app/video?v=29&l=es",
+      "png_stem": "video-29"
+    },
+    {
+      "key": "30",
+      "kind": "v",
+      "title": "Grupos de Tutoría entre Pares",
+      "vimeoId": "1067207804",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=30",
+      "expected_redirect": "/app/video?v=30&l=es",
+      "png_stem": "video-30"
+    },
+    {
+      "key": "33",
+      "kind": "v",
+      "title": "Presentación del Evangelio de los 3 Círculos",
+      "vimeoId": "1077447788",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&v=33",
+      "expected_redirect": "/app/video?v=33&l=es",
+      "png_stem": "video-33"
+    }
+  ],
+  "activities": [
+    {
+      "key": "33group",
+      "kind": "a",
+      "title": "Reunión de grupos 3/3",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=33group",
+      "expected_redirect": "/activities/33group",
+      "png_stem": "activity-33group"
+    },
+    {
+      "key": "3monthplan",
+      "kind": "a",
+      "title": "Three Month Plan",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=3monthplan",
+      "expected_redirect": "/activities/3monthplan",
+      "png_stem": "activity-3monthplan"
+    },
+    {
+      "key": "4fields",
+      "kind": "a",
+      "title": "Diagrama de los cuatro campos",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=4fields",
+      "expected_redirect": "/activities/4fields",
+      "png_stem": "activity-4fields"
+    },
+    {
+      "key": "accountability",
+      "kind": "a",
+      "title": "Grupos de rendición de cuentas",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=accountability",
+      "expected_redirect": "/activities/accountability",
+      "png_stem": "activity-accountability"
+    },
+    {
+      "key": "blessprayer",
+      "kind": "a",
+      "title": "La oración B. L. E. S. S.",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=blessprayer",
+      "expected_redirect": "/activities/blessprayer",
+      "png_stem": "activity-blessprayer"
+    },
+    {
+      "key": "coachingchecklist",
+      "kind": "a",
+      "title": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&a=coachingchecklist",
+      "expected_redirect": "/activities/coachingchecklist",
+      "png_stem": "activity-coachingchecklist"
+    },
+    {
+      "key": "genmapping",
+      "kind": "a",
+      "title": "Mapeo generacional",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=genmapping",
+      "expected_redirect": "/activities/genmapping",
+      "png_stem": "activity-genmapping"
+    },
+    {
+      "key": "getacoach",
+      "kind": "a",
+      "title": null,
+      "qr_url": "https://zume.training/app/qr/?l=es&a=getacoach",
+      "expected_redirect": "/activities/getacoach",
+      "png_stem": "activity-getacoach"
+    },
+    {
+      "key": "join_the_community",
+      "kind": "a",
+      "title": "Únete a la comunidad",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=join_the_community",
+      "expected_redirect": "/activities/join_the_community",
+      "png_stem": "activity-join_the_community"
+    },
+    {
+      "key": "listof100",
+      "kind": "a",
+      "title": "Crea tu propia lista de cien",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=listof100",
+      "expected_redirect": "/activities/listof100",
+      "png_stem": "activity-listof100"
+    },
+    {
+      "key": "lordssupper",
+      "kind": "a",
+      "title": "La cena del Señor",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=lordssupper",
+      "expected_redirect": "/activities/lordssupper",
+      "png_stem": "activity-lordssupper"
+    },
+    {
+      "key": "next_steps",
+      "kind": "a",
+      "title": "Únete a la comunidad",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=next_steps",
+      "expected_redirect": "/activities/next_steps",
+      "png_stem": "activity-next_steps"
+    },
+    {
+      "key": "peermentoring",
+      "kind": "a",
+      "title": "Grupos de tutoría entre pares",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=peermentoring",
+      "expected_redirect": "/activities/peermentoring",
+      "png_stem": "activity-peermentoring"
+    },
+    {
+      "key": "prayercycle",
+      "kind": "a",
+      "title": "La rueda de oración",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=prayercycle",
+      "expected_redirect": "/activities/prayercycle",
+      "png_stem": "activity-prayercycle"
+    },
+    {
+      "key": "prayerwalking",
+      "kind": "a",
+      "title": "Caminata de oración",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=prayerwalking",
+      "expected_redirect": "/activities/prayerwalking",
+      "png_stem": "activity-prayerwalking"
+    },
+    {
+      "key": "sharegospel",
+      "kind": "a",
+      "title": "Compartir el evangelio",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=sharegospel",
+      "expected_redirect": "/activities/sharegospel",
+      "png_stem": "activity-sharegospel"
+    },
+    {
+      "key": "sharetestimony",
+      "kind": "a",
+      "title": "Testimonio de tres minutos",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=sharetestimony",
+      "expected_redirect": "/activities/sharetestimony",
+      "png_stem": "activity-sharetestimony"
+    },
+    {
+      "key": "soaps",
+      "kind": "a",
+      "title": "Estudio bíblico S. O. A. P. S.",
+      "qr_url": "https://zume.training/app/qr/?l=es&a=soaps",
+      "expected_redirect": "/activities/soaps",
+      "png_stem": "activity-soaps"
+    }
+  ],
+  "counts": {
+    "checkins": 10,
+    "videos": 29,
+    "activities": 18
+  }
+}

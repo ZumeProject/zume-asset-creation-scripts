@@ -1,0 +1,20 @@
+{
+  "source": "vimeo",
+  "folder_id": "21862752",
+  "downloaded_at": "2026-01-01T00:00:00Z",
+  "video_count": 2,
+  "videos": {
+    "1": {
+      "vimeo_id": "247062938",
+      "title": "(01) God Uses Ordinary People",
+      "bytes": 1000,
+      "status": "cached"
+    },
+    "2": {
+      "vimeo_id": "247382094",
+      "title": "(02) Simple Definition of Disciple and Church",
+      "bytes": 1000,
+      "status": "cached"
+    }
+  }
+}

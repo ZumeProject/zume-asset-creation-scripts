@@ -1,0 +1,26 @@
+{
+  "lang": "en",
+  "type": "10",
+  "sessions": [
+    {
+      "number": 1,
+      "blocks": [
+        {
+          "kind": "checkin",
+          "qr": "qr/checkin-5678.png",
+          "qr_url": "https://zume.training/app/qr/?l=en&c=5678"
+        },
+        {
+          "kind": "read",
+          "qr": "qr/video-1.png",
+          "qr_url": "https://zume.training/app/qr/?l=en&v=1"
+        },
+        {
+          "kind": "activity",
+          "qr": "qr/activity-soaps.png",
+          "qr_url": "https://zume.training/app/qr/?l=en&a=soaps"
+        }
+      ]
+    }
+  ]
+}
