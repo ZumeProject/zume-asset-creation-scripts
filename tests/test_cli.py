@@ -69,3 +69,73 @@ def test_build_full_pack_aborts_on_local_videos(monkeypatch, capsys):
     assert code == 1
     assert called["build"] is False
     assert "local_videos" in capsys.readouterr().err
+
+
+def test_build_applies_gap_fillers_by_default(monkeypatch, tmp_path, capsys):
+    pdf = tmp_path / "out.pdf"
+    pdf.write_bytes(b"%PDF")
+    images = tmp_path / "images"
+    images.mkdir()
+    (images / "A001.png").write_bytes(b"PNG")
+
+    monkeypatch.setattr("zume_assets.lang_prereqs.check_build_readiness", lambda *_a, **_k: [])
+    monkeypatch.setattr("zume_assets.cli.build_pdf", lambda *_a, **_k: pdf)
+    monkeypatch.setattr("zume_assets.cli.load_repo_root", lambda: tmp_path)
+    monkeypatch.setattr("zume_assets.cli.default_images_dir", lambda _root: images)
+
+    called = {"gap": False}
+
+    def fake_apply(input_pdf, output_pdf, images_dir, **_kwargs):
+        called["gap"] = True
+        assert images_dir == images
+        assert input_pdf == pdf
+        return []
+
+    monkeypatch.setattr("zume_assets.cli.apply_gap_fillers", fake_apply)
+    monkeypatch.setattr("zume_assets.cli.placements_report", lambda _p: "Placed 0\n")
+
+    code = main(["build", "--lang", "en", "--type", "10", "--targets", "pdf"])
+    assert code == 0
+    assert called["gap"] is True
+    out = capsys.readouterr()
+    assert "Wrote" in out.out
+    assert "--no-gap-fillers" not in out.err
+
+
+def test_build_no_gap_fillers_warns_and_skips(monkeypatch, tmp_path, capsys):
+    pdf = tmp_path / "out.pdf"
+    pdf.write_bytes(b"%PDF")
+
+    monkeypatch.setattr("zume_assets.lang_prereqs.check_build_readiness", lambda *_a, **_k: [])
+    monkeypatch.setattr("zume_assets.cli.build_pdf", lambda *_a, **_k: pdf)
+
+    def boom(*_a, **_k):
+        raise AssertionError("apply_gap_fillers must not run with --no-gap-fillers")
+
+    monkeypatch.setattr("zume_assets.cli.apply_gap_fillers", boom)
+
+    code = main(
+        ["build", "--lang", "en", "--type", "10", "--targets", "pdf", "--no-gap-fillers"]
+    )
+    assert code == 0
+    err = capsys.readouterr().err
+    assert "WARNING" in err
+    assert "--no-gap-fillers" in err
+
+
+def test_build_gap_fillers_fail_when_images_missing(monkeypatch, tmp_path, capsys):
+    pdf = tmp_path / "out.pdf"
+    pdf.write_bytes(b"%PDF")
+    empty = tmp_path / "empty-images"
+    empty.mkdir()
+
+    monkeypatch.setattr("zume_assets.lang_prereqs.check_build_readiness", lambda *_a, **_k: [])
+    monkeypatch.setattr("zume_assets.cli.build_pdf", lambda *_a, **_k: pdf)
+    monkeypatch.setattr("zume_assets.cli.load_repo_root", lambda: tmp_path)
+    monkeypatch.setattr("zume_assets.cli.default_images_dir", lambda _root: empty)
+
+    code = main(["build", "--lang", "en", "--type", "10", "--targets", "pdf"])
+    assert code == 1
+    err = capsys.readouterr().err
+    assert "Gap fillers enabled" in err
+    assert "empty" in err.lower() or "missing" in err.lower()

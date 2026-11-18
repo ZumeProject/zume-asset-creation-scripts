@@ -33,10 +33,11 @@ python3 -m zume_assets prereqs --lang <lang> --pdf-only   # map BLOCK; videos/pa
 python3 build.py --lang en --type 10 --targets pdf
 python3 -m zume_assets build --lang en --type 20 --targets pdf
 python3 -m zume_assets build --lang en --type intensive --targets pdf
-# Production PDFs include decorative bottom-gap images (required for signed-off packs):
-python3 -m zume_assets build --lang en --type 10 --targets pdf --gap-fillers
+# Gap fillers are ON by default (decorative bottom-gap images from images/).
+# Typst-only draft (not for sign-off):
+python3 -m zume_assets build --lang en --type 10 --targets pdf --no-gap-fillers
 # Hard-fail on missing local videos + capture packs too:
-python3 -m zume_assets build --lang en --type 10 --targets pdf --full-pack --gap-fillers
+python3 -m zume_assets build --lang en --type 10 --targets pdf --full-pack
 ```
 
 Course types are `10`, `20`, and `intensive`. English is the signed-off target. The same PDF renderer also builds other locales (Arabic and Traditional Chinese have font and direction support).
@@ -45,7 +46,7 @@ Requires Python 3.10+ and the [Typst](https://github.com/typst/typst/releases) C
 
 Content comes from `https://api.zume.training/api/v1`. QR payloads use `https://zume.training/app/qr/?l={locale}&{c|v|a}={id}`.
 
-**PDF diagram images** (pace timelines, Four Fields, Generational Mapping) come from presenter `images.*` URLs plus script `{{ paceN_image }}` shortcodes. Locale scripts that omit shortcodes are merged with English shortcode slots at assemble time. Missing required diagram assets hard-fail the build — do not ship blank slots. Decorative fillers are separate (`--gap-fillers` / `images/`).
+**PDF diagram images** (pace timelines, Four Fields, Generational Mapping) come from presenter `images.*` URLs plus script `{{ paceN_image }}` shortcodes. Locale scripts that omit shortcodes are merged with English shortcode slots at assemble time. Missing required diagram assets hard-fail the build — do not ship blank slots. Decorative bottom-gap fillers from `images/` are **on by default** for `build` (requires `pymupdf` / `pip install -e ".[dev]"`). Use `--no-gap-fillers` only for intentional Typst-only drafts — do not report those as signed-off language packs.
 
 ### Full pack prerequisites (before PDF / Keynote / videos)
 
@@ -147,7 +148,7 @@ Do **not** write finished PDFs or Keynote files into Agent Store `docs/` (or any
 - Do not restore `slides/assemble-pptx/`. Build CLI must keep rejecting `--targets pptx`; publish PPTX comes from Keynote export only.
 - Do not treat `keynote` as a CLI `--targets` value; Keynote is assembled only via `slides/assemble-keynote/` on macOS. The CLI rejects `keynote` the same way it rejects other non-PDF targets.
 - Do not bring back a Playwright or Chromium PDF printer. The old zume5 `/book/generator` path was removed. (`slides/capture/` Playwright is for presenter PNGs only.)
-- Do not page-stamp PDFs with PyPDF or ReportLab for guidebook layout. Typst owns layout; `gap-fillers` may stamp decorative images after compile.
+- Do not page-stamp PDFs with PyPDF or ReportLab for guidebook layout. Typst owns layout; gap fillers stamp decorative images after compile by default (`--no-gap-fillers` to skip).
 - Keynote assembly is macOS-only. Do not try to run it on Linux CI.
 - Do not print, paste, or commit secrets from `.env` / Vimeo credentials.
 
