@@ -106,12 +106,24 @@ slide-builder/            # legacy packer + vimeo-folders.json + PyVimeo deps
 slides/capture/           # presenter PNG capture
 slides/videos/            # EN Vimeo download helpers (production video path)
 slides/assemble-keynote/  # macOS Keynote assembly
-publish/                  # future GCS upload
+publish/                  # GCS publish notes (CLI: zume_assets publish)
 ```
+
+## Publish (GCS)
+
+After a language pack is approved, upload PDF + Keynote to `gs://zume-file-mirror/{lang}/` and verify Downloads:
+
+```bash
+python3 -m zume_assets publish upload --lang es
+python3 -m zume_assets publish upload --lang es --execute
+python3 -m zume_assets publish verify-downloads --lang es
+```
+
+Requires `gcloud` + auth on the machine. Dry-run by default. See [publish/README.md](publish/README.md) and [skills/publish-gcs-assets/SKILL.md](skills/publish-gcs-assets/SKILL.md).
 
 ### Notes
 
-- Do **not** publish to GCS from this pipeline until English PDFs are signed off.
+- Only publish after human sign-off for that language; use `--execute` only after a dry-run looks right.
 - Production outputs are PDF + Keynote only. PPTX tooling was removed; do not restore it for production.
 - The CLI only builds PDF. Keynote uses `slides/assemble-keynote/` on macOS.
 - Video downloads: use `slides/videos/` (production). `slide-builder/` still holds `vimeo-folders.json` and shared requirements until a follow-up relocates them.

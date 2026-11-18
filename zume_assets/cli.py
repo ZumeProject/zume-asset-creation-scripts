@@ -1,8 +1,9 @@
-"""CLI for Zume asset builds and pipeline review."""
+"""CLI for Zume asset builds, pipeline review, and GCS publish."""
 
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
 
@@ -258,6 +259,151 @@ def _cmd_review(argv: list[str] | None) -> int:
     return 2
 
 
+def _parse_course_types(raw: str | None) -> tuple[str, ...]:
+    if not raw or not raw.strip():
+        return ("10", "20", "intensive")
+    types = tuple(t.strip() for t in raw.split(",") if t.strip())
+    allowed = {"10", "20", "intensive"}
+    bad = [t for t in types if t not in allowed]
+    if bad:
+        raise ValueError(f"Unknown course type(s): {', '.join(bad)}")
+    return types
+
+
+def _cmd_publish(argv: list[str] | None) -> int:
+    from .publish.upload import upload_pack
+    from .publish.verify import verify_downloads
+
+    parser = argparse.ArgumentParser(
+        prog="zume-assets publish",
+        description=(
+            "Upload approved PDF + Keynote packs to gs://zume-file-mirror/{lang}/ "
+            "and verify the language downloads listing on api.zume.training."
+        ),
+    )
+    sub = parser.add_subparsers(dest="publish_command", required=True)
+
+    up = sub.add_parser(
+        "upload",
+        help="Upload local output/{lang}/ PDF + Keynote (dry-run by default)",
+    )
+    up.add_argument("--lang", required=True, help="Locale code (e.g. es)")
+    up.add_argument(
+        "--types",
+        default="10,20,intensive",
+        help="Comma-separated course types (default: 10,20,intensive)",
+    )
+    up.add_argument(
+        "--dir",
+        type=Path,
+        default=None,
+        help="Override output/{lang} directory",
+    )
+    up.add_argument(
+        "--execute",
+        action="store_true",
+        help="Actually run gcloud storage cp (default is dry-run)",
+    )
+    up.add_argument(
+        "--include-videos",
+        action="store_true",
+        help="Also upload output/{lang}/videos/* (off by default; gitignored)",
+    )
+    up.add_argument(
+        "--allow-missing",
+        action="store_true",
+        help="Dry-run even when some PDF/Keynote files are missing",
+    )
+    up.add_argument(
+        "--json",
+        action="store_true",
+        help="Print machine-readable JSON plan/result",
+    )
+
+    ver = sub.add_parser(
+        "verify-downloads",
+        help="Assert api.zume.training downloads/{lang} lists expected PDF/Keynote names",
+    )
+    ver.add_argument("--lang", required=True, help="Locale code (e.g. es)")
+    ver.add_argument(
+        "--types",
+        default="10,20,intensive",
+        help="Comma-separated course types (default: 10,20,intensive)",
+    )
+    ver.add_argument(
+        "--json",
+        action="store_true",
+        help="Print machine-readable JSON report",
+    )
+
+    args = parser.parse_args(argv)
+
+    try:
+        course_types = _parse_course_types(args.types)
+    except ValueError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    if args.publish_command == "upload":
+        try:
+            result = upload_pack(
+                args.lang,
+                course_types=course_types,
+                lang_dir=args.dir,
+                include_videos=args.include_videos,
+                execute=args.execute,
+                require_all=not args.allow_missing,
+            )
+        except Exception as exc:
+            print(f"publish upload failed: {exc}", file=sys.stderr)
+            return 1
+
+        if args.json:
+            print(json.dumps(result, indent=2, default=str))
+        else:
+            mode = "EXECUTE" if args.execute else "DRY-RUN"
+            print(f"publish upload [{mode}] lang={args.lang} status={result['status']}")
+            for entry in result.get("plan", {}).get("files") or []:
+                flag = "MISSING" if entry.get("missing") else "ok"
+                size = entry.get("bytes")
+                size_s = f" ({size} bytes)" if size is not None else ""
+                print(f"  [{flag}] {entry['local']} -> {entry['gs_uri']}{size_s}")
+            if not args.execute:
+                print("Re-run with --execute to upload (requires gcloud auth).")
+            else:
+                print(f"Uploaded {len(result.get('uploaded') or [])} object(s).")
+        if result.get("status") == "incomplete":
+            return 1
+        return 0
+
+    if args.publish_command == "verify-downloads":
+        report = verify_downloads(args.lang, course_types=course_types)
+        if args.json:
+            print(json.dumps(report, indent=2, default=str))
+        else:
+            print(
+                f"verify-downloads {report.get('status')}: "
+                f"{report.get('api')} (download_id={report.get('download_id')})"
+            )
+            for check in report.get("checks") or []:
+                mark = "ok" if check.get("ok") else "FAIL"
+                print(
+                    f"  [{mark}] {check['field']}: "
+                    f"expected={check['expected']!r} actual={check['actual']!r}"
+                )
+            for note in report.get("notes") or []:
+                print(f"  note: {note}")
+            for fail in report.get("failures") or []:
+                if fail.get("field") is None:
+                    print(f"  error: {fail.get('detail')}")
+        if report.get("status") == "pass":
+            return 0
+        return 1
+
+    parser.print_help()
+    return 2
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="zume-assets",
@@ -331,11 +477,18 @@ def main(argv: list[str] | None = None) -> int:
         help="Pipeline review (fetch-master / qr / videos / all); see: zume-assets review -h",
         add_help=False,
     )
+    sub.add_parser(
+        "publish",
+        help="GCS upload + downloads verify; see: zume-assets publish -h",
+        add_help=False,
+    )
 
-    # Peek at argv so `review …` can use its own subparser without eating flags.
+    # Peek at argv so nested commands use their own subparsers.
     raw = list(argv) if argv is not None else sys.argv[1:]
     if raw and raw[0] == "review":
         return _cmd_review(raw[1:])
+    if raw and raw[0] == "publish":
+        return _cmd_publish(raw[1:])
 
     args = parser.parse_args(argv)
 

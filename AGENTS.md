@@ -13,6 +13,7 @@ In-repo skills under [`skills/`](skills/). Cursor ignores `.cursor/`, so skills 
 | [skills/mac-keynote-assemble/SKILL.md](skills/mac-keynote-assemble/SKILL.md) | macOS Keynote assemble, embed, play chrome, health recovery |
 | [skills/output-paths-worktrees/SKILL.md](skills/output-paths-worktrees/SKILL.md) | `output/{lang}/`, gitignore, worktrees, Agent Store boundaries |
 | [skills/pipeline-review/SKILL.md](skills/pipeline-review/SKILL.md) | Independent QR decode + Keynote video mapping vs online master |
+| [skills/publish-gcs-assets/SKILL.md](skills/publish-gcs-assets/SKILL.md) | Upload approved PDF/Keynote to `zume-file-mirror` + verify downloads |
 
 ## What works
 
@@ -72,6 +73,16 @@ python3 -m zume_assets review all --lang es --type 10 --fetch
 
 Master cache: `manifest/review/{lang}-{type}.json`. Reports: `output/{lang}/review/`. See the pipeline-review skill. With `--live`, allowlisted activity redirects include `3monthplan` → `auth/login` and marketing pages for `getacoach` / `join_the_community` / `next_steps`. Video review gates on `vimeo_id` (title string mismatches are notes only). Pack training id `20` / `t20_b` may alias online `19` when SOURCE records that alias — treat as PASS.
 
+### Publish (GCS + downloads verify)
+
+After human sign-off for a language pack, upload PDF + Keynote from `output/{lang}/` to `gs://zume-file-mirror/{lang}/` via `gcloud storage cp`, then verify `GET /api/v1/downloads/{lang}`. Dry-run by default; require `--execute` for real upload. Do not upload `videos/` unless `--include-videos`. Needs `gcloud` + ADC on the machine (typically macOS Creator Studio). See the publish-gcs-assets skill.
+
+```bash
+python3 -m zume_assets publish upload --lang es
+python3 -m zume_assets publish upload --lang es --execute
+python3 -m zume_assets publish verify-downloads --lang es
+```
+
 ## Workspace paths
 
 Keep all work inside the active repo checkout. Do not create sibling folders under `~/Documents/ZUME/` (or elsewhere) for outputs, capture packs, worktrees, or scratch.
@@ -90,7 +101,7 @@ Do **not** write finished PDFs or Keynote files into Agent Store `docs/` (or any
 
 ## Do not
 
-- Do not publish to GCS or change downloads rows. `publish/` is a placeholder and stays unused until English PDFs are signed off.
+- Do not upload to GCS without human sign-off for that language. Prefer dry-run; only pass `--execute` after approval. Do not update zume6 downloads rows from this CLI (verify only). Do not upload `videos/` unless explicitly opted in. Never print GCS/ADC credentials.
 - Do not copy or save final deliverables into Agent Store `docs/` (use repo `output/` only).
 - Do not create output, worktree, or capture-pack directories outside the active repo root.
 - Do not build, require, or advertise PowerPoint / PPTX in production. The CLI must keep rejecting `pptx`. Do not restore `slides/assemble-pptx/`.
@@ -109,13 +120,14 @@ pdf/templates/            Typst book template
 pdf/assets/               cover and logo
 zume_assets/              assembler, QR, Typst compile, CLI, gap fillers
 zume_assets/review/       pipeline review (master, QR decode, video check)
+zume_assets/publish/      GCS upload (gcloud) + downloads verify
 tests/                    offline unit tests (no live API)
 skills/                   in-repo agent skills (linked above)
 slide-builder/            legacy multi-lang packer + shared vimeo-folders.json / requirements
 slides/capture/           presenter PNG capture packs
 slides/videos/            EN Vimeo download + provenance (production video path)
 slides/assemble-keynote/  macOS Keynote deck assembly
-publish/                  future GCS upload (unused)
+publish/                  GCS publish notes (CLI lives in zume_assets/publish/)
 ```
 
 `slides/videos/` is the production EN video download path. `slide-builder/` remains for its folder map, PyVimeo requirements, and legacy interactive packer until a follow-up relocates those pieces. Its Python deps stay in `slide-builder/requirements.txt` and are not part of the guidebook package.
