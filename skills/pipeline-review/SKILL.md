@@ -44,6 +44,16 @@ Reports land in `output/{lang}/review/` (`qr-{type}.json|.md`, `videos-{type}.js
 - Video theme = automated id + locale metadata match (no AI frame review).
 - Never print or commit Vimeo / `.env` secrets.
 
+## Live redirect allowlist
+
+With `--live`, most activity QRs must land on `/activities/{key}`. One intentional exception:
+
+| Activity | Live final (expected) | Why |
+|---|---|---|
+| `3monthplan` | `…/{locale}/auth/login?redirect=…/create-your-plan` | create-your-plan requires login |
+
+Do **not** treat homepage redirects for `getacoach`, `join_the_community`, or `next_steps` as OK unless product evidence says so — those remain FAIL.
+
 ## Common mistakes
 
 | Mistake | Fix |
@@ -52,3 +62,4 @@ Reports land in `output/{lang}/review/` (`qr-{type}.json|.md`, `videos-{type}.js
 | Missing master JSON | `review fetch-master --lang … --type …` |
 | Expecting CI to hit the live API | Use fixtures / committed `manifest/review/` caches |
 | Unpacking `.key` for video ids in v1 | Use pack `video-replace-list.json` / `SOURCE.json` |
+| Marking `3monthplan` → auth/login as FAIL | Allowed by design (login gate for create-your-plan) |

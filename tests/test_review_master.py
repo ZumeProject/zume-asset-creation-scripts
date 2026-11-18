@@ -35,6 +35,9 @@ def test_expected_redirect_patterns():
     assert expected_redirect_path("c", "5678", "en") == "/checkin?code=5678"
     assert expected_redirect_path("v", "1", "es") == "/app/video?v=1&l=es"
     assert expected_redirect_path("a", "soaps", "en") == "/activities/soaps"
+    # 3monthplan intentionally lands on auth/login (create-your-plan requires login).
+    assert expected_redirect_path("a", "3monthplan", "en") == "/auth/login"
+    assert expected_redirect_path("a", "getacoach", "en") == "/activities/getacoach"
 
 
 def test_build_master_offline_from_presenter_stub(tmp_path: Path):
@@ -69,3 +72,27 @@ def test_build_master_offline_from_presenter_stub(tmp_path: Path):
     assert master["videos"][0]["vimeoId"] == "247062938"
     assert master["checkins"][0]["png_stem"] == "checkin-5678"
     assert any(a["key"] == "join_the_community" for a in master["activities"])
+
+
+def test_build_master_3monthplan_expected_redirect_override():
+    sessions = [
+        {
+            "session": 1,
+            "checkinCode": "5678",
+            "slides": [{"type": "activity", "activityKey": "3monthplan"}],
+        }
+    ]
+    presenter = {
+        "locale": "en",
+        "videos": {},
+        "activities": {"3monthplan": {"title": "Three Month Plan"}},
+    }
+    master = build_master(
+        "en",
+        "10",
+        presenter=presenter,
+        sessions=sessions,
+        follow_redirects=False,
+    )
+    plan = next(a for a in master["activities"] if a["key"] == "3monthplan")
+    assert plan["expected_redirect"] == "/auth/login"

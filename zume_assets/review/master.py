@@ -20,6 +20,14 @@ EXPECTED_REDIRECT = {
     "a": "/activities/{id}",
 }
 
+# Activities whose live destination is intentionally not /activities/{id}.
+# Live QR checks use a stricter allowlist in qr_check.live_redirect_ok (path + query).
+# Do not add getacoach / join_the_community / next_steps here without evidence.
+ACTIVITY_EXPECTED_REDIRECT_OVERRIDES = {
+    # create-your-plan requires login → …/auth/login?redirect=…/create-your-plan
+    "3monthplan": "/auth/login",
+}
+
 
 def default_master_path(lang: str, course_type: str, root: Path | None = None) -> Path:
     repo = root or load_repo_root()
@@ -50,6 +58,8 @@ def collect_keys_from_manifest(sessions: list[dict[str, Any]]) -> tuple[list[dic
 
 
 def expected_redirect_path(kind: str, content_id: str, locale: str) -> str:
+    if kind == "a" and content_id in ACTIVITY_EXPECTED_REDIRECT_OVERRIDES:
+        return ACTIVITY_EXPECTED_REDIRECT_OVERRIDES[content_id]
     template = EXPECTED_REDIRECT[kind]
     return template.format(id=content_id, locale=locale)
 

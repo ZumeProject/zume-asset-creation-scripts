@@ -395,7 +395,7 @@
       "kind": "a",
       "title": "Three Month Plan",
       "qr_url": "https://zume.training/app/qr/?l=es&a=3monthplan",
-      "expected_redirect": "/activities/3monthplan",
+      "expected_redirect": "/auth/login",
       "png_stem": "activity-3monthplan"
     },
     {

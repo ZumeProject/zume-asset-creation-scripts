@@ -5,11 +5,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, unquote, urlparse
 
 from ..api import load_repo_root
 from .decode import QrDecodeError, backend_name, decode_qr_png
 from .master import (
+    ACTIVITY_EXPECTED_REDIRECT_OVERRIDES,
     default_master_path,
     load_master,
     master_entries_by_png_stem,
@@ -48,9 +49,35 @@ def book_qr_urls(book: dict[str, Any]) -> dict[str, str]:
     return out
 
 
+def activity_live_allowlisted(key: str, final_url: str) -> bool | None:
+    """Return True/False for activity keys with a special live rule; else None.
+
+    Only ``3monthplan`` is allowlisted today (auth/login → create-your-plan).
+    Homepage redirects for getacoach / join_the_community / next_steps stay FAIL.
+    """
+    if key not in ACTIVITY_EXPECTED_REDIRECT_OVERRIDES:
+        return None
+    if key == "3monthplan":
+        parsed = urlparse(final_url)
+        path = parsed.path or ""
+        query = unquote(parsed.query or "")
+        # create-your-plan requires login; QR lands on auth/login with redirect back.
+        return "/auth/login" in path and "create-your-plan" in query
+    return None
+
+
 def live_redirect_ok(entry: dict[str, Any], final_url: str | None) -> bool:
     if not final_url:
         return False
+    kind = entry.get("kind")
+    key = str(entry.get("key") or "")
+
+    # Intentional alternate destinations (checked before generic expected_redirect).
+    if kind == "a":
+        special = activity_live_allowlisted(key, final_url)
+        if special is not None:
+            return special
+
     expected = str(entry.get("expected_redirect") or "")
     parsed = urlparse(final_url)
     path_q = parsed.path
@@ -60,16 +87,13 @@ def live_redirect_ok(entry: dict[str, Any], final_url: str | None) -> bool:
     if expected and expected in path_q:
         return True
     # Fallback: checkin / video / activity patterns.
-    kind = entry.get("kind")
     if kind == "c":
         code = str(entry.get("code") or "")
         return "/checkin" in parsed.path and (not code or code in (parsed.query or ""))
     if kind == "v":
-        key = str(entry.get("key") or "")
         qs = parse_qs(parsed.query)
         return "/app/video" in parsed.path and key in (qs.get("v") or [])
     if kind == "a":
-        key = str(entry.get("key") or "")
         return f"/activities/{key}" in parsed.path or parsed.path.rstrip("/").endswith(f"/{key}")
     return False
 
