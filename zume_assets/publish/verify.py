@@ -23,9 +23,9 @@ def verify_downloads(
     fetch: FetchFn | None = None,
 ) -> dict[str, Any]:
     """
-    Assert downloads row filenames match expected PDF + Keynote names.
+    Assert downloads row filenames match expected PDF + Keynote + PPTX names.
 
-    PowerPoint / PPTX fields are noted only (not a production target).
+    Checks guidebook_*, keynote_*, and powerpoint_* fields.
     Returns a report dict; status is pass | fail | error.
     """
     fetch_fn = fetch or fetch_downloads
@@ -43,6 +43,7 @@ def verify_downloads(
             "failures": [{"field": None, "expected": None, "actual": None, "detail": str(exc)}],
             "row": None,
             "checks": [],
+            "notes": [],
         }
 
     if not isinstance(row, dict):
@@ -61,6 +62,7 @@ def verify_downloads(
             ],
             "row": row,
             "checks": [],
+            "notes": [],
         }
 
     checks: list[dict[str, Any]] = []
@@ -94,17 +96,6 @@ def verify_downloads(
             }
         )
 
-    ppt_notes = []
-    for field in (
-        "powerpoint_10_session",
-        "powerpoint_20_session",
-        "powerpoint_intensive",
-    ):
-        if row.get(field):
-            ppt_notes.append(
-                f"{field}={row.get(field)} (PPTX not uploaded by this pipeline)"
-            )
-
     status = "pass" if not failures else "fail"
     keep_keys = fields | {"download_id", "language_id", "online_store"}
     return {
@@ -117,6 +108,6 @@ def verify_downloads(
         "fields_checked": sorted(fields),
         "checks": checks,
         "failures": failures,
-        "notes": ppt_notes,
+        "notes": [],
         "row": {k: row.get(k) for k in sorted(row.keys()) if k in keep_keys},
     }

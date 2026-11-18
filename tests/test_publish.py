@@ -13,24 +13,41 @@ from zume_assets.publish.upload import upload_pack
 from zume_assets.publish.verify import verify_downloads
 
 
-def _touch_pack(lang_dir: Path, lang: str, types: tuple[str, ...] = ("10", "20", "intensive")) -> None:
+def _touch_pack(
+    lang_dir: Path, lang: str, types: tuple[str, ...] = ("10", "20", "intensive")
+) -> None:
     lang_dir.mkdir(parents=True, exist_ok=True)
     for asset in expected_filenames(lang, types):
-        (lang_dir / asset.filename).write_bytes(b"%PDF-fake" if asset.kind == "pdf" else b"key")
+        if asset.kind == "pdf":
+            data = b"%PDF-fake"
+        elif asset.kind == "pptx":
+            data = b"PK-fake-pptx"
+        else:
+            data = b"key"
+        (lang_dir / asset.filename).write_bytes(data)
 
 
 def test_expected_filenames_spanish():
     names = expected_filenames("es")
     assert filename_for("10", "es", ".pdf") == "Zume-Training-10-Session-es.pdf"
     assert filename_for("10", "es", ".key") == "Zume-Training-10-Session-es.key"
+    assert filename_for("10", "es", ".pptx") == "Zume-Training-10-Session-es.pptx"
     assert filename_for("intensive", "es", ".pdf") == "Zume-Training-Intensive-es.pdf"
     assert {a.filename for a in names} == {
         "Zume-Training-10-Session-es.pdf",
         "Zume-Training-10-Session-es.key",
+        "Zume-Training-10-Session-es.pptx",
         "Zume-Training-20-Session-es.pdf",
         "Zume-Training-20-Session-es.key",
+        "Zume-Training-20-Session-es.pptx",
         "Zume-Training-Intensive-es.pdf",
         "Zume-Training-Intensive-es.key",
+        "Zume-Training-Intensive-es.pptx",
+    }
+    assert {a.downloads_field for a in names if a.kind == "pptx"} == {
+        "powerpoint_10_session",
+        "powerpoint_20_session",
+        "powerpoint_intensive",
     }
 
 
@@ -38,11 +55,12 @@ def test_discover_pack_and_plan(tmp_path: Path):
     lang_dir = tmp_path / "es"
     _touch_pack(lang_dir, "es", ("10",))
     items = discover_pack("es", course_types=("10",), lang_dir=lang_dir)
-    assert len(items) == 2
+    assert len(items) == 3
+    assert {i.kind for i in items} == {"pdf", "keynote", "pptx"}
     assert all(not i.missing for i in items)
     assert items[0].gs_uri.startswith("gs://zume-file-mirror/es/")
     plan = plan_uploads(items)
-    assert plan["present"] == 2
+    assert plan["present"] == 3
     assert plan["missing"] == 0
 
 
@@ -68,7 +86,7 @@ def test_upload_dry_run_default(tmp_path: Path):
     result = upload_pack("es", lang_dir=lang_dir, execute=False)
     assert result["status"] == "dry-run"
     assert result["execute"] is False
-    assert len(result["commands"]) == 6
+    assert len(result["commands"]) == 9
     assert result["commands"][0][0] == "gcloud"
     assert "storage" in result["commands"][0]
     assert result["uploaded"] == []
@@ -90,8 +108,31 @@ def test_upload_execute_uses_cp_fn(tmp_path: Path):
         cp_fn=fake_cp,
     )
     assert result["status"] == "uploaded"
-    assert len(copied) == 2
+    assert len(copied) == 3
     assert all(u.startswith("gs://zume-file-mirror/es/") for _, u in copied)
+    assert any(str(p).endswith(".pptx") for p, _ in copied)
+
+
+def test_upload_execute_overwrites_without_existence_guard(tmp_path: Path):
+    """Once --execute is authorized, cp always runs; no refuse-if-exists check."""
+    lang_dir = tmp_path / "es"
+    _touch_pack(lang_dir, "es", ("10",))
+    calls: list[tuple[str, str]] = []
+
+    def fake_cp(local: Path, gs_uri: str) -> None:
+        # Simulate destination already present — upload still proceeds.
+        calls.append((str(local), gs_uri))
+
+    result = upload_pack(
+        "es",
+        course_types=("10",),
+        lang_dir=lang_dir,
+        execute=True,
+        cp_fn=fake_cp,
+    )
+    assert result["status"] == "uploaded"
+    assert len(calls) == 3
+    assert "if-exists" not in json.dumps(result)
 
 
 def test_upload_execute_refuses_missing(tmp_path: Path):
@@ -101,12 +142,25 @@ def test_upload_execute_refuses_missing(tmp_path: Path):
         upload_pack("es", course_types=("10",), lang_dir=lang_dir, execute=True)
 
 
+def test_upload_execute_refuses_missing_pptx_only(tmp_path: Path):
+    lang_dir = tmp_path / "es"
+    lang_dir.mkdir()
+    for asset in expected_filenames("es", ("10",)):
+        if asset.kind == "pptx":
+            continue
+        (lang_dir / asset.filename).write_bytes(b"x")
+    with pytest.raises(FileNotFoundError, match=r"\.pptx"):
+        upload_pack("es", course_types=("10",), lang_dir=lang_dir, execute=True)
+
+
 def test_verify_downloads_pass():
     row = {
         "keynote_10_session": "Zume-Training-10-Session-es.key",
         "keynote_20_session": "Zume-Training-20-Session-es.key",
         "keynote_intensive": "Zume-Training-Intensive-es.key",
-        "powerpoint_10_session": "legacy.pptx",
+        "powerpoint_10_session": "Zume-Training-10-Session-es.pptx",
+        "powerpoint_20_session": "Zume-Training-20-Session-es.pptx",
+        "powerpoint_intensive": "Zume-Training-Intensive-es.pptx",
         "guidebook_10_session": "Zume-Training-10-Session-es.pdf",
         "guidebook_20_session": "Zume-Training-20-Session-es.pdf",
         "guidebook_intensive": "Zume-Training-Intensive-es.pdf",
@@ -116,7 +170,7 @@ def test_verify_downloads_pass():
     report = verify_downloads("es", fetch=lambda _lang: row)
     assert report["status"] == "pass"
     assert report["download_id"] == "abc"
-    assert any("PPTX" in n for n in report["notes"])
+    assert any(c["field"] == "powerpoint_10_session" and c["ok"] for c in report["checks"])
 
 
 def test_verify_downloads_fail_mismatch():
@@ -127,6 +181,9 @@ def test_verify_downloads_fail_mismatch():
         "keynote_10_session": "Zume-Training-10-Session-es.key",
         "keynote_20_session": None,
         "keynote_intensive": "Zume-Training-Intensive-es.key",
+        "powerpoint_10_session": "Zume-Training-10-Session-es.pptx",
+        "powerpoint_20_session": "Zume-Training-20-Session-es.pptx",
+        "powerpoint_intensive": "wrong.pptx",
         "download_id": "x",
         "language_id": "es",
     }
@@ -135,9 +192,10 @@ def test_verify_downloads_fail_mismatch():
     fields = {f["field"] for f in report["failures"]}
     assert "guidebook_10_session" in fields
     assert "keynote_20_session" in fields
+    assert "powerpoint_intensive" in fields
 
 
-def test_publish_cli_dry_run(tmp_path: Path, capsys, monkeypatch):
+def test_publish_cli_dry_run(tmp_path: Path, capsys):
     lang_dir = tmp_path / "es"
     _touch_pack(lang_dir, "es", ("10",))
     code = main(
@@ -156,12 +214,14 @@ def test_publish_cli_dry_run(tmp_path: Path, capsys, monkeypatch):
     out = capsys.readouterr().out
     assert "DRY-RUN" in out
     assert "gs://zume-file-mirror/es/Zume-Training-10-Session-es.pdf" in out
+    assert "gs://zume-file-mirror/es/Zume-Training-10-Session-es.pptx" in out
 
 
 def test_publish_cli_verify(capsys, monkeypatch):
     row = {
         "guidebook_10_session": "Zume-Training-10-Session-es.pdf",
         "keynote_10_session": "Zume-Training-10-Session-es.key",
+        "powerpoint_10_session": "Zume-Training-10-Session-es.pptx",
         "download_id": "d1",
         "language_id": "es",
     }
@@ -170,11 +230,6 @@ def test_publish_cli_verify(capsys, monkeypatch):
         assert lang == "es"
         return row
 
-    monkeypatch.setattr(
-        "zume_assets.publish.verify.fetch_downloads",
-        fake_fetch,
-    )
-    # verify_downloads is imported inside _cmd_publish; patch the module used at call time
     import zume_assets.publish.verify as verify_mod
 
     monkeypatch.setattr(verify_mod, "fetch_downloads", fake_fetch)
@@ -213,4 +268,4 @@ def test_publish_cli_json_plan(tmp_path: Path, capsys):
     assert code == 0
     data = json.loads(capsys.readouterr().out)
     assert data["status"] == "dry-run"
-    assert data["plan"]["present"] == 2
+    assert data["plan"]["present"] == 3

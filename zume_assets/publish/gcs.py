@@ -18,7 +18,7 @@ class UploadItem:
     object_name: str  # relative under {lang}/
     gs_uri: str
     public_url: str
-    kind: str  # pdf | keynote | video | other
+    kind: str  # pdf | keynote | pptx | video | other
     course_type: str | None = None
     missing: bool = False
 
@@ -69,6 +69,8 @@ def storage_cp(local: Path, gs_uri: str, *, execute: bool) -> list[str]:
     """
     Copy one local file to a gs:// URI via `gcloud storage cp`.
 
+    Overwrite is the normal path: if the object already exists, `cp` replaces it.
+    No existence check and no second confirmation after `--execute` is authorized.
     When execute is False, returns the command that would run (dry-run).
     """
     args = ["storage", "cp", str(local), gs_uri]

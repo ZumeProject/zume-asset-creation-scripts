@@ -13,7 +13,7 @@ In-repo skills under [`skills/`](skills/). Cursor ignores `.cursor/`, so skills 
 | [skills/mac-keynote-assemble/SKILL.md](skills/mac-keynote-assemble/SKILL.md) | macOS Keynote assemble, embed, play chrome, health recovery |
 | [skills/output-paths-worktrees/SKILL.md](skills/output-paths-worktrees/SKILL.md) | `output/{lang}/`, gitignore, worktrees, Agent Store boundaries |
 | [skills/pipeline-review/SKILL.md](skills/pipeline-review/SKILL.md) | Independent QR decode + Keynote video mapping vs online master |
-| [skills/publish-gcs-assets/SKILL.md](skills/publish-gcs-assets/SKILL.md) | Upload approved PDF/Keynote to `zume-file-mirror` + verify downloads |
+| [skills/publish-gcs-assets/SKILL.md](skills/publish-gcs-assets/SKILL.md) | Upload approved PDF/Keynote/PPTX to `zume-file-mirror` + verify downloads |
 
 ## What works
 
@@ -21,8 +21,7 @@ In-repo skills under [`skills/`](skills/). Cursor ignores `.cursor/`, so skills 
 
 1. **Typst PDF guidebooks** — via the Python CLI
 2. **Keynote decks (`.key`)** — via `slides/assemble-keynote/` on macOS (not a CLI `--targets` value)
-
-PowerPoint / PPTX is **not** a production target. The old `slides/assemble-pptx/` tree was removed.
+3. **PPTX** — Keynote export during review (`File → Export To → PowerPoint`); required for publish. Do **not** restore `slides/assemble-pptx/`.
 
 ```bash
 pip install -e ".[dev]"
@@ -75,7 +74,7 @@ Master cache: `manifest/review/{lang}-{type}.json`. Reports: `output/{lang}/revi
 
 ### Publish (GCS + downloads verify)
 
-After human sign-off for a language pack, upload PDF + Keynote from `output/{lang}/` to `gs://zume-file-mirror/{lang}/` via `gcloud storage cp`, then verify `GET /api/v1/downloads/{lang}`. Dry-run by default; require `--execute` for real upload. Do not upload `videos/` unless `--include-videos`. Needs `gcloud` + ADC on the machine (typically macOS Creator Studio). See the publish-gcs-assets skill.
+After human sign-off for a language pack, upload PDF + Keynote + PPTX from `output/{lang}/` to `gs://zume-file-mirror/{lang}/` via `gcloud storage cp`, then verify `GET /api/v1/downloads/{lang}` (`guidebook_*`, `keynote_*`, `powerpoint_*`). Dry-run by default; require `--execute` for real upload. Once `--execute` is authorized, **always overwrite** same-named objects (no second prompt). Do not upload `videos/` unless `--include-videos`. Needs `gcloud` + ADC on the machine (typically macOS Creator Studio). Missing PPTX after review: export from Keynote UI (computer use). See the publish-gcs-assets skill.
 
 ```bash
 python3 -m zume_assets publish upload --lang es
@@ -101,10 +100,10 @@ Do **not** write finished PDFs or Keynote files into Agent Store `docs/` (or any
 
 ## Do not
 
-- Do not upload to GCS without human sign-off for that language. Prefer dry-run; only pass `--execute` after approval. Do not update zume6 downloads rows from this CLI (verify only). Do not upload `videos/` unless explicitly opted in. Never print GCS/ADC credentials.
+- Do not upload to GCS without human sign-off for that language. Prefer dry-run; only pass `--execute` after approval. After `--execute`, overwrite same-named GCS objects without asking again. Do not update zume6 downloads rows from this CLI (verify only). Do not upload `videos/` unless explicitly opted in. Never print GCS/ADC credentials.
 - Do not copy or save final deliverables into Agent Store `docs/` (use repo `output/` only).
 - Do not create output, worktree, or capture-pack directories outside the active repo root.
-- Do not build, require, or advertise PowerPoint / PPTX in production. The CLI must keep rejecting `pptx`. Do not restore `slides/assemble-pptx/`.
+- Do not restore `slides/assemble-pptx/`. Build CLI must keep rejecting `--targets pptx`; publish PPTX comes from Keynote export only.
 - Do not treat `keynote` as a CLI `--targets` value; Keynote is assembled only via `slides/assemble-keynote/` on macOS. The CLI rejects `keynote` the same way it rejects other non-PDF targets.
 - Do not bring back a Playwright or Chromium PDF printer. The old zume5 `/book/generator` path was removed. (`slides/capture/` Playwright is for presenter PNGs only.)
 - Do not page-stamp PDFs with PyPDF or ReportLab for guidebook layout. Typst owns layout; `gap-fillers` may stamp decorative images after compile.
