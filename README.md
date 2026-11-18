@@ -15,7 +15,7 @@ See [AGENTS.md](AGENTS.md) for agent rules and [skills/](skills/) for step-by-st
 1. Fetch live presenter, scripts, and activities APIs
 2. Assemble a normalized book JSON from the course manifest (`10`, `20`, or `intensive`)
 3. Emit QR images and compile a Typst template to PDF
-4. Optionally stamp decorative bottom-gap images (`--gap-fillers`)
+4. Stamp decorative bottom-gap images from `images/` (on by default; `--no-gap-fillers` to skip)
 
 English is the review target. The same command builds other locales. Arabic and Traditional Chinese include font and direction handling.
 
@@ -38,10 +38,10 @@ From the repo root:
 python3 build.py --lang en --type 10 --targets pdf
 python3 build.py --lang en --type 20 --targets pdf
 python3 build.py --lang en --type intensive --targets pdf
-# equivalent:
+# equivalent (gap fillers on by default):
 python3 -m zume_assets build --lang en --type 10 --targets pdf
-# with decorative gap fillers:
-python3 -m zume_assets build --lang en --type 10 --targets pdf --gap-fillers
+# Typst-only draft without decorative fillers:
+python3 -m zume_assets build --lang en --type 10 --targets pdf --no-gap-fillers
 ```
 
 All finished assets land under the repo `output/` tree (for example

@@ -37,13 +37,15 @@ Gate behavior:
 ```bash
 pip install -e ".[dev]"
 python3 -m zume_assets prereqs --lang <lang> --pdf-only
-# Production packs always stamp decorative gap fillers:
-python3 -m zume_assets build --lang <lang> --type <10|20|intensive> --targets pdf --gap-fillers
+# Gap fillers ON by default (decorative bottom-gap images from images/):
+python3 -m zume_assets build --lang <lang> --type <10|20|intensive> --targets pdf
+# Typst-only draft (not for sign-off):
+python3 -m zume_assets build --lang <lang> --type <type> --targets pdf --no-gap-fillers
 ```
 
 Outputs: `output/{lang}/Zume-Training-*-{lang}.pdf` plus `output/{lang}/build-{type}/`.
 
-Diagram images (pace / Four Fields / Gen Mapping) download from presenter `images.*` during assemble. Locale scripts that omit `{{ paceN_image }}` shortcodes are merged with English shortcode slots. Missing required diagrams **hard-fail** the build.
+Diagram images (pace / Four Fields / Gen Mapping) download from presenter `images.*` during assemble. Locale scripts that omit `{{ paceN_image }}` shortcodes are merged with English shortcode slots. Missing required diagrams **hard-fail** the build. Decorative gap fillers are **on by default**; a missing/empty `images/` library also fails the build.
 
 ### Keynote (macOS only)
 
@@ -60,7 +62,7 @@ python3 slides/assemble-keynote/embed_videos_choose.py --type <type> --lang <lan
 - CLI `--targets` accepts **pdf only**; reject/restore neither `pptx` nor `keynote` as CLI targets.
 - Do not write finished PDFs/Keynote into Agent Store `docs/` — see [output-paths-worktrees](../output-paths-worktrees/SKILL.md).
 - English is the signed-off review locale; other langs share the same Typst path (Arabic/CJK need fonts).
-- Production PDFs use `--gap-fillers` (same as EN/ES signed-off packs).
+- Production / signed-off PDFs use default gap fillers (same as EN/ES). Do not ship `--no-gap-fillers` as done.
 - Agents must not skip `prereqs` / the build gate.
 
 ## Common mistakes
@@ -69,6 +71,6 @@ python3 slides/assemble-keynote/embed_videos_choose.py --type <type> --lang <lan
 |---|---|
 | Building PPTX | Stop — production is PDF + Keynote only |
 | Running Keynote scripts on Linux CI | Use Mac / Creator Studio |
-| Skipping gap fillers on a production language pack | Pass `--gap-fillers` |
+| Reporting a Typst-only draft (`--no-gap-fillers`) as a finished pack | Rebuild without the flag (fillers are default) |
 | Skipping readiness / inventing a Vimeo folder id | Run `prereqs`; ask Chris for a real folder id |
 | Reporting PDF-only success when Keynote was expected | Use `--full-pack` or fix NOTE items before Keynote |

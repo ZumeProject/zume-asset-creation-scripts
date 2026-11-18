@@ -430,14 +430,18 @@ def main(argv: list[str] | None = None) -> int:
     )
     build.add_argument(
         "--gap-fillers",
-        action="store_true",
-        help="Stamp decorative bottom-gap images from images/ after Typst compile",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "Stamp decorative bottom-gap images from images/ after Typst compile "
+            "(default: on; pass --no-gap-fillers only for intentional Typst-only drafts)"
+        ),
     )
     build.add_argument(
         "--images-dir",
         type=Path,
         default=None,
-        help="PNG library for --gap-fillers (default: <repo>/images)",
+        help="PNG library for gap fillers (default: <repo>/images)",
     )
     build.add_argument(
         "--full-pack",
@@ -598,6 +602,12 @@ def main(argv: list[str] | None = None) -> int:
             if args.gap_fillers:
                 root = load_repo_root()
                 images_dir = args.images_dir or default_images_dir(root)
+                if not images_dir.is_dir() or not any(images_dir.glob("*.png")):
+                    raise RuntimeError(
+                        f"Gap fillers enabled but PNG library missing or empty: {images_dir}. "
+                        "Install images/ in the repo (or pass --images-dir), or use "
+                        "--no-gap-fillers only for intentional Typst-only drafts."
+                    )
                 placements = apply_gap_fillers(
                     pdf_path,
                     pdf_path,
@@ -607,9 +617,9 @@ def main(argv: list[str] | None = None) -> int:
                 print(placements_report(placements), end="")
             else:
                 print(
-                    "Note: built without --gap-fillers. Production PDFs (EN/ES) stamp "
-                    "decorative bottom-gap images from images/; re-run with --gap-fillers "
-                    "or: zume-assets gap-fill --pdf … --output …",
+                    "WARNING: built with --no-gap-fillers. Signed-off / production language "
+                    "PDFs require decorative bottom-gap images. Re-run without the flag "
+                    "(gap fillers are on by default) or: zume-assets gap-fill --pdf … --output …",
                     file=sys.stderr,
                 )
         except Exception as exc:
