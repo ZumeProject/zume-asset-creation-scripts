@@ -9,7 +9,12 @@ from pathlib import Path
 import pytest
 from zume_assets.qr import make_qr_png
 from zume_assets.review.decode import backend_name
-from zume_assets.review.qr_check import check_qr, urls_equivalent
+from zume_assets.review.qr_check import (
+    activity_live_allowlisted,
+    check_qr,
+    live_redirect_ok,
+    urls_equivalent,
+)
 
 FIXTURES = Path(__file__).parent / "fixtures" / "review"
 
@@ -89,3 +94,50 @@ def test_urls_equivalent_order_insensitive():
     a = "https://zume.training/app/qr/?l=en&v=1"
     b = "https://zume.training/app/qr/?v=1&l=en"
     assert urls_equivalent(a, b)
+
+
+def test_live_redirect_ok_3monthplan_auth_login():
+    """create-your-plan requires login; auth/login redirect is expected design."""
+    entry = {
+        "kind": "a",
+        "key": "3monthplan",
+        "expected_redirect": "/auth/login",
+    }
+    final = (
+        "https://zume.training/es/auth/login?"
+        "redirect=%2Fes%2Fdashboard%2Ftraining%2Fcreate-your-plan"
+    )
+    assert live_redirect_ok(entry, final) is True
+    assert activity_live_allowlisted("3monthplan", final) is True
+
+
+def test_live_redirect_ok_3monthplan_rejects_bare_login_or_homepage():
+    entry = {
+        "kind": "a",
+        "key": "3monthplan",
+        "expected_redirect": "/auth/login",
+    }
+    # Must include create-your-plan in the redirect query — bare login is not enough.
+    assert live_redirect_ok(entry, "https://zume.training/en/auth/login") is False
+    assert live_redirect_ok(entry, "https://zume.training/es") is False
+
+
+def test_live_redirect_ok_homepage_activities_still_fail():
+    """getacoach / join_the_community / next_steps homepage redirects stay FAIL."""
+    for key in ("getacoach", "join_the_community", "next_steps"):
+        entry = {
+            "kind": "a",
+            "key": key,
+            "expected_redirect": f"/activities/{key}",
+        }
+        assert live_redirect_ok(entry, "https://zume.training/es") is False
+        assert activity_live_allowlisted(key, "https://zume.training/es") is None
+
+
+def test_live_redirect_ok_normal_activity_path():
+    entry = {
+        "kind": "a",
+        "key": "soaps",
+        "expected_redirect": "/activities/soaps",
+    }
+    assert live_redirect_ok(entry, "https://zume.training/en/activities/soaps") is True

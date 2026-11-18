@@ -41,6 +41,14 @@
   ],
   "activities": [
     {
+      "key": "3monthplan",
+      "kind": "a",
+      "title": "3-Month Plan",
+      "qr_url": "https://zume.training/app/qr/?l=en&a=3monthplan",
+      "expected_redirect": "/auth/login",
+      "png_stem": "activity-3monthplan"
+    },
+    {
       "key": "soaps",
       "kind": "a",
       "title": "SOAPS Bible Reading",
@@ -60,6 +68,6 @@
   "counts": {
     "checkins": 1,
     "videos": 2,
-    "activities": 2
+    "activities": 3
   }
 }

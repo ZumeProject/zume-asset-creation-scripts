@@ -70,7 +70,7 @@ python3 -m zume_assets review videos --lang en --type 10
 python3 -m zume_assets review all --lang es --type 10 --fetch
 ```
 
-Master cache: `manifest/review/{lang}-{type}.json`. Reports: `output/{lang}/review/`. See the pipeline-review skill.
+Master cache: `manifest/review/{lang}-{type}.json`. Reports: `output/{lang}/review/`. See the pipeline-review skill. With `--live`, activity `3monthplan` → `auth/login` (create-your-plan) is an allowed destination; do not treat homepage redirects for `getacoach` / `join_the_community` / `next_steps` as OK without evidence.
 
 ## Workspace paths
 
