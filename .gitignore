@@ -52,7 +52,10 @@ Thumbs.db
 
 # IDE specific files
 # Note: committed agent skills live in repo-root skills/ (not under .cursor/)
-.cursor/
+# Project Cursor subagents are an exception (create-subagent skill).
+.cursor/*
+!.cursor/agents/
+!.cursor/agents/**
 .idea/
 .vscode/
 *.swp
