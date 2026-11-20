@@ -10,16 +10,28 @@ import keynote_health as kh
 
 class KeynoteHealthUnitTests(unittest.TestCase):
     def test_ping_ok(self) -> None:
-        with mock.patch.object(kh, "run_osascript", return_value=(0, "Keynote:1", "")):
-            result = kh.ping()
+        with mock.patch.object(
+            kh, "dismiss_modified_dialogs", return_value=kh.HealthResult(True, "clicked:0")
+        ):
+            with mock.patch.object(kh, "run_osascript", return_value=(0, "Keynote:1", "")):
+                result = kh.ping()
         self.assertTrue(result.ok)
         self.assertIn("ping", result.detail)
 
     def test_ping_timeout(self) -> None:
-        with mock.patch.object(kh, "run_osascript", return_value=(124, "", "TIMEOUT")):
-            result = kh.ping()
+        with mock.patch.object(
+            kh, "dismiss_modified_dialogs", return_value=kh.HealthResult(True, "clicked:0")
+        ):
+            with mock.patch.object(kh, "run_osascript", return_value=(124, "", "TIMEOUT")):
+                result = kh.ping()
         self.assertFalse(result.ok)
         self.assertIn("TIMEOUT", result.detail)
+
+    def test_dismiss_modified_dialogs_ok(self) -> None:
+        with mock.patch.object(kh, "run_osascript", return_value=(0, "clicked:1", "")):
+            result = kh.dismiss_modified_dialogs()
+        self.assertTrue(result.ok)
+        self.assertIn("clicked", result.detail)
 
     def test_ensure_healthy_short_circuits_on_ok_ping(self) -> None:
         with mock.patch.object(kh, "ping", return_value=kh.HealthResult(True, "ping ok")):

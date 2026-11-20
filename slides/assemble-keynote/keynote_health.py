@@ -32,6 +32,62 @@ def kill_osascript() -> None:
     _pkill("osascript")
 
 
+def dismiss_modified_dialogs(timeout: int = 20) -> HealthResult:
+    """Click Keynote ``Save Anyway`` on file-modified sheets (unattended Mac).
+
+    Creator Studio scripts as application \"Keynote\"; System Events process
+    name is also ``Keynote``. Prefer the explicit button over Escape so we do
+    not discard in-progress decks while Chris is away.
+    """
+    code, out, err = run_osascript(
+        '''
+tell application "System Events"
+  if not (exists process "Keynote") then return "no-keynote"
+  tell process "Keynote"
+    set frontmost to true
+    set clicked to 0
+    -- Sheets on document windows (common "file modified" prompt)
+    try
+      repeat with w in windows
+        try
+          if exists sheet 1 of w then
+            tell sheet 1 of w
+              if exists button "Save Anyway" then
+                click button "Save Anyway"
+                set clicked to clicked + 1
+              else if exists button "Replace" then
+                click button "Replace"
+                set clicked to clicked + 1
+              end if
+            end tell
+          end if
+        end try
+      end repeat
+    end try
+    -- Standalone dialog windows
+    try
+      repeat with w in (get windows whose subrole is "AXDialog" or role is "AXSheet")
+        try
+          if exists button "Save Anyway" of w then
+            click button "Save Anyway" of w
+            set clicked to clicked + 1
+          end if
+        end try
+      end repeat
+    end try
+    return "clicked:" & (clicked as text)
+  end tell
+end tell
+''',
+        timeout=timeout,
+    )
+    if code == 0:
+        return HealthResult(True, out or "dismiss ok")
+    if code == 124:
+        return HealthResult(False, "dismiss TIMEOUT")
+    return HealthResult(False, f"dismiss fail code={code} {(err or out)[:160]}")
+
+
 def run_osascript(script: str, timeout: int = 30) -> tuple[int, str, str]:
     """Run osascript with a hard timeout; kill osascript on hang."""
     try:
@@ -55,6 +111,8 @@ def keynote_running() -> bool:
 
 def ping(timeout: int = 12) -> HealthResult:
     """Return ok if Keynote answers a tiny AppleScript ping."""
+    # Clear modal sheets that block AppleScript when the .key changed on disk.
+    dismiss_modified_dialogs(timeout=min(timeout, 15))
     code, out, err = run_osascript(
         f'''
 tell application "{APP_NAME}"
@@ -73,6 +131,7 @@ end tell
 def quit_clean(timeout: int = 25) -> HealthResult:
     """Ask Keynote to quit; do not force yet."""
     kill_osascript()
+    dismiss_modified_dialogs(timeout=15)
     code, out, err = run_osascript(
         f'''
 tell application "{APP_NAME}"
