@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Capture presenter slides for course type 10/20/intensive from local zume6.
+"""Capture presenter slides for course type 10/20/intensive.
+
+Production Keynote packs must be captured from https://zume.training so QR
+payloads bake production hosts (not localhost). Local zume6 is only for
+dev/smoke captures with --allow-localhost.
 
 Writes a pack under the Project Agent Store media/ tree:
   media/{lang}-{10|20|intensive}-presenter-captures/
@@ -8,11 +12,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
+import re
+import subprocess
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-
-from playwright.sync_api import sync_playwright
+from urllib.parse import urlparse
 
 STORE = Path(
     "/Users/chris/Library/Application Support/Cursor/AgentStores/"
@@ -21,11 +27,15 @@ STORE = Path(
 SESSIONS_DIR = Path(
     "/Users/chris/Documents/ZUME/zume6/platform/docs/core/sessions"
 )
-# Prefer hostname "localhost" — Next.js 16 blocks 127.0.0.1 for HMR/dev assets
-# unless allowedDevOrigins is set, which leaves the presenter stuck on Loading.
-BASE_DEFAULT = "http://localhost:3000"
+# Production default — localhost presenter QRs encode http://localhost:3000/app/qr/...
+# which then get baked into Keynote. Use --allow-localhost only for local smoke tests.
+PROD_BASE = "https://zume.training"
+BASE_DEFAULT = os.environ.get("PRESENTER_BASE_URL", PROD_BASE).rstrip("/")
 VIEWPORT = {"width": 1920, "height": 1080}
 DEVICE_SCALE = 2
+_NONPROD_HOST_RE = re.compile(
+    r"^(localhost|127\.0\.0\.1|0\.0\.0\.0|\[::1\])(?::\d+)?$", re.IGNORECASE
+)
 
 COURSE = {
     "10": {
@@ -210,6 +220,60 @@ def write_manifest(
     (cap / "manifest.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
 
 
+def is_nonprod_base(base: str) -> bool:
+    """True when the presenter origin would bake non-production QR hosts."""
+    host = urlparse(base.rstrip("/") + "/").hostname or ""
+    if not host:
+        return True
+    if _NONPROD_HOST_RE.match(host):
+        return True
+    return host.endswith(".local")
+
+
+def decode_qr_payloads(png: Path) -> list[str]:
+    """Decode QR payloads from a PNG via zbarimg when available."""
+    try:
+        out = subprocess.check_output(
+            ["zbarimg", "-q", "--raw", str(png)],
+            stderr=subprocess.DEVNULL,
+            text=True,
+            timeout=30,
+        )
+    except (FileNotFoundError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        return []
+    return [line.strip() for line in out.splitlines() if line.strip()]
+
+
+def invalidate_nonprod_qr_pngs(png_dir: Path, items: list[dict]) -> list[str]:
+    """Delete PNGs whose decoded QR payload points at a non-production host.
+
+    Returns invalidated slide keys so capture will re-fetch them.
+    """
+    invalidated: list[str] = []
+    for item in items:
+        dest = png_dir / item["png"]
+        if not dest.exists():
+            continue
+        payloads = decode_qr_payloads(dest)
+        if not payloads:
+            continue
+        bad = False
+        for payload in payloads:
+            host = urlparse(payload).hostname or ""
+            # Production packs must encode zume.training only.
+            if host != "zume.training":
+                bad = True
+                break
+        if not bad:
+            continue
+        dest.unlink()
+        item["status"] = "pending"
+        item["bytes"] = None
+        item["captured_at"] = None
+        invalidated.append(str(item.get("key") or item["png"]))
+    return invalidated
+
+
 def capture_one(page, item: dict, dest: Path, retries: int = 2) -> None:
     last_err: Exception | None = None
     for attempt in range(retries + 1):
@@ -244,9 +308,36 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--type", choices=sorted(COURSE), required=True)
     parser.add_argument("--lang", default="en", help="Locale code (en, ky, ms, …)")
-    parser.add_argument("--base", default=BASE_DEFAULT)
+    parser.add_argument(
+        "--base",
+        default=BASE_DEFAULT,
+        help=f"Presenter origin (default: {BASE_DEFAULT} / $PRESENTER_BASE_URL)",
+    )
+    parser.add_argument(
+        "--allow-localhost",
+        action="store_true",
+        help="Allow http://localhost:3000 (or similar) for local smoke captures only",
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Re-capture every slide even when a PNG already exists",
+    )
+    parser.add_argument(
+        "--invalidate-nonprod-qr",
+        action="store_true",
+        help="Delete PNGs whose QR payload is not https://zume.training/… before capture",
+    )
     parser.add_argument("--limit", type=int, default=0, help="Capture only first N (smoke)")
     args = parser.parse_args(argv)
+
+    base = args.base.rstrip("/")
+    if is_nonprod_base(base) and not args.allow_localhost:
+        raise SystemExit(
+            f"Refusing non-production presenter base {base!r}. "
+            f"Capture production packs from {PROD_BASE} "
+            "(or pass --allow-localhost for local smoke tests only)."
+        )
 
     lang = args.lang.strip().lower()
     meta = COURSE[args.type]
@@ -256,26 +347,43 @@ def main(argv: list[str] | None = None) -> int:
     (cap / "videos").mkdir(parents=True, exist_ok=True)
     (cap / "work").mkdir(parents=True, exist_ok=True)
 
-    items = build_items(args.type, args.base.rstrip("/"), lang)
+    items = build_items(args.type, base, lang)
     if args.limit > 0:
         items = items[: args.limit]
 
+    if args.invalidate_nonprod_qr:
+        dropped = invalidate_nonprod_qr_pngs(png_dir, items)
+        print(
+            f"invalidate-nonprod-qr removed {len(dropped)} PNG(s): "
+            f"{', '.join(dropped[:20])}{'…' if len(dropped) > 20 else ''}",
+            flush=True,
+        )
+
     for item in items:
         dest = png_dir / item["png"]
+        if args.force and dest.exists():
+            dest.unlink()
+            item["status"] = "pending"
+            item["bytes"] = None
+            item["captured_at"] = None
+            continue
         if dest.exists() and dest.stat().st_size > 5000:
             item["status"] = "done"
             item["bytes"] = dest.stat().st_size
             item["captured_at"] = item.get("captured_at") or "existing"
 
     write_manifest(
-        cap, items, base=args.base.rstrip("/"), course_type=args.type, lang=lang, phase="resume"
+        cap, items, base=base, course_type=args.type, lang=lang, phase="resume"
     )
     first_missing = next((i["index"] for i in items if i["status"] != "done"), None)
     print(
-        f"{lang} {meta['label']} resume first_missing={first_missing} "
+        f"{lang} {meta['label']} base={base} resume first_missing={first_missing} "
         f"done={sum(1 for i in items if i['status']=='done')}/{len(items)} → {png_dir}",
         flush=True,
     )
+
+    # Lazy import so unit tests can load helpers without Playwright installed (CI).
+    from playwright.sync_api import sync_playwright
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
@@ -295,7 +403,7 @@ def main(argv: list[str] | None = None) -> int:
             write_manifest(
                 cap,
                 items,
-                base=args.base.rstrip("/"),
+                base=base,
                 course_type=args.type,
                 lang=lang,
                 phase="capturing",
@@ -309,7 +417,7 @@ def main(argv: list[str] | None = None) -> int:
         browser.close()
 
     write_manifest(
-        cap, items, base=args.base.rstrip("/"), course_type=args.type, lang=lang, phase="complete"
+        cap, items, base=base, course_type=args.type, lang=lang, phase="complete"
     )
     print(
         f"DONE {lang} {meta['label']} captured="
