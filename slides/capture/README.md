@@ -45,3 +45,20 @@ Finished Keynote decks assembled from this pack belong under the repo
 `output/{lang}/` directory — never Agent Store `docs/`.
 
 Viewport: 1920×1080 @ deviceScaleFactor 2 (3840×2160) for `capture_presenter.py`.
+
+## Localhost QR codes in Keynote / PPTX
+
+Screenshots from `localhost:3000` bake **localhost** into on-slide QR symbols. Typst PDF QRs are unaffected (`https://zume.training`).
+
+Prefer capturing with the production default above. If a pack was already captured
+from localhost (or you used `--allow-localhost`), rewrite payloads in place before
+assembling Keynote:
+
+```bash
+# needs: brew install zbar
+python3 slides/capture/fix_localhost_qr.py --audit
+python3 slides/capture/fix_localhost_qr.py --lang pus --apply
+python3 slides/capture/fix_localhost_qr.py --apply   # all packs
+```
+
+Then reassemble Keynote + export PPTX so `output/{lang}/` decks pick up the fixed PNGs. See `.cursor/agents/qr-localhost-fixer.md`.
