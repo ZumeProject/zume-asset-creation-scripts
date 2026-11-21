@@ -1,0 +1,73 @@
+{
+  "lang": "en",
+  "type": "10",
+  "locale": "en",
+  "fetched_at": "2026-01-01T00:00:00Z",
+  "api_base": "https://api.zume.training/api/v1",
+  "site_base": "https://zume.training",
+  "manifest": "ten_session.json",
+  "follow_redirects": false,
+  "checkins": [
+    {
+      "session": 1,
+      "code": "5678",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=en&c=5678",
+      "expected_redirect": "/checkin?code=5678",
+      "png_stem": "checkin-5678"
+    }
+  ],
+  "videos": [
+    {
+      "key": "1",
+      "kind": "v",
+      "title": "God Uses Ordinary People",
+      "vimeoId": "247062938",
+      "youtubeId": "",
+      "qr_url": "https://zume.training/app/qr/?l=en&v=1",
+      "expected_redirect": "/app/video?v=1&l=en",
+      "png_stem": "video-1"
+    },
+    {
+      "key": "2",
+      "kind": "v",
+      "title": "Simple Definition of Disciple and Church",
+      "vimeoId": "247382094",
+      "youtubeId": "",
+      "qr_url": "https://zume.training/app/qr/?l=en&v=2",
+      "expected_redirect": "/app/video?v=2&l=en",
+      "png_stem": "video-2"
+    }
+  ],
+  "activities": [
+    {
+      "key": "3monthplan",
+      "kind": "a",
+      "title": "3-Month Plan",
+      "qr_url": "https://zume.training/app/qr/?l=en&a=3monthplan",
+      "expected_redirect": "/auth/login",
+      "png_stem": "activity-3monthplan"
+    },
+    {
+      "key": "soaps",
+      "kind": "a",
+      "title": "SOAPS Bible Reading",
+      "qr_url": "https://zume.training/app/qr/?l=en&a=soaps",
+      "expected_redirect": "/activities/soaps",
+      "png_stem": "activity-soaps"
+    },
+    {
+      "key": "join_the_community",
+      "kind": "a",
+      "title": "Join the Community",
+      "qr_url": "https://zume.training/app/qr/?l=en&a=join_the_community",
+      "expected_redirect": "/activities/join_the_community",
+      "png_stem": "activity-join_the_community"
+    }
+  ],
+  "counts": {
+    "checkins": 1,
+    "videos": 2,
+    "activities": 3
+  }
+}

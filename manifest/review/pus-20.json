@@ -1,0 +1,607 @@
+{
+  "lang": "pus",
+  "type": "20",
+  "locale": "pus",
+  "fetched_at": "2026-11-18T21:52:44Z",
+  "api_base": "https://api.zume.training/api/v1",
+  "site_base": "https://zume.training",
+  "manifest": "twenty_session.json",
+  "follow_redirects": false,
+  "checkins": [
+    {
+      "session": 1,
+      "code": "3354",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=3354",
+      "expected_redirect": "/checkin?code=3354",
+      "png_stem": "checkin-3354"
+    },
+    {
+      "session": 2,
+      "code": "4568",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=4568",
+      "expected_redirect": "/checkin?code=4568",
+      "png_stem": "checkin-4568"
+    },
+    {
+      "session": 3,
+      "code": "8767",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=8767",
+      "expected_redirect": "/checkin?code=8767",
+      "png_stem": "checkin-8767"
+    },
+    {
+      "session": 4,
+      "code": "6787",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=6787",
+      "expected_redirect": "/checkin?code=6787",
+      "png_stem": "checkin-6787"
+    },
+    {
+      "session": 5,
+      "code": "3450",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=3450",
+      "expected_redirect": "/checkin?code=3450",
+      "png_stem": "checkin-3450"
+    },
+    {
+      "session": 6,
+      "code": "2344",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=2344",
+      "expected_redirect": "/checkin?code=2344",
+      "png_stem": "checkin-2344"
+    },
+    {
+      "session": 7,
+      "code": "1116",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=1116",
+      "expected_redirect": "/checkin?code=1116",
+      "png_stem": "checkin-1116"
+    },
+    {
+      "session": 8,
+      "code": "5431",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=5431",
+      "expected_redirect": "/checkin?code=5431",
+      "png_stem": "checkin-5431"
+    },
+    {
+      "session": 9,
+      "code": "8768",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=8768",
+      "expected_redirect": "/checkin?code=8768",
+      "png_stem": "checkin-8768"
+    },
+    {
+      "session": 10,
+      "code": "2347",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=2347",
+      "expected_redirect": "/checkin?code=2347",
+      "png_stem": "checkin-2347"
+    },
+    {
+      "session": 11,
+      "code": "9434",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=9434",
+      "expected_redirect": "/checkin?code=9434",
+      "png_stem": "checkin-9434"
+    },
+    {
+      "session": 12,
+      "code": "2348",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=2348",
+      "expected_redirect": "/checkin?code=2348",
+      "png_stem": "checkin-2348"
+    },
+    {
+      "session": 13,
+      "code": "6785",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=6785",
+      "expected_redirect": "/checkin?code=6785",
+      "png_stem": "checkin-6785"
+    },
+    {
+      "session": 14,
+      "code": "9872",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=9872",
+      "expected_redirect": "/checkin?code=9872",
+      "png_stem": "checkin-9872"
+    },
+    {
+      "session": 15,
+      "code": "4327",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=4327",
+      "expected_redirect": "/checkin?code=4327",
+      "png_stem": "checkin-4327"
+    },
+    {
+      "session": 16,
+      "code": "2871",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=2871",
+      "expected_redirect": "/checkin?code=2871",
+      "png_stem": "checkin-2871"
+    },
+    {
+      "session": 17,
+      "code": "4328",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=4328",
+      "expected_redirect": "/checkin?code=4328",
+      "png_stem": "checkin-4328"
+    },
+    {
+      "session": 18,
+      "code": "6548",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=6548",
+      "expected_redirect": "/checkin?code=6548",
+      "png_stem": "checkin-6548"
+    },
+    {
+      "session": 19,
+      "code": "7657",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=7657",
+      "expected_redirect": "/checkin?code=7657",
+      "png_stem": "checkin-7657"
+    },
+    {
+      "session": 20,
+      "code": "2767",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=pus&c=2767",
+      "expected_redirect": "/checkin?code=2767",
+      "png_stem": "checkin-2767"
+    }
+  ],
+  "videos": [
+    {
+      "key": "1",
+      "kind": "v",
+      "title": "خُدائے عام خلک استعمالوي",
+      "vimeoId": "1208816332",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=1",
+      "expected_redirect": "/app/video?v=1&l=pus",
+      "png_stem": "video-1"
+    },
+    {
+      "key": "2",
+      "kind": "v",
+      "title": "د شاګرد او کليسا ساده تعريف",
+      "vimeoId": "1208816331",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=2",
+      "expected_redirect": "/app/video?v=2&l=pus",
+      "png_stem": "video-2"
+    },
+    {
+      "key": "3",
+      "kind": "v",
+      "title": "روحاني ساه اخيستل يعنې د خُدائے اورېدل او اطاعت کول",
+      "vimeoId": "1208816330",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=3",
+      "expected_redirect": "/app/video?v=3&l=pus",
+      "png_stem": "video-3"
+    },
+    {
+      "key": "4",
+      "kind": "v",
+      "title": "‎343. S.O.A.P.S. ‎د بائبل لوستل",
+      "vimeoId": "1208816334",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=4",
+      "expected_redirect": "/app/video?v=4&l=pus",
+      "png_stem": "video-4"
+    },
+    {
+      "key": "5",
+      "kind": "v",
+      "title": "د احتساب ډلى",
+      "vimeoId": "1208816398",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=5",
+      "expected_redirect": "/app/video?v=5&l=pus",
+      "png_stem": "video-5"
+    },
+    {
+      "key": "6",
+      "kind": "v",
+      "title": "مصرف کوونکی او توليد کوونکی طرزِ ژوند",
+      "vimeoId": "1208818453",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=6",
+      "expected_redirect": "/app/video?v=6&l=pus",
+      "png_stem": "video-6"
+    },
+    {
+      "key": "7",
+      "kind": "v",
+      "title": "څنګه يو ساعت په دعا کښې تېر کړئ",
+      "vimeoId": "1208818875",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=7",
+      "expected_redirect": "/app/video?v=7&l=pus",
+      "png_stem": "video-7"
+    },
+    {
+      "key": "8",
+      "kind": "v",
+      "title": "د اړيکو امانتداري – د ١٠٠ ليسټ",
+      "vimeoId": "1208819408",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=8",
+      "expected_redirect": "/app/video?v=8&l=pus",
+      "png_stem": "video-8"
+    },
+    {
+      "key": "9",
+      "kind": "v",
+      "title": "روحاني اقتصاد",
+      "vimeoId": "1208820824",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=9",
+      "expected_redirect": "/app/video?v=9&l=pus",
+      "png_stem": "video-9"
+    },
+    {
+      "key": "10",
+      "kind": "v",
+      "title": "انجيل او دا څنګه شريک کړو",
+      "vimeoId": "1208821202",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=10",
+      "expected_redirect": "/app/video?v=10&l=pus",
+      "png_stem": "video-10"
+    },
+    {
+      "key": "11",
+      "kind": "v",
+      "title": "بپتسمه او دا څنګه ترسره کړو",
+      "vimeoId": "1208821238",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=11",
+      "expected_redirect": "/app/video?v=11&l=pus",
+      "png_stem": "video-11"
+    },
+    {
+      "key": "12",
+      "kind": "v",
+      "title": "خپله درې منټه ګواهى تياره کړئ",
+      "vimeoId": "1208822295",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=12",
+      "expected_redirect": "/app/video?v=12&l=pus",
+      "png_stem": "video-12"
+    },
+    {
+      "key": "13",
+      "kind": "v",
+      "title": "د ستر برکت ليد شريکول",
+      "vimeoId": "1208822525",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=13",
+      "expected_redirect": "/app/video?v=13&l=pus",
+      "png_stem": "video-13"
+    },
+    {
+      "key": "14",
+      "kind": "v",
+      "title": "ډکلنګ شاګردي – سمدستي مشري",
+      "vimeoId": "1208823262",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=14",
+      "expected_redirect": "/app/video?v=14&l=pus",
+      "png_stem": "video-14"
+    },
+    {
+      "key": "15",
+      "kind": "v",
+      "title": "هغه ځايونه ليدل چرته چې بادشاهي نشته",
+      "vimeoId": "1208824943",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=15",
+      "expected_redirect": "/app/video?v=15&l=pus",
+      "png_stem": "video-15"
+    },
+    {
+      "key": "16",
+      "kind": "v",
+      "title": "د مالِک عشاء او دا څنګه رهبري کړو",
+      "vimeoId": "1208825320",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=16",
+      "expected_redirect": "/app/video?v=16&l=pus",
+      "png_stem": "video-16"
+    },
+    {
+      "key": "17",
+      "kind": "v",
+      "title": "دعا ګرځېدل او دا څنګه وکړو",
+      "vimeoId": "1208826112",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=17",
+      "expected_redirect": "/app/video?v=17&l=pus",
+      "png_stem": "video-17"
+    },
+    {
+      "key": "18",
+      "kind": "v",
+      "title": "د امن سړی او دا څنګه پيدا کړو",
+      "vimeoId": "1208827361",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=18",
+      "expected_redirect": "/app/video?v=18&l=pus",
+      "png_stem": "video-18"
+    },
+    {
+      "key": "19",
+      "kind": "v",
+      "title": "وفاداري د علم نه غوره ده",
+      "vimeoId": "1208827636",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=19",
+      "expected_redirect": "/app/video?v=19&l=pus",
+      "png_stem": "video-19"
+    },
+    {
+      "key": "21",
+      "kind": "v",
+      "title": "‎3/ ‎ډلې سيکنډ طريقه",
+      "vimeoId": "1208827829",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=21",
+      "expected_redirect": "/app/video?v=21&l=pus",
+      "png_stem": "video-21"
+    },
+    {
+      "key": "22",
+      "kind": "v",
+      "title": "د بالغېدونکو شاګردانو د پاره  د ټرينِګ عمل (چکر)",
+      "vimeoId": "1208829217",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=22",
+      "expected_redirect": "/app/video?v=22&l=pus",
+      "png_stem": "video-22"
+    },
+    {
+      "key": "23",
+      "kind": "v",
+      "title": "د مشرانو ډله",
+      "vimeoId": "1208829289",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=23",
+      "expected_redirect": "/app/video?v=23&l=pus",
+      "png_stem": "video-23"
+    },
+    {
+      "key": "24",
+      "kind": "v",
+      "title": "غير ترتيبي وده ومنئ",
+      "vimeoId": "1208830660",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=24",
+      "expected_redirect": "/app/video?v=24&l=pus",
+      "png_stem": "video-24"
+    },
+    {
+      "key": "25",
+      "kind": "v",
+      "title": "د زياتېدو رفتار مهم دی",
+      "vimeoId": "1208830675",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=25",
+      "expected_redirect": "/app/video?v=25&l=pus",
+      "png_stem": "video-25"
+    },
+    {
+      "key": "26",
+      "kind": "v",
+      "title": "همېشه د دوو کليساوو برخه اوسئ",
+      "vimeoId": "1208831065",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=26",
+      "expected_redirect": "/app/video?v=26&l=pus",
+      "png_stem": "video-26"
+    },
+    {
+      "key": "28",
+      "kind": "v",
+      "title": "کوچنګ چک ليست",
+      "vimeoId": "1208834048",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=28",
+      "expected_redirect": "/app/video?v=28&l=pus",
+      "png_stem": "video-28"
+    },
+    {
+      "key": "29",
+      "kind": "v",
+      "title": "په شبکو کښې مشري",
+      "vimeoId": "1208835225",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=29",
+      "expected_redirect": "/app/video?v=29&l=pus",
+      "png_stem": "video-29"
+    },
+    {
+      "key": "30",
+      "kind": "v",
+      "title": "د همځولو د لارښوونې ډلې",
+      "vimeoId": "1208835551",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=30",
+      "expected_redirect": "/app/video?v=30&l=pus",
+      "png_stem": "video-30"
+    },
+    {
+      "key": "33",
+      "kind": "v",
+      "title": "د درې حلقو د انجیل وړاندې کول",
+      "vimeoId": "1208836807",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&v=33",
+      "expected_redirect": "/app/video?v=33&l=pus",
+      "png_stem": "video-33"
+    }
+  ],
+  "activities": [
+    {
+      "key": "33group",
+      "kind": "a",
+      "title": "۳/۳ ډلې (مکمل تفصيل)",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=33group",
+      "expected_redirect": "/activities/33group",
+      "png_stem": "activity-33group"
+    },
+    {
+      "key": "3monthplan",
+      "kind": "a",
+      "title": "درې مياشتنی منصوبه",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=3monthplan",
+      "expected_redirect": "/auth/login",
+      "png_stem": "activity-3monthplan"
+    },
+    {
+      "key": "4fields",
+      "kind": "a",
+      "title": "ددى مثال",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=4fields",
+      "expected_redirect": "/activities/4fields",
+      "png_stem": "activity-4fields"
+    },
+    {
+      "key": "accountability",
+      "kind": "a",
+      "title": "د احتساب ډلى",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=accountability",
+      "expected_redirect": "/activities/accountability",
+      "png_stem": "activity-accountability"
+    },
+    {
+      "key": "blessprayer",
+      "kind": "a",
+      "title": "د دعا طريقه",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=blessprayer",
+      "expected_redirect": "/activities/blessprayer",
+      "png_stem": "activity-blessprayer"
+    },
+    {
+      "key": "coachingchecklist",
+      "kind": "a",
+      "title": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=coachingchecklist",
+      "expected_redirect": "/activities/coachingchecklist",
+      "png_stem": "activity-coachingchecklist"
+    },
+    {
+      "key": "genmapping",
+      "kind": "a",
+      "title": "د نسب نامى نقشه",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=genmapping",
+      "expected_redirect": "/activities/genmapping",
+      "png_stem": "activity-genmapping"
+    },
+    {
+      "key": "getacoach",
+      "kind": "a",
+      "title": null,
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=getacoach",
+      "expected_redirect": "/get-a-coach",
+      "png_stem": "activity-getacoach"
+    },
+    {
+      "key": "join_the_community",
+      "kind": "a",
+      "title": "ټولنې سره يو ځای شئ.",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=join_the_community",
+      "expected_redirect": "/join-the-community",
+      "png_stem": "activity-join_the_community"
+    },
+    {
+      "key": "listof100",
+      "kind": "a",
+      "title": "د خپل ۱۰۰ کسانو لېست جوړ کړئ‎.",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=listof100",
+      "expected_redirect": "/activities/listof100",
+      "png_stem": "activity-listof100"
+    },
+    {
+      "key": "lordssupper",
+      "kind": "a",
+      "title": "عشاء ربانى",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=lordssupper",
+      "expected_redirect": "/activities/lordssupper",
+      "png_stem": "activity-lordssupper"
+    },
+    {
+      "key": "peermentoring",
+      "kind": "a",
+      "title": "د همځولو د لارښوونې ډلې",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=peermentoring",
+      "expected_redirect": "/activities/peermentoring",
+      "png_stem": "activity-peermentoring"
+    },
+    {
+      "key": "prayercycle",
+      "kind": "a",
+      "title": "په ۱۲ ساده قدمونو کښې (هر يو ۵ مينټ)، دا طريقه تاسو يو ګينټه دعا ته رهبري کوي۔",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=prayercycle",
+      "expected_redirect": "/activities/prayercycle",
+      "png_stem": "activity-prayercycle"
+    },
+    {
+      "key": "prayerwalking",
+      "kind": "a",
+      "title": "د دعا سفر",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=prayerwalking",
+      "expected_redirect": "/activities/prayerwalking",
+      "png_stem": "activity-prayerwalking"
+    },
+    {
+      "key": "sharegospel",
+      "kind": "a",
+      "title": "خ خدائ زيرے شريک کړئ",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=sharegospel",
+      "expected_redirect": "/activities/sharegospel",
+      "png_stem": "activity-sharegospel"
+    },
+    {
+      "key": "sharetestimony",
+      "kind": "a",
+      "title": "درې منټه شاهدي",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=sharetestimony",
+      "expected_redirect": "/activities/sharetestimony",
+      "png_stem": "activity-sharetestimony"
+    },
+    {
+      "key": "soaps",
+      "kind": "a",
+      "title": "SOAPS بائبل مطالعه",
+      "qr_url": "https://zume.training/app/qr/?l=pus&a=soaps",
+      "expected_redirect": "/activities/soaps",
+      "png_stem": "activity-soaps"
+    }
+  ],
+  "counts": {
+    "checkins": 20,
+    "videos": 29,
+    "activities": 17
+  }
+}

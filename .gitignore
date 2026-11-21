@@ -1,0 +1,52 @@
+# --- Deliverables & build caches (never commit) ---
+# Single output root: finished PDFs/Keynote, videos, Typst intermediates
+output/
+# Legacy slide-builder language / packer outputs
+slide-builder/output/
+slide-builder/ar/
+slide-builder/pa/
+slide-builder/zhhk/
+slide-builder/**/videos/
+
+# Worktrees and comparison downloads
+.worktrees/
+reference/
+
+# Python virtual environments
+venv/
+env/
+.env
+.env.backup
+.config.json
+slide-builder/.config.json
+config.json
+slide-builder/.env
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.venv/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# IDE specific files
+# Note: committed agent skills live in repo-root skills/ (not under .cursor/)
+# Project Cursor subagents are an exception (create-subagent skill).
+.cursor/*
+!.cursor/agents/
+!.cursor/agents/**
+.idea/
+.vscode/
+*.swp
+*.swo
+.config.json
