@@ -57,8 +57,15 @@ def get_project_path(args=None) -> Path:
     
     project_path = config.get('project_path')
     if not project_path:
+        lang = os.environ.get('ZUME_LANGUAGE_CODE', '').strip().lower()
+        if lang:
+            project_path = str(
+                Path(__file__).resolve().parents[2] / "build" / "legacy" / lang
+            )
+    if not project_path:
         print("❌ No project path found.")
         print("Provide via --project-path argument, ZUME_PROJECT_PATH env var, or .config.json")
+        print("Default when ZUME_LANGUAGE_CODE is set: <repo>/build/legacy/{lang}")
         sys.exit(1)
     
     project_path = Path(project_path)

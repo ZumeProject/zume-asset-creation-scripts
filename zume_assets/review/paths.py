@@ -1,43 +1,32 @@
-"""Shared review path helpers (avoid importing cli to prevent cycles)."""
+"""Review path helpers. Canonical definitions live in ``zume_assets.paths``."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
-from ..api import load_repo_root
+from ..paths import (
+    book_path,
+    build_dir,
+    capture_pack_dir,
+    output_root,
+    qr_dir,
+    report_dir,
+    source_json,
+    videos_dir,
+)
 
-
-def output_root(root: Path | None = None) -> Path:
-    return (root or load_repo_root()) / "output"
-
-
-def build_dir(lang: str, course_type: str, root: Path | None = None) -> Path:
-    return output_root(root) / lang / f"build-{course_type}"
-
-
-def qr_dir(lang: str, course_type: str, root: Path | None = None) -> Path:
-    return build_dir(lang, course_type, root) / "qr"
-
-
-def book_path(lang: str, course_type: str, root: Path | None = None) -> Path:
-    return build_dir(lang, course_type, root) / "book.json"
-
-
-def report_dir(lang: str, root: Path | None = None) -> Path:
-    return output_root(root) / lang / "review"
-
-
-def videos_dir(lang: str, root: Path | None = None) -> Path:
-    return output_root(root) / lang / "videos"
-
-
-def source_json(lang: str, root: Path | None = None) -> Path:
-    return videos_dir(lang, root) / "SOURCE.json"
-
-
-def local_pack_dir(lang: str, course_type: str, root: Path | None = None) -> Path:
-    """Repo-local Keynote pack path: output/{lang}/pack-{type}."""
-    return output_root(root) / lang / f"pack-{course_type}"
+__all__ = [
+    "book_path",
+    "build_dir",
+    "capture_pack_dir",
+    "default_pack_dir",
+    "output_root",
+    "pack_has_embed_sources",
+    "qr_dir",
+    "report_dir",
+    "source_json",
+    "videos_dir",
+]
 
 
 def pack_has_embed_sources(pack: Path) -> bool:
@@ -55,23 +44,9 @@ def default_pack_dir(
     root: Path | None = None,
     store: Path | None = None,
 ) -> Path:
-    """Prefer Agent Store presenter capture pack, else output/{lang}/pack-{type}.
+    """Presenter capture pack: ``build/{lang}/captures/{type}``.
 
-    Mac / Creator Studio packs live under Agent Store
-    ``media/{lang}-{type}-presenter-captures/``. ``review videos`` / ``review all``
-    should find those without a manual ``--pack`` when present.
+    ``store`` is ignored. Packs are not read from an Agent Store.
     """
-    # Local import avoids a paths ↔ lang_prereqs cycle at module load.
-    from ..lang_prereqs import default_capture_pack_dir
-
-    capture = default_capture_pack_dir(lang, course_type, store=store)
-    local = local_pack_dir(lang, course_type, root)
-    candidates = (capture, local)
-    for cand in candidates:
-        if pack_has_embed_sources(cand):
-            return cand
-    for cand in candidates:
-        if cand.is_dir():
-            return cand
-    # Prefer the Agent Store path in "not found" notes (where packs usually live).
-    return capture
+    del store
+    return capture_pack_dir(lang, course_type, root)

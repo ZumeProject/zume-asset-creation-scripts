@@ -9,7 +9,7 @@ Requires env (or slide-builder/.env / repo .env):
   VIMEO_CLIENT_ID (or VIMEO_CLIENT_IDENTIFIER)
   VIMEO_CLIENT_SECRET (or VIMEO_CLIENT_SECRETS)
 
-Writes numbered files to --out (default: output/{lang}/videos/{id}.mp4) plus
+Writes numbered files to --out (default: build/{lang}/videos/{id}.mp4) plus
 SOURCE.json provenance so assemble can refuse GCS / stale caches.
 """
 from __future__ import annotations
@@ -295,7 +295,7 @@ def main(argv: list[str] | None = None) -> int:
             f"--folder-id {args.folder_id} does not match mapped {lang} folder {folder_id}"
         )
 
-    out_dir = args.out or (REPO_ROOT / "output" / lang / "videos")
+    out_dir = args.out or (REPO_ROOT / "build" / lang / "videos")
     folder_url = f"https://vimeo.com/user/{EN_VIMEO_USER_ID}/folder/{folder_id}"
 
     client = get_client()

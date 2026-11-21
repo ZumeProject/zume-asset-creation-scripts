@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from ..api import load_repo_root
+from ..paths import videos_dir
 from .gcs import UploadItem, object_uri, public_url
 from .names import COURSE_TYPES, expected_filenames
 
@@ -46,9 +47,9 @@ def discover_pack(
         )
 
     if include_videos:
-        videos_dir = base / "videos"
-        if videos_dir.is_dir():
-            for path in sorted(videos_dir.iterdir()):
+        downloaded = videos_dir(lang, root)
+        if downloaded.is_dir():
+            for path in sorted(downloaded.iterdir()):
                 if not path.is_file():
                     continue
                 if path.name == "SOURCE.json":

@@ -1,5 +1,6 @@
 # --- Deliverables & build caches (never commit) ---
-# Single output root: finished PDFs/Keynote, videos, Typst intermediates
+# Finished upload set only: PDF, Keynote, PPTX under output/{lang}/.
+# Do not commit these binaries.
 output/
 # Legacy slide-builder language / packer outputs
 slide-builder/output/
@@ -30,7 +31,10 @@ __pycache__/
 .ruff_cache/
 .venv/
 
-# Distribution / packaging
+# Distribution / packaging, and the pipeline working tree.
+# build/ holds videos, Typst intermediates, review reports, capture packs,
+# comparison files (build/reference/), and legacy packer output (build/legacy/).
+# python -m build also writes here; do not run it while a language pack is in build/.
 dist/
 build/
 *.egg-info/

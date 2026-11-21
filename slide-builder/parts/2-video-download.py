@@ -49,10 +49,18 @@ def load_config(args=None):
             except json.JSONDecodeError as e:
                 print(f"⚠️  Warning: Error reading .config.json: {e}")
     
+    # Default inside the repo working tree when the operator did not choose a path.
+    if not config.get('project_path') and config.get('language_code'):
+        lang = str(config['language_code']).strip().lower()
+        config['project_path'] = str(
+            Path(__file__).resolve().parents[2] / "build" / "legacy" / lang
+        )
+
     # Validate required fields
     if 'project_path' not in config or not config['project_path']:
         print("❌ Missing required configuration: 'project_path'")
         print("Provide via --project-path argument, ZUME_PROJECT_PATH env var, or .config.json")
+        print("Default when a language is set: <repo>/build/legacy/{lang}")
         sys.exit(1)
     
     if 'language_code' not in config or not config['language_code']:

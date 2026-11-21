@@ -33,17 +33,17 @@ pip install -r slide-builder/requirements.txt
 python3 slides/videos/download_lang_vimeo.py --lang es
 python3 slides/videos/download_lang_vimeo.py --lang en
 # EN-only wrapper (same folder; kept for older docs/scripts)
-python3 slides/videos/download_en_vimeo.py --out output/en/videos
+python3 slides/videos/download_en_vimeo.py --out build/en/videos
 ```
 
 Accepted env aliases: `VIMEO_ACCESS_TOKEN` / `VIMEO_PERSONAL_ACCESS_TOKEN`, `VIMEO_CLIENT_ID` / `VIMEO_CLIENT_IDENTIFIER`, `VIMEO_CLIENT_SECRET` / `VIMEO_CLIENT_SECRETS`.
 
 Writes:
 
-- `output/{lang}/videos/{n}.mp4` (training numbers from titles)
-- `output/{lang}/videos/SOURCE.json` with `source=vimeo`, `folder_id`, timestamps
+- `build/{lang}/videos/{n}.mp4` (training numbers from titles)
+- `build/{lang}/videos/SOURCE.json` with `source=vimeo`, `folder_id`, timestamps
 
-That tree is **gitignored** (`output/**/videos/`).
+That tree is **gitignored** (`build/`).
 
 ## Secrets
 
@@ -55,14 +55,14 @@ That tree is **gitignored** (`output/**/videos/`).
 
 - Prefer `provenance_matches_folder()` / `SOURCE.json` before trusting a video dir.
 - Do **not** silently fall back to `zume-file-mirror` / GCS for rebuilds.
-- Keynote embed expects numbered MP4s available to the capture pack (`pack/videos/`).
+- Keynote embed reads the capture pack’s `videos/` symlink, which points at `build/{lang}/videos`.
 
 ## Common mistakes
 
 | Mistake | Fix |
 |---|---|
 | Using GCS mirror as default | Use the mapped Vimeo folder for that language |
-| Committing MP4s | Keep under ignored `output/**/videos/` |
+| Committing MP4s | Keep under ignored `build/{lang}/videos/` |
 | Logging `.env` contents while debugging | Check key names only |
 | Pointing `--folder-id` at a non-mapped folder | Script asserts map match |
 | Skipping download because “PDF worked” | Run `prereqs`; Keynote needs local MP4s |

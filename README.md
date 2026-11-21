@@ -44,20 +44,21 @@ python3 -m zume_assets build --lang en --type 10 --targets pdf
 python3 -m zume_assets build --lang en --type 10 --targets pdf --no-gap-fillers
 ```
 
-All finished assets land under the repo `output/` tree (for example
-`<repo>/output/en/`). See [AGENTS.md](AGENTS.md) for workspace path rules.
+Finished PDF, Keynote, and PPTX land under `output/{lang}/`. Working files
+(Typst intermediates, videos, review reports, capture packs) land under
+gitignored `build/{lang}/`. See [AGENTS.md](AGENTS.md).
 Do not copy final PDFs or Keynote into Agent Store `docs/`.
 
 Output for the 10-session English book:
 
 - `output/en/Zume-Training-10-Session-en.pdf` — reviewable guidebook
-- `output/en/build-10/book.json` — assembled content
-- `output/en/build-10/qr/` — QR PNGs
-- `output/en/build-10/cache/` — cached API payloads
+- `build/en/10/book.json` — assembled content
+- `build/en/10/qr/` — QR PNGs
+- `build/en/10/cache/` — cached API payloads
 
 20-session and intensive files follow the same pattern (`Zume-Training-20-Session-en.pdf`, `Zume-Training-Intensive-en.pdf`).
 
-Reference PDFs (downloaded for comparison only; never uploaded over GCS) belong under `reference/`.
+Reference PDFs (downloaded for comparison only; never uploaded over GCS) belong under `build/reference/`.
 
 ## Videos (Vimeo → local MP4s)
 
@@ -65,10 +66,10 @@ EN proven source: [Vimeo folder 21862752](https://vimeo.com/user/75461893/folder
 
 ```bash
 pip install -r slide-builder/requirements.txt
-python3 slides/videos/download_en_vimeo.py --out output/en/videos
+python3 slides/videos/download_en_vimeo.py --out build/en/videos
 ```
 
-Writes numbered `output/en/videos/{id}.mp4` plus `SOURCE.json`. Credentials come from env or repo `.env` (never commit or log tokens). See [slides/videos/README.md](slides/videos/README.md).
+Writes numbered `build/en/videos/{id}.mp4` plus `SOURCE.json`. Credentials come from env or repo `.env` (never commit or log tokens). See [slides/videos/README.md](slides/videos/README.md).
 
 ## Keynote decks (macOS)
 

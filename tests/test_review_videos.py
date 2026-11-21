@@ -340,31 +340,9 @@ def test_video_check_pack_extras_remain_notes(tmp_path: Path):
     assert any("not in embed list (ignored): 31" in n for n in report["notes"])
 
 
-def test_default_pack_dir_prefers_agent_store_capture(tmp_path: Path):
+def test_default_pack_dir_is_build_captures(tmp_path: Path):
     from zume_assets.review.paths import default_pack_dir
 
     root = tmp_path / "repo"
-    store = tmp_path / "store"
-    capture = store / "media" / "pus-10-presenter-captures"
-    (capture / "work").mkdir(parents=True)
-    (capture / "work" / "video-replace-list.json").write_text("[]", encoding="utf-8")
-    local = root / "output" / "pus" / "pack-10"
-    local.mkdir(parents=True)
-    (local / "manifest.json").write_text("{}", encoding="utf-8")
-
-    chosen = default_pack_dir("pus", "10", root=root, store=store)
-    assert chosen == capture
-
-
-def test_default_pack_dir_falls_back_to_local_output(tmp_path: Path):
-    from zume_assets.review.paths import default_pack_dir
-
-    root = tmp_path / "repo"
-    store = tmp_path / "store"
-    store.mkdir()
-    local = root / "output" / "en" / "pack-10"
-    (local / "work").mkdir(parents=True)
-    (local / "work" / "video-replace-list.json").write_text("[]", encoding="utf-8")
-
-    chosen = default_pack_dir("en", "10", root=root, store=store)
-    assert chosen == local
+    chosen = default_pack_dir("pus", "10", root=root, store=tmp_path / "ignored-store")
+    assert chosen == root / "build" / "pus" / "captures" / "10"

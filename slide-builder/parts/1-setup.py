@@ -175,8 +175,8 @@ Examples:
     
     parser.add_argument(
         '--folder', '-f',
-        default='.',
-        help='Base location where language folders will be created (default: current directory)'
+        default=str(Path(__file__).resolve().parents[2] / "build" / "legacy"),
+        help='Base location for language folders (default: <repo>/build/legacy)'
     )
     
     parser.add_argument(

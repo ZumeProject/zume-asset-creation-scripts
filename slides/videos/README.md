@@ -17,17 +17,17 @@ and ask Chris for a real folder id (never invent one). Known production:
 # Never print or commit those secrets.
 pip install -r slide-builder/requirements.txt
 
-# Any mapped language (writes output/{lang}/videos + SOURCE.json; gitignored)
+# Any mapped language (writes build/{lang}/videos + SOURCE.json; gitignored)
 python3 slides/videos/download_lang_vimeo.py --lang es
 python3 slides/videos/download_lang_vimeo.py --lang en
 
 # EN-only wrapper (same folder; kept for older docs/scripts)
-python3 slides/videos/download_en_vimeo.py --out output/en/videos
+python3 slides/videos/download_en_vimeo.py --out build/en/videos
 ```
 
-Writes numbered `output/{lang}/videos/{id}.mp4` plus `SOURCE.json` provenance
+Writes numbered `build/{lang}/videos/{id}.mp4` plus `SOURCE.json` provenance
 (`source=vimeo`, `folder_id`, optional `language_code`). That directory is
-gitignored (`output/**/videos/`).
+gitignored (`build/`).
 
 If the folder has `19` but not `20`, `download_lang_vimeo.py` aliases `20.mp4`
 from `19.mp4` (Faithfulness / `t20_b`).
@@ -37,8 +37,7 @@ substitute mirror MP4s when rebuilding decks.
 
 ## Assemble after download
 
-Copy or link the numbered MP4s into the capture pack’s `videos/` as required by
-Keynote embed, then:
+Capture packs link `videos/` at `build/{lang}/videos` (one copy per language). Then:
 
 ```bash
 python3 slides/assemble-keynote/assemble_images_keynote.py --type 10 --lang es

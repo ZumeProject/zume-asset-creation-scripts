@@ -1,9 +1,11 @@
 # Zume Slide Full Builder (legacy packer)
 
-**Production EN path:** use `slides/videos/download_en_vimeo.py` and
-`slides/assemble-keynote/` instead of this interactive packer. This tree still
-supplies `parts/vimeo-folders.json` and `requirements.txt` (PyVimeo) for the
-production download helper.
+**Production path:** use `slides/videos/download_lang_vimeo.py` (writes
+`build/{lang}/videos`) and `slides/assemble-keynote/` instead of this interactive
+packer. If you still run this packer, its default project path is
+`<repo>/build/legacy/{lang}/` (gitignored). This tree still supplies
+`parts/vimeo-folders.json` and `requirements.txt` (PyVimeo) for the production
+download helper.
 
 NOTE
 
@@ -81,14 +83,15 @@ Set up your project configuration, folder structure, and Vimeo API credentials.
 python 1-setup.py
 
 # Non-interactive setup
-python 1-setup.py --language en --folder ./projects
+python 1-setup.py --language en
+# --folder defaults to <repo>/build/legacy (do not pass a path outside the repo)
 
 # Show current configuration
 python 1-setup.py --show-config
 ```
 
 **What it does:**
-- Creates folder structure for your language (e.g., `en/10/`, `en/20/`, `en/intensive/`, `en/videos/`)
+- Creates `build/legacy/{lang}/{10,20,intensive,videos}` (default `--folder` is `<repo>/build/legacy`)
 - Stores Vimeo API credentials in `.env` file
 - Optionally saves configuration in `.config.json` (use `--save-config` flag)
 
@@ -122,13 +125,13 @@ python 2-video-download.py --folder-id <folder_id>
 **Examples:**
 ```bash
 # Download all videos (with explicit config - recommended for parallel builds)
-python 2-video-download.py --folder-id 269501 --project-path ./projects/en --language-code en
+python 2-video-download.py --folder-id 269501 --language-code en
 
 # List videos without downloading
 python 2-video-download.py --folder-id 269501 --list-only
 
 # Download with more concurrent workers
-python 2-video-download.py --folder-id 269501 --project-path ./projects/en --language-code en --max-workers 5
+python 2-video-download.py --folder-id 269501 --language-code en --max-workers 5
 
 # Using .config.json (backward compatible - single build only)
 python 2-video-download.py --folder-id 269501
@@ -171,16 +174,16 @@ python 3-slides-download.py [options]
 **Examples:**
 ```bash
 # Download all slides (with explicit config - recommended for parallel builds)
-python 3-slides-download.py --project-path ./projects/en --language-code en
+python 3-slides-download.py --language-code en
 
 # Download only 10-session slides
-python 3-slides-download.py --project-path ./projects/en --language-code en --curriculum ten_session
+python 3-slides-download.py --language-code en --curriculum ten_session
 
 # Resume from last processed slide
-python 3-slides-download.py --project-path ./projects/en --language-code en --resume
+python 3-slides-download.py --language-code en --resume
 
 # Only download missing screenshots
-python 3-slides-download.py --project-path ./projects/en --language-code en --missing-only
+python 3-slides-download.py --language-code en --missing-only
 
 # Using .config.json (backward compatible - single build only)
 python 3-slides-download.py --curriculum ten_session
@@ -223,7 +226,7 @@ zume-slide-full-builder/
 ├── requirements.txt     # Python dependencies
 ├── .config.json         # Project configuration (created by setup)
 ├── .env                 # Vimeo API credentials (created by setup)
-└── [language]/          # Language folder (e.g., en/, es/, fr/)
+└── build/legacy/[language]/   # default language folder (gitignored)
     ├── videos/          # Downloaded videos
     ├── 10/              # 10-session slides
     ├── 20/              # 20-session slides
@@ -272,11 +275,11 @@ You can now run multiple build processes in parallel without conflicts:
 ```bash
 # Terminal 1: Build English version
 python build.py
-# Enter: en, ./projects
+# Enter: en  (folder default is <repo>/build/legacy)
 
 # Terminal 2: Build Spanish version (simultaneously)
 python build.py
-# Enter: es, ./projects
+# Enter: es  (same default folder; language subdir is separate)
 ```
 
 Both builds will run independently with their own session IDs and won't interfere with each other.

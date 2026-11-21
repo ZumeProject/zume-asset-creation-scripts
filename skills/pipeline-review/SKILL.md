@@ -23,12 +23,12 @@ pip install -e ".[dev]"          # includes zxing-cpp for QR decode
 python3 -m zume_assets review fetch-master --lang en --type 10
 python3 -m zume_assets review fetch-master --lang es --type 10 --follow-redirects
 
-# Decode output/{lang}/build-{type}/qr/*.png vs master (+ optional book.json / --live)
+# Decode build/{lang}/{type}/qr/*.png vs master (+ optional book.json / --live)
 python3 -m zume_assets review qr --lang en --type 10
 python3 -m zume_assets review qr --lang es --type 10 --live
 
 # SOURCE.json + pack video-replace-list vs master videos
-# Default pack discovery: Agent Store media/{lang}-{type}-presenter-captures/, else output/{lang}/pack-{type}
+# Default pack: build/{lang}/captures/{type}/
 python3 -m zume_assets review videos --lang en --type 10
 python3 -m zume_assets review videos --lang en --type 10 --pack /path/to/pack
 
@@ -36,7 +36,7 @@ python3 -m zume_assets review videos --lang en --type 10 --pack /path/to/pack
 python3 -m zume_assets review all --lang en --type 10 --fetch
 ```
 
-Reports land in `output/{lang}/review/` (`qr-{type}.json|.md`, `videos-{type}.json|.md`, `all-{type}.json|.md`). Exit non-zero on mismatch; report only (no auto-fix).
+Reports land in `build/{lang}/review/` (`qr-{type}.json|.md`, `videos-{type}.json|.md`, `all-{type}.json|.md`). Exit non-zero on mismatch; report only (no auto-fix).
 
 ## Rules
 
@@ -69,13 +69,13 @@ With `--live`, most activity QRs must land on `/activities/{key}`. Intentional e
 
 Official map: `OFFICIAL_VIDEO_ALIASES` in `zume_assets/review/video_check.py` (`20` → `19`). Require SOURCE evidence (`aliases["20"].from == "19"` and/or `videos["20"].status == "aliased"`).
 
-Default pack path: Agent Store `media/{lang}-{type}-presenter-captures/` when it has `work/video-replace-list.json` or `manifest.json`; else `output/{lang}/pack-{type}`.
+Default pack path: `build/{lang}/captures/{type}/` (`work/video-replace-list.json` or `manifest.json`).
 
 ## Common mistakes
 
 | Mistake | Fix |
 |---|---|
-| Running `review qr` before a PDF build | Build PDF so `output/{lang}/build-{type}/qr/` exists |
+| Running `review qr` before a PDF build | Build PDF so `build/{lang}/{type}/qr/` exists |
 | Missing master JSON | `review fetch-master --lang … --type …` |
 | Expecting CI to hit the live API | Use fixtures / committed `manifest/review/` caches |
 | Unpacking `.key` for video ids in v1 | Use pack `video-replace-list.json` / `SOURCE.json` |
@@ -83,6 +83,6 @@ Default pack path: Agent Store `media/{lang}-{type}-presenter-captures/` when it
 | Failing video review on title string noise | Ignore titles; gate on `vimeo_id` only |
 | Failing pack `t20_b` / id 20 when SOURCE aliases 19 | Official allowlist — must PASS |
 | Failing SOURCE-only review on Vimeo extras | Extras are notes; only missing master ids FAIL |
-| Passing `--pack` every time on Mac | Default discovery should find Agent Store capture packs |
+| Passing `--pack` every time | Default discovery reads `build/{lang}/captures/{type}/` |
 | Treating `getacoach` → `/{lang}` homepage as OK for coach-offered locales | Still FAIL — missing marketing page |
 | Treating `getacoach` → `/{lang}` homepage as FAIL for `NO_COACH_LOCALES` (e.g. `pus`) | PASS — intentional zume6 no-coach gate |

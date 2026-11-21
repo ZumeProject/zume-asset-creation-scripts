@@ -9,6 +9,7 @@ COURSE_TYPES = ("10", "20", "intensive")
 REQUIRED_KINDS = frozenset({"pdf", "keynote", "pptx"})
 
 # Stem shared by PDF / Keynote / PPTX deliverables under output/{lang}/.
+# Working files (videos, Typst, review, captures) live under build/{lang}/.
 STEMS: dict[str, str] = {
     "10": "Zume-Training-10-Session-{lang}",
     "20": "Zume-Training-20-Session-{lang}",

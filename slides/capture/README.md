@@ -37,9 +37,11 @@ export PRESENTER_BASE_URL=http://127.0.0.1:3000
 python3 slides/capture/capture_en10.py
 ```
 
-Writes the capture pack (intermediate PNGs + manifest) to the Project store:
+Writes the capture pack (intermediate PNGs + manifest) under the repo:
 
-`/cursor/stores/.../media/{lang}-{10|20|intensive}-presenter-captures/{pngs,manifest.json}`
+`build/{lang}/captures/{10|20|intensive}/{pngs,manifest.json}`
+
+`videos/` in that pack is a symlink to `build/{lang}/videos`.
 
 Finished Keynote decks assembled from this pack belong under the repo
 `output/{lang}/` directory — never Agent Store `docs/`.

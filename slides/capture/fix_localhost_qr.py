@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Rewrite localhost QR payloads in presenter capture PNGs to zume.training.
 
-Keynote/PPTX decks assemble from Agent Store capture packs. Those packs were
-often screenshot from ``http://localhost:3000``, so QR codes in the PNGs encode
-localhost. Typst PDF QRs (``zume_assets.qr``) are already production.
+Keynote/PPTX decks assemble from capture packs under ``build/{lang}/captures/{type}/``.
+Those packs were often screenshot from ``http://localhost:3000``, so QR codes in
+the PNGs encode localhost. Typst PDF QRs (``zume_assets.qr``) are already production.
 
 Requires system ``zbarimg`` (Homebrew ``zbar``) for decode + bounding box.
 
@@ -32,10 +32,7 @@ sys.path.insert(0, str(REPO_ROOT))
 
 from zume_assets.qr import SITE, make_qr_png, rewrite_localhost_qr_url  # noqa: E402
 
-DEFAULT_STORE = Path(
-    "/Users/chris/Library/Application Support/Cursor/AgentStores/"
-    "cursor_agent_stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/files"
-)
+DEFAULT_BUILD = REPO_ROOT / "build"
 
 COURSE_TYPES = ("10", "20", "intensive")
 _POLYGON_RE = re.compile(
@@ -52,26 +49,23 @@ class QrHit:
     box: tuple[int, int, int, int]  # left, top, right, bottom
 
 
-def pack_dir(store: Path, lang: str, course_type: str) -> Path:
-    return store / "media" / f"{lang}-{course_type}-presenter-captures"
+def pack_dir(build_root: Path, lang: str, course_type: str) -> Path:
+    return build_root / lang / "captures" / course_type
 
 
-def discover_langs(store: Path) -> list[str]:
-    media = store / "media"
-    if not media.is_dir():
+def discover_langs(build_root: Path) -> list[str]:
+    if not build_root.is_dir():
         return []
-    langs: set[str] = set()
-    for path in media.iterdir():
-        name = path.name
-        if not name.endswith("-presenter-captures"):
+    langs: list[str] = []
+    for path in sorted(build_root.iterdir()):
+        if not path.is_dir() or path.name in {"reference", "legacy"}:
             continue
-        # lang may contain hyphens only as locale parts; types are fixed suffixes
-        for course_type in COURSE_TYPES:
-            suffix = f"-{course_type}-presenter-captures"
-            if name.endswith(suffix):
-                langs.add(name[: -len(suffix)])
-                break
-    return sorted(langs)
+        captures = path / "captures"
+        if not captures.is_dir():
+            continue
+        if any((captures / course_type).is_dir() for course_type in COURSE_TYPES):
+            langs.append(path.name)
+    return langs
 
 
 def _require_zbarimg() -> str:
@@ -196,14 +190,14 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--store",
         type=Path,
-        default=DEFAULT_STORE,
-        help="Agent Store root containing media/{lang}-{type}-presenter-captures/",
+        default=DEFAULT_BUILD,
+        help="Working-tree root (default: <repo>/build). Packs are {lang}/captures/{type}/",
     )
     parser.add_argument(
         "--lang",
         action="append",
         dest="langs",
-        help="Locale code (repeatable). Default: all packs under store/media",
+        help="Locale code (repeatable). Default: every language under the working tree",
     )
     parser.add_argument(
         "--type",
@@ -226,7 +220,7 @@ def main(argv: list[str] | None = None) -> int:
     store = args.store.expanduser().resolve()
     langs = args.langs or discover_langs(store)
     if not langs:
-        raise SystemExit(f"No presenter-capture packs found under {store / 'media'}")
+        raise SystemExit(f"No presenter-capture packs found under {store}")
     types = tuple(args.types) if args.types else COURSE_TYPES
     apply = bool(args.apply)
     if args.audit and args.apply:
