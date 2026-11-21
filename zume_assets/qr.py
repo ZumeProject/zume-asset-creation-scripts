@@ -16,6 +16,30 @@ import qrcode
 
 SITE = "https://zume.training"
 
+# Local presenter captures bake QR payloads with these origins; production
+# Keynote/PPTX must use SITE instead.
+_LOCAL_QR_ORIGINS = (
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://localhost:3000",
+    "https://127.0.0.1:3000",
+)
+
+
+def rewrite_localhost_qr_url(url: str, *, site: str = SITE) -> str | None:
+    """If ``url`` is a localhost app QR payload, return the production rewrite.
+
+    Returns ``None`` when the URL does not use a known local presenter origin.
+    Path and query are preserved (``/app/qr/?l=…&…``).
+    """
+    text = (url or "").strip()
+    if not text:
+        return None
+    for origin in _LOCAL_QR_ORIGINS:
+        if text.startswith(origin):
+            return site.rstrip("/") + text[len(origin) :]
+    return None
+
 
 def make_qr_png(url: str, dest: Path, *, box_size: int = 8, border: int = 1) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
