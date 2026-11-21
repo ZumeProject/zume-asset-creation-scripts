@@ -20,8 +20,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-from playwright.sync_api import sync_playwright
-
 STORE = Path(
     "/Users/chris/Library/Application Support/Cursor/AgentStores/"
     "cursor_agent_stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/files"
@@ -383,6 +381,9 @@ def main(argv: list[str] | None = None) -> int:
         f"done={sum(1 for i in items if i['status']=='done')}/{len(items)} → {png_dir}",
         flush=True,
     )
+
+    # Lazy import so unit tests can load helpers without Playwright installed (CI).
+    from playwright.sync_api import sync_playwright
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
