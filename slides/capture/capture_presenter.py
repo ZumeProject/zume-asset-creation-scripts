@@ -21,9 +21,16 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-SESSIONS_DIR = Path(
-    "/Users/chris/Documents/ZUME/zume6/platform/docs/core/sessions"
-)
+REPO_ROOT = Path(__file__).resolve().parents[2]
+# Course structure lives in this repo. Presenter slide keys are derived from
+# those manifests (overrideKey, or t{videoKey}_a/_b for watch/video). Each
+# session also ends with the live presenter's closing "final" slide, and the
+# 10-session course adds "congratulations" when the manifest does not.
+MANIFEST_FILES = {
+    "10": "ten_session.json",
+    "20": "twenty_session.json",
+    "intensive": "intensive_session.json",
+}
 # Production default — localhost presenter QRs encode http://localhost:3000/app/qr/...
 # which then get baked into Keynote. Use --allow-localhost only for local smoke tests.
 PROD_BASE = "https://zume.training"
@@ -36,17 +43,14 @@ _NONPROD_HOST_RE = re.compile(
 
 COURSE = {
     "10": {
-        "sessions": "10session.json",
         "type_param": "10",
         "label": "10-Session",
     },
     "20": {
-        "sessions": "20session.json",
         "type_param": "20",
         "label": "20-Session",
     },
     "intensive": {
-        "sessions": "intensive.json",
         "type_param": "intensive",
         "label": "Intensive",
     },
@@ -137,6 +141,46 @@ HIDE_INIT_JS = """
 """
 
 
+def presenter_slide_key(slide: dict) -> str:
+    """Presenter query key for one manifest slide."""
+    override = slide.get("overrideKey")
+    if override:
+        return str(override)
+    stype = slide.get("type") or ""
+    if stype == "watch":
+        return f"t{slide['videoKey']}_a"
+    if stype == "video":
+        return f"t{slide['videoKey']}_b"
+    if stype == "break":
+        return "break"
+    raise ValueError(f"Cannot derive a presenter slide key from {slide!r}")
+
+
+def load_presenter_sessions(course_type: str, root: Path | None = None) -> list[list[dict]]:
+    """Slide lists for one course, in presenter order, from ``manifest/``."""
+    name = MANIFEST_FILES[course_type]
+    path = (root or REPO_ROOT) / "manifest" / name
+    sessions = json.loads(path.read_text(encoding="utf-8"))
+    out: list[list[dict]] = []
+    last = len(sessions) - 1
+    for index, session in enumerate(sessions):
+        slides: list[dict] = []
+        for slide in session.get("slides") or []:
+            slides.append(
+                {
+                    "key": presenter_slide_key(slide),
+                    "type": slide.get("type") or "",
+                    "videoKey": slide.get("videoKey"),
+                }
+            )
+        keys = [s["key"] for s in slides]
+        if index == last and "congratulations" not in keys:
+            slides.append({"key": "congratulations", "type": "congratulations"})
+        slides.append({"key": "final", "type": "final"})
+        out.append(slides)
+    return out
+
+
 def video_id_for(slide: dict) -> str | None:
     """Derive tN_b → N; specials t10_e/t10_g. Prefer key over alt_video_id."""
     if (slide.get("type") or "") != "video":
@@ -157,7 +201,7 @@ def video_id_for(slide: dict) -> str | None:
 
 def build_items(course_type: str, base: str, lang: str) -> list[dict]:
     meta = COURSE[course_type]
-    sessions = json.loads((SESSIONS_DIR / meta["sessions"]).read_text(encoding="utf-8"))
+    sessions = load_presenter_sessions(course_type)
     items: list[dict] = []
     idx = 0
     root = base.rstrip("/")
