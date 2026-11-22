@@ -5,8 +5,9 @@ Production Keynote packs must be captured from https://zume.training so QR
 payloads bake production hosts (not localhost). Local zume6 is only for
 dev/smoke captures with --allow-localhost.
 
-Writes a pack under the Project Agent Store media/ tree:
-  media/{lang}-{10|20|intensive}-presenter-captures/
+Writes a pack under the repo working tree:
+  build/{lang}/captures/{10|20|intensive}/
+  videos/ is a symlink to build/{lang}/videos (one MP4 set per language).
 """
 from __future__ import annotations
 
@@ -20,10 +21,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-STORE = Path(
-    "/Users/chris/Library/Application Support/Cursor/AgentStores/"
-    "cursor_agent_stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/files"
-)
 SESSIONS_DIR = Path(
     "/Users/chris/Documents/ZUME/zume6/platform/docs/core/sessions"
 )
@@ -138,10 +135,6 @@ HIDE_INIT_JS = """
   }
 }
 """
-
-
-def pack_name(lang: str, course_type: str) -> str:
-    return f"{lang}-{course_type}-presenter-captures"
 
 
 def video_id_for(slide: dict) -> str | None:
@@ -341,10 +334,12 @@ def main(argv: list[str] | None = None) -> int:
 
     lang = args.lang.strip().lower()
     meta = COURSE[args.type]
-    cap = STORE / "media" / pack_name(lang, args.type)
+    from zume_assets.paths import capture_pack_dir, ensure_capture_videos_link, videos_dir
+
+    cap = capture_pack_dir(lang, args.type)
+    ensure_capture_videos_link(cap, videos_dir(lang))
     png_dir = cap / "pngs"
     png_dir.mkdir(parents=True, exist_ok=True)
-    (cap / "videos").mkdir(parents=True, exist_ok=True)
     (cap / "work").mkdir(parents=True, exist_ok=True)
 
     items = build_items(args.type, base, lang)

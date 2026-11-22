@@ -17,8 +17,8 @@ python3 -m zume_assets prereqs --lang <lang>
 
 `assemble_images_keynote.py` auto-runs the **full** readiness gate and aborts on any BLOCK. Must be clean for:
 
-1. Vimeo map entry + local `output/{lang}/videos/` MP4s (`SOURCE.json`)
-2. Capture pack: Agent Store `media/{lang}-{10|20|intensive}-presenter-captures/` (PNGs + `manifest.json`; sync MP4s into pack `videos/`)
+1. Vimeo map entry + local `build/{lang}/videos/` MP4s (`SOURCE.json`)
+2. Capture pack: `build/{lang}/captures/{10|20|intensive}/` (PNGs + `manifest.json`). `videos/` is a symlink to `build/{lang}/videos`, not a second copy.
 
 Missing map/pack/videos → assemble exits with next steps. Escalate missing folder ids to Chris (do not invent). PDF-only success does **not** mean Keynote is ready.
 

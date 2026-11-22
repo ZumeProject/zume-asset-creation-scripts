@@ -22,8 +22,8 @@ python3 -m zume_assets prereqs --lang <lang> --pdf-only
 | Check | Where | If missing |
 |---|---|---|
 | Vimeo folder map | `slide-builder/parts/vimeo-folders.json` | Ask Chris for folder id (user `75461893`); **do not invent**. Add map entry. Known: `en`→`21862752`, `es`→`269525`, `pus`→`29862924`. |
-| Local MP4s + `SOURCE.json` | `output/{lang}/videos/` | `python3 slides/videos/download_lang_vimeo.py --lang <lang>` (needs credentials) |
-| Capture packs | Agent Store `media/{lang}-{10\|20\|intensive}-presenter-captures/` | Capture via `slides/capture/capture_presenter.py` or obtain approved pack |
+| Local MP4s + `SOURCE.json` | `build/{lang}/videos/` | `python3 slides/videos/download_lang_vimeo.py --lang <lang>` (needs credentials) |
+| Capture packs | `build/{lang}/captures/{10\|20\|intensive}/` | Capture via `slides/capture/capture_presenter.py`. `videos/` links to `build/{lang}/videos` |
 
 Gate behavior:
 
@@ -43,7 +43,7 @@ python3 -m zume_assets build --lang <lang> --type <10|20|intensive> --targets pd
 python3 -m zume_assets build --lang <lang> --type <type> --targets pdf --no-gap-fillers
 ```
 
-Outputs: `output/{lang}/Zume-Training-*-{lang}.pdf` plus `output/{lang}/build-{type}/`.
+Outputs: `output/{lang}/Zume-Training-*-{lang}.pdf` plus Typst intermediates in `build/{lang}/{type}/`.
 
 Diagram images (pace / Four Fields / Gen Mapping) download from presenter `images.*` during assemble. Locale scripts that omit `{{ paceN_image }}` shortcodes are merged with English shortcode slots. Missing required diagrams **hard-fail** the build. Decorative gap fillers are **on by default**; a missing/empty `images/` library also fails the build.
 

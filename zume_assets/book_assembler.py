@@ -27,6 +27,7 @@ from .images import (
     resolve_image_key,
     resolve_paragraph_items,
 )
+from .paths import typst_build_dir
 from .qr import activity_url, checkin_url, make_qr_png, video_url
 
 # Presenter UI keys for the congratulations / join-community closing copy.
@@ -659,7 +660,7 @@ def assemble_book(
         raise NotImplementedError(f"Unsupported course type={course_type}")
 
     root = _repo()
-    build_dir = build_dir or (root / "output" / lang / f"build-{course_type}")
+    build_dir = build_dir or typst_build_dir(lang, course_type, root)
     build_dir.mkdir(parents=True, exist_ok=True)
     (build_dir / "qr").mkdir(parents=True, exist_ok=True)
 

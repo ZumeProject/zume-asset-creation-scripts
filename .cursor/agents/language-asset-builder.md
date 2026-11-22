@@ -27,11 +27,11 @@ Under `output/{lang}/`:
 ## Workflow
 
 1. **Prereqs** — clear BLOCKs (Vimeo map, videos, packs as required).
-2. **Videos** — if needed: `python3 slides/videos/download_lang_vimeo.py --lang <lang>` then sync into packs / Agent Store media as the repo expects.
+2. **Videos** — if needed: `python3 slides/videos/download_lang_vimeo.py --lang <lang>` (writes `build/{lang}/videos`). Capture packs link that directory; do not copy MP4s per course type.
 3. **PDF** — `python3 -m zume_assets build --lang <lang> --type {10,20,intensive} --targets pdf` (gap fillers default on). Spot-check diagrams.
 4. **Keynote** — assemble/embed on macOS Creator Studio with local packs; confirm 29 mp4s per deck.
 5. **PPTX** — Keynote `File → Export To → PowerPoint` next to each `.key` when needed for publish.
-6. **Verify** — prereqs clean; `review` (videos; live QR when asked). Prefer Agent Store pack discovery.
+6. **Verify** — prereqs clean; `review` (videos; live QR when asked). Pack discovery uses `build/{lang}/captures/{type}/`.
 7. **GCS** — never upload unless Chris explicitly approves for that language; then use `skills/publish-gcs-assets/SKILL.md` (`--execute` + verify-downloads). Downloads-row updates are a separate admin step.
 
 ## Rules

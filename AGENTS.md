@@ -11,17 +11,19 @@ In-repo skills under [`skills/`](skills/). Cursor ignores `.cursor/`, so skills 
 | [skills/build-language-assets/SKILL.md](skills/build-language-assets/SKILL.md) | Building a locale’s Typst PDF and/or Keynote deck |
 | [skills/vimeo-download-provenance/SKILL.md](skills/vimeo-download-provenance/SKILL.md) | Downloading training MP4s from Vimeo, `SOURCE.json`, credentials |
 | [skills/mac-keynote-assemble/SKILL.md](skills/mac-keynote-assemble/SKILL.md) | macOS Keynote assemble, embed, play chrome, health recovery |
-| [skills/output-paths-worktrees/SKILL.md](skills/output-paths-worktrees/SKILL.md) | `output/{lang}/`, gitignore, worktrees, Agent Store boundaries |
+| [skills/output-paths-worktrees/SKILL.md](skills/output-paths-worktrees/SKILL.md) | `build/` working files, `output/{lang}/` uploads, gitignore, worktrees |
 | [skills/pipeline-review/SKILL.md](skills/pipeline-review/SKILL.md) | Independent QR decode + Keynote video mapping vs online master |
 | [skills/publish-gcs-assets/SKILL.md](skills/publish-gcs-assets/SKILL.md) | Upload approved PDF/Keynote/PPTX to `zume-file-mirror` + verify downloads |
 
 ## What works
 
-**Production deliverables** under `output/{lang}/`:
+**Production deliverables** under `output/{lang}/` (the nine files publish uploads: PDF, Keynote, PPTX for `10`, `20`, and `intensive`):
 
 1. **Typst PDF guidebooks** — via the Python CLI
-2. **Keynote decks (`.key`)** — via `slides/assemble-keynote/` on macOS (not a CLI `--targets` value)
+2. **Keynote decks (`.key`)** — via `slides/assemble-keynote/` on macOS (not a CLI `--targets` value). `--promote` copies the finished deck here.
 3. **PPTX** — Keynote export during review (`File → Export To → PowerPoint`); required for publish. Do **not** restore `slides/assemble-pptx/`.
+
+Working files for a language live under gitignored `build/{lang}/` (videos, Typst intermediates, review reports, capture packs). Comparison files live under `build/reference/`. `output/{lang}/` should not hold videos, `build-*` dirs, or review reports.
 
 **First step of every language build** is the readiness checklist. Agents must not skip it. `zume-assets build` / `build.py` auto-run it and **abort before Typst** when the Vimeo folder map is missing.
 
@@ -64,8 +66,8 @@ python3 -m zume_assets prereqs --lang <lang>
 Checks:
 
 1. **Vimeo folder map** — `slide-builder/parts/vimeo-folders.json` must list `language_code` → `folder_id`
-2. **Local MP4s** — `output/{lang}/videos/` + `SOURCE.json` from the download script
-3. **Presenter capture packs** — Agent Store `media/{lang}-{10|20|intensive}-presenter-captures/` (`manifest.json` + PNGs)
+2. **Local MP4s** — `build/{lang}/videos/` + `SOURCE.json` from the download script
+3. **Presenter capture packs** — `build/{lang}/captures/{10|20|intensive}/` (`manifest.json` + PNGs). `videos/` in the pack is a symlink to `build/{lang}/videos`, not a second copy.
 
 Proven production folder ids (do not guess others):
 
@@ -81,14 +83,14 @@ If a language is **not** in the map, stop and ask Chris for the folder URL/id, a
 
 ```bash
 pip install -r slide-builder/requirements.txt
-# Any mapped language (writes output/{lang}/videos + SOURCE.json; gitignored)
+# Any mapped language (writes build/{lang}/videos + SOURCE.json; gitignored)
 python3 slides/videos/download_lang_vimeo.py --lang es
 python3 slides/videos/download_lang_vimeo.py --lang en
 # EN-only wrapper (same folder; kept for older docs/scripts)
-python3 slides/videos/download_en_vimeo.py --out output/en/videos
+python3 slides/videos/download_en_vimeo.py --out build/en/videos
 ```
 
-Writes numbered MP4s plus `SOURCE.json` provenance. Keynote assemble reads pack videos (typically synced from that download). Do **not** default to GCS / `zume-file-mirror`. Never log or commit Vimeo tokens from `.env`. Unmapped languages exit with explicit next steps (see `prereqs`).
+Writes numbered MP4s plus `SOURCE.json` provenance. Capture packs link `videos/` at that directory. Do **not** default to GCS / `zume-file-mirror`. Never log or commit Vimeo tokens from `.env`. Unmapped languages exit with explicit next steps (see `prereqs`).
 
 ### Keynote (macOS / Creator Studio)
 
@@ -112,11 +114,11 @@ python3 -m zume_assets review videos --lang en --type 10
 python3 -m zume_assets review all --lang es --type 10 --fetch
 ```
 
-Master cache: `manifest/review/{lang}-{type}.json`. Reports: `output/{lang}/review/`. See the pipeline-review skill. With `--live`, allowlisted activity redirects include `3monthplan` → `auth/login` and marketing pages for `getacoach` / `join_the_community` / `next_steps` (locale-prefixed paths OK). For locales in zume6 `NO_COACH_LOCALES` (mirrored as `NO_COACH_LOCALES` in review code; e.g. `pus`), `getacoach` → `/{lang}` homepage is intentional and PASS. For coach-offered locales, homepage collapse still FAIL (missing marketing page, not a bad QR PNG). Video review gates on `vimeo_id` (title string mismatches are notes only). Pack training id `20` / `t20_b` may alias online `19` when SOURCE records that alias — treat as PASS. `review videos` / `review all` prefer Agent Store `media/{lang}-{type}-presenter-captures/` when present (no manual `--pack` needed); SOURCE-only mode still FAILs on missing master ids but treats Vimeo-folder extras as notes.
+Master cache: `manifest/review/{lang}-{type}.json` (committed, small). Reports: `build/{lang}/review/`. See the pipeline-review skill. With `--live`, allowlisted activity redirects include `3monthplan` → `auth/login` and marketing pages for `getacoach` / `join_the_community` / `next_steps` (locale-prefixed paths OK). For locales in zume6 `NO_COACH_LOCALES` (mirrored as `NO_COACH_LOCALES` in review code; e.g. `pus`), `getacoach` → `/{lang}` homepage is intentional and PASS. For coach-offered locales, homepage collapse still FAIL (missing marketing page, not a bad QR PNG). Video review gates on `vimeo_id` (title string mismatches are notes only). Pack training id `20` / `t20_b` may alias online `19` when SOURCE records that alias — treat as PASS. `review videos` / `review all` read `build/{lang}/captures/{type}/` (no manual `--pack` needed when that pack exists); SOURCE-only mode still FAILs on missing master ids but treats Vimeo-folder extras as notes.
 
 ### Publish (GCS + downloads verify)
 
-After human sign-off for a language pack, upload PDF + Keynote + PPTX from `output/{lang}/` to `gs://zume-file-mirror/{lang}/` via `gcloud storage cp`, then verify `GET /api/v1/downloads/{lang}` (`guidebook_*`, `keynote_*`, `powerpoint_*`). Dry-run by default; require `--execute` for real upload. Once `--execute` is authorized, **always overwrite** same-named objects (no second prompt). Do not upload `videos/` unless `--include-videos`. Needs `gcloud` + ADC on the machine (typically macOS Creator Studio). Missing PPTX after review: export from Keynote UI (computer use). See the publish-gcs-assets skill.
+After human sign-off for a language pack, upload PDF + Keynote + PPTX from `output/{lang}/` to `gs://zume-file-mirror/{lang}/` via `gcloud storage cp`, then verify `GET /api/v1/downloads/{lang}` (`guidebook_*`, `keynote_*`, `powerpoint_*`). Dry-run by default; require `--execute` for real upload. Once `--execute` is authorized, **always overwrite** same-named objects (no second prompt). Do not upload videos unless `--include-videos` (those files are `build/{lang}/videos/`). After a verified upload, `build/{lang}/` and `output/{lang}/` can be deleted. Needs `gcloud` + ADC on the machine (typically macOS Creator Studio). Missing PPTX after review: export from Keynote UI (computer use). See the publish-gcs-assets skill.
 
 ```bash
 python3 -m zume_assets publish upload --lang es
@@ -128,17 +130,20 @@ python3 -m zume_assets publish verify-downloads --lang es
 
 Keep all work inside the active repo checkout. Do not create sibling folders under `~/Documents/ZUME/` (or elsewhere) for outputs, capture packs, worktrees, or scratch.
 
-Canonical deliverable path:
+Two repo-root folders, both gitignored:
 
-`<repo>/output/{lang}/`
+- `<repo>/output/{lang}/` — the nine finished PDF / Keynote / PPTX names that publish uploads
+- `<repo>/build/{lang}/` — videos, Typst intermediates (`{type}/`), review reports, capture packs (`captures/{type}/`)
+- `<repo>/build/reference/` — comparison downloads
+- `<repo>/build/legacy/{lang}/` — legacy slide-builder packer, if it is still run
 
-Language subdirs are fine (`output/en/…`). Comparison downloads go in `<repo>/reference/`.
+**Gitignore policy:** `output/` and `build/` are ignored entirely. Do not commit PDFs, Keynote, PPTX, or videos. `images/` stays tracked source art for gap fillers. `manifest/review/` stays tracked (small master lists). `.env` stays gitignored. See the output-paths-worktrees skill.
 
-**Gitignore policy:** `output/**/videos/`, `output/**/*.mp4`, and `output/**/build-*/` are ignored (download caches + Typst intermediates). Finished PDFs and Keynote under `output/{lang}/` are *not* blanket-ignored so they *may* be tracked if Chris asks — leave large binaries local unless explicitly told to commit. Never commit videos. See the output-paths-worktrees skill.
+`build/` is also the directory `python -m build` uses. Do not run that packaging command while a language pack is in `build/`.
 
-If a git worktree is needed, create it only as `<repo>/.worktrees/<name>` (gitignored). Never use `../<repo>-wt-*` or any other path next to the checkout.
+If a git worktree is needed, create it only as `<repo>/.worktrees/<name>` (gitignored) and use it for code. Asset builds run in the main checkout. A build inside a worktree writes that worktree’s own `build/` and `output/` because paths are checkout-relative. Never use `../<repo>-wt-*` or any other path next to the checkout.
 
-Do **not** write finished PDFs or Keynote files into Agent Store `docs/` (or any other store path). Store may keep `internal/` notes and short `FULL-PATH` / `OUTPUT-PATH.txt` pointers that point at the local `output/` tree.
+Do **not** write finished PDFs or Keynote files into Agent Store `docs/` (or any other store path). Store may keep `internal/` notes and short `FULL-PATH` / `OUTPUT-PATH.txt` pointers that point at the local `output/` tree. Capture packs are not stored in Agent Store `media/`.
 
 ## Do not
 
@@ -155,18 +160,22 @@ Do **not** write finished PDFs or Keynote files into Agent Store `docs/` (or any
 ## Layout
 
 ```
+build/{lang}/             gitignored working files (videos, Typst, review, captures)
+build/reference/          comparison downloads
+output/{lang}/            gitignored PDF + Keynote + PPTX upload set
 manifest/                 course structure
 manifest/review/          on-demand review master lists ({lang}-{type}.json)
 pdf/templates/            Typst book template
 pdf/assets/               cover and logo
-zume_assets/              assembler, QR, Typst compile, CLI, gap fillers
+images/                   tracked gap-filler art (do not move into build/)
+zume_assets/              assembler, QR, Typst compile, CLI, gap fillers, paths
 zume_assets/review/       pipeline review (master, QR decode, video check)
 zume_assets/publish/      GCS upload (gcloud) + downloads verify
 tests/                    offline unit tests (no live API)
 skills/                   in-repo agent skills (linked above)
 slide-builder/            legacy multi-lang packer + shared vimeo-folders.json / requirements
-slides/capture/           presenter PNG capture packs
-slides/videos/            EN Vimeo download + provenance (production video path)
+slides/capture/           presenter PNG capture into build/{lang}/captures/
+slides/videos/            Vimeo download + provenance (production video path)
 slides/assemble-keynote/  macOS Keynote deck assembly
 publish/                  GCS publish notes (CLI lives in zume_assets/publish/)
 ```

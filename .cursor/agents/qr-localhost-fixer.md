@@ -7,7 +7,7 @@ You fix **localhost QR codes baked into Keynote/PPTX** for `zume-asset-creation-
 
 ## Problem
 
-Presenter capture packs under Agent Store `media/{lang}-{10|20|intensive}-presenter-captures/pngs/` are often screenshotted from `http://localhost:3000`. QR symbols in those PNGs encode:
+Presenter capture packs under `build/{lang}/captures/{10|20|intensive}/pngs/` are often screenshotted from `http://localhost:3000`. QR symbols in those PNGs encode:
 
 `http://localhost:3000/app/qr/?l={locale}&{c|v|a}=…`
 

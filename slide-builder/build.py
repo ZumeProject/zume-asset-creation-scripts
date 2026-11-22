@@ -60,9 +60,12 @@ class BuildRunner:
         
         # Get folder destination
         while True:
-            folder = input("What is the folder destination? (default: current directory): ").strip()
+            default_folder = str(Path(__file__).resolve().parents[1] / "build" / "legacy")
+            folder = input(
+                f"What is the folder destination? (default: {default_folder}): "
+            ).strip()
             if not folder:
-                folder = "."
+                folder = default_folder
             
             folder_path = Path(folder).resolve()
             if not folder_path.exists():

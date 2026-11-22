@@ -10,7 +10,7 @@ Requires env (or slide-builder/.env / repo .env):
   VIMEO_CLIENT_ID (or VIMEO_CLIENT_IDENTIFIER)
   VIMEO_CLIENT_SECRET (or VIMEO_CLIENT_SECRETS)
 
-Writes numbered files to --out (default: output/en/videos/{id}.mp4) plus SOURCE.json
+Writes numbered files to --out (default: build/en/videos/{id}.mp4) plus SOURCE.json
 provenance so assemble can refuse GCS / stale caches.
 """
 from __future__ import annotations
@@ -37,7 +37,7 @@ from vimeo_folder import (  # noqa: E402
     write_provenance,
 )
 
-DEFAULT_OUT = REPO_ROOT / "output" / "en" / "videos"
+DEFAULT_OUT = REPO_ROOT / "build" / "en" / "videos"
 MIN_MP4_BYTES = 100_000
 ENV_FILES = (
     REPO_ROOT / "slide-builder" / ".env",

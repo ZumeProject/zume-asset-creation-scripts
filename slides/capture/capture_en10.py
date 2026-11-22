@@ -10,6 +10,10 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
+from zume_assets.paths import capture_pack_dir, ensure_capture_videos_link, videos_dir  # noqa: E402
+
 PRESENTER_BASE = os.environ.get("PRESENTER_BASE_URL", "http://127.0.0.1:3000").rstrip("/")
 
 # Legacy ordered keys from slide-builder/parts/3-slides-download.py (ten_session)
@@ -50,7 +54,7 @@ button[aria-label*="previous"], button[aria-label*="next"],
 { display: none !important; visibility: hidden !important; opacity: 0 !important; pointer-events: none !important; }
 """
 
-STORE = Path("/cursor/stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/media/en-10-presenter-captures")
+STORE = capture_pack_dir("en", "10", REPO_ROOT)
 PNG_DIR = STORE / "pngs"
 MANIFEST = STORE / "manifest.json"
 VIEWPORT = {"width": 1846, "height": 1034}
@@ -120,6 +124,7 @@ def capture_one(page, slide: dict, out_path: Path) -> None:
 def main() -> int:
     slides = build_slides()
     PNG_DIR.mkdir(parents=True, exist_ok=True)
+    ensure_capture_videos_link(STORE, videos_dir("en", REPO_ROOT))
     write_manifest(slides, 0, "starting")
     print(f"Capturing {len(slides)} slides → {PNG_DIR}", flush=True)
 

@@ -14,6 +14,7 @@ from .gap_fillers import (
     default_images_dir,
     placements_report,
 )
+from .paths import typst_build_dir
 from .typst_render import compile_pdf, prepare_build_dir
 
 
@@ -30,7 +31,7 @@ def default_pdf_path(lang: str, course_type: str, root: Path | None = None) -> P
 
 def build_pdf(lang: str, course_type: str, output: Path | None = None) -> Path:
     root = load_repo_root()
-    build_dir = default_output_root(root) / lang / f"build-{course_type}"
+    build_dir = typst_build_dir(lang, course_type, root)
     book = assemble_book(lang=lang, course_type=course_type, build_dir=build_dir)
     prepare_build_dir(build_dir, book)
 
@@ -92,7 +93,7 @@ def _cmd_review(argv: list[str] | None) -> int:
         "--report-dir",
         type=Path,
         default=None,
-        help="Report output dir (default: output/{lang}/review)",
+        help="Report output dir (default: build/{lang}/review)",
     )
     qr_p.add_argument(
         "--live",
@@ -110,7 +111,7 @@ def _cmd_review(argv: list[str] | None) -> int:
         "--source",
         type=Path,
         default=None,
-        help="SOURCE.json path (default: output/{lang}/videos/SOURCE.json)",
+        help="SOURCE.json path (default: build/{lang}/videos/SOURCE.json)",
     )
     vid_p.add_argument(
         "--pack",
@@ -122,7 +123,7 @@ def _cmd_review(argv: list[str] | None) -> int:
         "--report-dir",
         type=Path,
         default=None,
-        help="Report output dir (default: output/{lang}/review)",
+        help="Report output dir (default: build/{lang}/review)",
     )
 
     all_p = sub.add_parser(
@@ -308,7 +309,7 @@ def _cmd_publish(argv: list[str] | None) -> int:
     up.add_argument(
         "--include-videos",
         action="store_true",
-        help="Also upload output/{lang}/videos/* (off by default; gitignored)",
+        help="Also upload build/{lang}/videos/* (off by default; gitignored)",
     )
     up.add_argument(
         "--allow-missing",

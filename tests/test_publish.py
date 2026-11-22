@@ -65,18 +65,27 @@ def test_discover_pack_and_plan(tmp_path: Path):
 
 
 def test_discover_pack_skips_videos_by_default(tmp_path: Path):
-    lang_dir = tmp_path / "es"
+    lang_dir = tmp_path / "output" / "es"
     _touch_pack(lang_dir, "es", ("10",))
-    videos = lang_dir / "videos"
-    videos.mkdir()
+    stray = lang_dir / "videos"
+    stray.mkdir()
+    (stray / "9.mp4").write_bytes(b"nope")
+    videos = tmp_path / "build" / "es" / "videos"
+    videos.mkdir(parents=True)
     (videos / "1.mp4").write_bytes(b"mp4")
     (videos / "SOURCE.json").write_text("{}", encoding="utf-8")
-    items = discover_pack("es", course_types=("10",), lang_dir=lang_dir)
+    items = discover_pack("es", course_types=("10",), lang_dir=lang_dir, root=tmp_path)
     assert all(i.kind != "video" for i in items)
     with_videos = discover_pack(
-        "es", course_types=("10",), lang_dir=lang_dir, include_videos=True
+        "es",
+        course_types=("10",),
+        lang_dir=lang_dir,
+        include_videos=True,
+        root=tmp_path,
     )
-    assert any(i.kind == "video" and i.object_name == "videos/1.mp4" for i in with_videos)
+    video_items = [i for i in with_videos if i.kind == "video"]
+    assert [i.object_name for i in video_items] == ["videos/1.mp4"]
+    assert video_items[0].local_path == videos / "1.mp4"
     assert not any("SOURCE.json" in i.object_name for i in with_videos)
 
 

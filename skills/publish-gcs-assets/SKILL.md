@@ -66,7 +66,7 @@ Once Chris authorizes the upload stage (`--execute` / “upload to Google”), *
 ## Rules
 
 - Production upload = **PDF + Keynote + PPTX** (PPTX from Keynote export). Never restore `slides/assemble-pptx/`.
-- Do **not** upload `output/{lang}/videos/` unless the user explicitly asks; then pass `--include-videos`.
+- Do **not** upload `build/{lang}/videos/` unless the user explicitly asks; then pass `--include-videos`.
 - Dry-run by default; require `--execute` for real `gcloud storage cp`.
 - `verify-downloads` asserts `guidebook_*`, `keynote_*`, and `powerpoint_*` fields match the stable `Zume-Training-…` names. It does **not** update downloads rows — if the API still lists old names, report the mismatch (admin/API update is a separate step).
 - Keep deliverables under repo `output/{lang}/` only.

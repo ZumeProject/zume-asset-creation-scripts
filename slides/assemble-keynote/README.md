@@ -13,7 +13,7 @@ the upper-left video/thumbnail play-icon chrome on every video slide.
 
 ## Normal rebuild (any language / course)
 
-Capture pack layout: Agent Store `media/{lang}-{10|20|intensive}-presenter-captures/`.
+Capture pack layout: `build/{lang}/captures/{10|20|intensive}/`. `videos/` links to `build/{lang}/videos`.
 
 ```bash
 # 1) Image deck from PNGs
@@ -40,7 +40,7 @@ stuck Keynote.
 
 - Keynote Creator Studio (scripted as application `"Keynote"`)
 - macOS screen **unlocked** (System Events file dialogs fail while locked)
-- Capture packs under the Project Agent Store `media/` tree
+- Capture packs under `build/{lang}/captures/{type}/`
 
 ## Outputs
 

@@ -19,10 +19,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import keynote_health as kh  # noqa: E402
 
-STORE = Path(
-    "/Users/chris/Library/Application Support/Cursor/AgentStores/"
-    "cursor_agent_stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/files"
-)
 REPO_ROOT = Path(__file__).resolve().parents[2]
 MAIN_OUT = REPO_ROOT / "output"
 VIDEO_ICON = REPO_ROOT / "slides" / "assets" / "video-play-icon.png"
@@ -39,7 +35,12 @@ COURSE = {
 
 
 def pack_dir(lang: str, course_type: str) -> Path:
-    return STORE / "media" / f"{lang}-{course_type}-presenter-captures"
+    sys.path.insert(0, str(REPO_ROOT))
+    from zume_assets.paths import capture_pack_dir, ensure_capture_videos_link, videos_dir
+
+    pack = capture_pack_dir(lang, course_type, REPO_ROOT)
+    ensure_capture_videos_link(pack, videos_dir(lang, REPO_ROOT))
+    return pack
 
 
 def log(path: Path, msg: str) -> None:

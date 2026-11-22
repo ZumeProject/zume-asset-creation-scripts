@@ -19,7 +19,7 @@ Production filenames (same stem for all three):
 
 PPTX comes from **Keynote → Export To → PowerPoint** during review (not `slides/assemble-pptx/`, which stays removed).
 
-Do **not** upload `output/{lang}/videos/` unless `--include-videos`.
+Do **not** upload `build/{lang}/videos/` unless `--include-videos`.
 
 ## Overwrite (default)
 

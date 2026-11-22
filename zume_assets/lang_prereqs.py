@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 from .api import load_repo_root
+from .paths import capture_pack_dir, videos_dir
 
 COURSE_TYPES = ("10", "20", "intensive")
 EN_VIMEO_USER_ID = "75461893"
@@ -60,18 +61,18 @@ def folder_id_for_language(lang: str, root: Path | None = None) -> tuple[str, st
     return None
 
 
-def default_capture_pack_dir(lang: str, course_type: str, store: Path | None = None) -> Path:
-    """Agent Store media pack path used by slides/assemble-keynote drivers."""
-    if store is None:
-        # Match assemble-keynote defaults when running on Creator Studio.
-        store = Path(
-            "/Users/chris/Library/Application Support/Cursor/AgentStores/"
-            "cursor_agent_stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f/files"
-        )
-        cloud = Path("/cursor/stores/bc-0f3d3d6a-77a3-4628-a7d9-8b7fe836c50f")
-        if cloud.exists():
-            store = cloud
-    return store / "media" / f"{lang}-{course_type}-presenter-captures"
+def default_capture_pack_dir(
+    lang: str,
+    course_type: str,
+    store: Path | None = None,
+    root: Path | None = None,
+) -> Path:
+    """Presenter capture pack at ``build/{lang}/captures/{type}``.
+
+    ``store`` is ignored. Packs are not read from an Agent Store.
+    """
+    del store
+    return capture_pack_dir(lang, course_type, root)
 
 
 def _vimeo_map_issue(lang: str, root: Path) -> PrereqIssue:
@@ -106,14 +107,14 @@ def _local_videos_issue(
         id="local_videos",
         blocking=blocking,
         message=(
-            f"No local Vimeo download under output/{lang}/videos "
+            f"No local Vimeo download under build/{lang}/videos "
             f"(mapped folder_id={folder_id}, name={display!r})."
         ),
         next_steps=[
             "pip install -r slide-builder/requirements.txt",
             "Ensure VIMEO_ACCESS_TOKEN (or VIMEO_PERSONAL_ACCESS_TOKEN) is set.",
             f"python3 slides/videos/download_lang_vimeo.py --lang {lang}",
-            "Sync numbered MP4s into each capture pack’s videos/ before Keynote embed.",
+            "Capture packs link videos/ to build/{lang}/videos (one copy per language).",
         ],
     )
 
@@ -135,8 +136,8 @@ def _capture_pack_issue(
         next_steps=[
             "Capture on Creator Studio via slides/capture/capture_presenter.py "
             f"--lang {lang} --type {course_type}",
-            "Or copy an approved pack into Agent Store "
-            f"media/{lang}-{course_type}-presenter-captures/",
+            f"Packs live at build/{lang}/captures/{course_type}/ "
+            "(manifest.json + pngs/).",
         ],
     )
 
@@ -165,16 +166,16 @@ def check_language_pack_prereqs(
         issues.append(_vimeo_map_issue(lang, root))
     elif mapped is not None and require_videos:
         folder_id, display = mapped
-        videos_dir = root / "output" / lang / "videos"
-        source = videos_dir / "SOURCE.json"
-        if not source.exists() or not any(videos_dir.glob("*.mp4")):
+        downloaded = videos_dir(lang, root)
+        source = downloaded / "SOURCE.json"
+        if not source.exists() or not any(downloaded.glob("*.mp4")):
             issues.append(
                 _local_videos_issue(lang, folder_id, display, blocking=True)
             )
 
     if require_capture_packs:
         for course_type in course_types:
-            pack = default_capture_pack_dir(lang, course_type, store=store)
+            pack = default_capture_pack_dir(lang, course_type, store=store, root=root)
             if not (pack / "manifest.json").exists():
                 issues.append(
                     _capture_pack_issue(lang, course_type, pack, blocking=True)
@@ -209,7 +210,7 @@ def check_build_readiness(
         # Without a map, video/pack notes are still useful on full mode only.
         if mode == "full":
             for ct in types:
-                pack = default_capture_pack_dir(lang, ct, store=store)
+                pack = default_capture_pack_dir(lang, ct, store=store, root=root)
                 if not (pack / "manifest.json").exists():
                     issues.append(
                         _capture_pack_issue(lang, ct, pack, blocking=True)
@@ -217,9 +218,9 @@ def check_build_readiness(
         return issues
 
     folder_id, display = mapped
-    videos_dir = root / "output" / lang / "videos"
-    source = videos_dir / "SOURCE.json"
-    videos_ok = source.exists() and any(videos_dir.glob("*.mp4"))
+    downloaded = videos_dir(lang, root)
+    source = downloaded / "SOURCE.json"
+    videos_ok = source.exists() and any(downloaded.glob("*.mp4"))
     if not videos_ok:
         issues.append(
             _local_videos_issue(
@@ -231,7 +232,7 @@ def check_build_readiness(
         )
 
     for ct in types:
-        pack = default_capture_pack_dir(lang, ct, store=store)
+        pack = default_capture_pack_dir(lang, ct, store=store, root=root)
         if not (pack / "manifest.json").exists():
             issues.append(
                 _capture_pack_issue(
