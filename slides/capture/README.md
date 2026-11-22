@@ -37,6 +37,8 @@ export PRESENTER_BASE_URL=http://127.0.0.1:3000
 python3 slides/capture/capture_en10.py
 ```
 
+Slide order comes from this repo’s `manifest/{ten,twenty,intensive}_session.json`, plus the presenter’s closing `final` slide (and `congratulations` on the 10-session course when the manifest omits it). Capture does not read a zume6 checkout.
+
 Writes the capture pack (intermediate PNGs + manifest) under the repo:
 
 `build/{lang}/captures/{10|20|intensive}/{pngs,manifest.json}`

@@ -39,6 +39,22 @@ def test_nonprod_bases_detected(base):
     assert cap.is_nonprod_base(base)
 
 
+def test_build_items_uses_repo_manifest_not_zume6():
+    cap = _load()
+    items = cap.build_items("10", "https://zume.training", "de")
+    assert len(items) == 189
+    assert items[0]["key"] == "s1_1_1"
+    assert items[4]["key"] == "t1_a"
+    assert items[5]["key"] == "t1_b"
+    assert items[5]["video_id"] == "1"
+    assert items[-2]["key"] == "congratulations"
+    assert items[-1]["key"] == "final"
+    assert "zume6" not in items[0]["url"]
+    assert items[0]["url"].startswith("https://zume.training/de/presenter?")
+    assert len(cap.build_items("20", "https://zume.training", "de")) == 268
+    assert len(cap.build_items("intensive", "https://zume.training", "de")) == 158
+
+
 def test_main_refuses_localhost_without_flag():
     cap = _load()
     with pytest.raises(SystemExit) as exc:
