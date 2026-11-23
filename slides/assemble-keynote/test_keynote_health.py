@@ -27,6 +27,12 @@ class KeynoteHealthUnitTests(unittest.TestCase):
         self.assertFalse(result.ok)
         self.assertIn("TIMEOUT", result.detail)
 
+    def test_revert_script_does_not_save_anyway(self) -> None:
+        script = kh.REVERT_CHANGED_FILE_SCRIPT
+        self.assertIn('button "Revert"', script)
+        self.assertNotIn("Save Anyway", script)
+        self.assertNotIn("Save As", script)
+
     def test_dismiss_modified_dialogs_ok(self) -> None:
         with mock.patch.object(kh, "run_osascript", return_value=(0, "clicked:1", "")):
             result = kh.dismiss_modified_dialogs()

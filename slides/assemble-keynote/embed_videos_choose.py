@@ -56,7 +56,7 @@ def run_osascript(script: str, timeout: int = 180) -> tuple[int, str, str]:
 
 
 def dismiss_ui() -> None:
-    # Prefer Save Anyway over Escape so unattended builds keep the deck.
+    # Revert reloads the file the builder wrote if Keynote says it changed on disk.
     kh.dismiss_modified_dialogs(timeout=15)
     run_osascript(
         '''

@@ -32,44 +32,30 @@ def kill_osascript() -> None:
     _pkill("osascript")
 
 
-def dismiss_modified_dialogs(timeout: int = 20) -> HealthResult:
-    """Click Keynote ``Save Anyway`` on file-modified sheets (unattended Mac).
-
-    Creator Studio scripts as application \"Keynote\"; System Events process
-    name is also ``Keynote``. Prefer the explicit button over Escape so we do
-    not discard in-progress decks while Chris is away.
-    """
-    code, out, err = run_osascript(
-        '''
+# "The document could not be autosaved. The file has been changed by another
+# application." Revert reloads the file the builder wrote. Save Anyway and
+# Save As would keep Keynote's stale in-memory copy.
+REVERT_CHANGED_FILE_SCRIPT = """
 tell application "System Events"
   if not (exists process "Keynote") then return "no-keynote"
   tell process "Keynote"
     set frontmost to true
     set clicked to 0
-    -- Sheets on document windows (common "file modified" prompt)
     try
       repeat with w in windows
         try
           if exists sheet 1 of w then
             tell sheet 1 of w
-              if exists button "Save Anyway" then
-                click button "Save Anyway"
-                set clicked to clicked + 1
-              else if exists button "Replace" then
-                click button "Replace"
+              if exists button "Revert" then
+                click button "Revert"
                 set clicked to clicked + 1
               end if
             end tell
           end if
         end try
-      end repeat
-    end try
-    -- Standalone dialog windows
-    try
-      repeat with w in (get windows whose subrole is "AXDialog" or role is "AXSheet")
         try
-          if exists button "Save Anyway" of w then
-            click button "Save Anyway" of w
+          if exists button "Revert" of w then
+            click button "Revert" of w
             set clicked to clicked + 1
           end if
         end try
@@ -78,9 +64,16 @@ tell application "System Events"
     return "clicked:" & (clicked as text)
   end tell
 end tell
-''',
-        timeout=timeout,
-    )
+"""
+
+
+def dismiss_modified_dialogs(timeout: int = 20) -> HealthResult:
+    """Click Revert when Keynote says the file changed on disk.
+
+    Creator Studio scripts as application \"Keynote\". Revert loads the file
+    the assemble scripts wrote. Do not click Save Anyway or Save As.
+    """
+    code, out, err = run_osascript(REVERT_CHANGED_FILE_SCRIPT, timeout=timeout)
     if code == 0:
         return HealthResult(True, out or "dismiss ok")
     if code == 124:

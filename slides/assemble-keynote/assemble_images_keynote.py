@@ -158,7 +158,8 @@ end tell
 
 
 def save_doc(out_path: Path) -> None:
-    run_osascript(
+    kh.dismiss_modified_dialogs(timeout=15)
+    code, out, err = run_osascript(
         f'''
 tell application "Keynote"
   if (count of documents) < 1 then
@@ -168,8 +169,24 @@ tell application "Keynote"
   save front document in POSIX file "{out_path}"
 end tell
 ''',
-        timeout=300,
+        timeout=90,
     )
+    if code != 0:
+        kh.dismiss_modified_dialogs(timeout=15)
+        code, out, err = run_osascript(
+            f'''
+tell application "Keynote"
+  if (count of documents) < 1 then
+    open POSIX file "{out_path}"
+    delay 2
+  end if
+  save front document in POSIX file "{out_path}"
+end tell
+''',
+            timeout=90,
+        )
+    if code != 0:
+        raise RuntimeError(err or out or "save failed")
 
 
 def close_all() -> None:
@@ -221,6 +238,7 @@ def assemble(paths: list[str], out_path: Path, save_every: int = 5) -> None:
         except Exception as exc:  # noqa: BLE001
             failures += 1
             print(f"append fail at {i}: {exc}", flush=True)
+            kh.dismiss_modified_dialogs(timeout=15)
             try:
                 save_doc(out_path)
             except Exception:
