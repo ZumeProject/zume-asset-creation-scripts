@@ -18,7 +18,10 @@ def find_typst() -> str:
     return path
 
 
-# Latin body first; script fallbacks cover Arabic / CJK when Liberation lacks glyphs.
+# Latin body first; script fallbacks cover Armenian / Arabic / CJK when the
+# Latin face lacks glyphs. Arial covers many scripts via Arial Unicode MS and
+# looks poor for Armenian — keep script Noto/SF faces in the stack so Typst
+# can pick them per-glyph (Keynote/presenter quality).
 _LATIN_SANS = (
     "Liberation Sans",
     "DejaVu Sans",
@@ -27,6 +30,9 @@ _LATIN_SANS = (
     "Arial",
 )
 _SCRIPT_FALLBACKS = (
+    # Armenian (hy) — prefer Noto over Arial Unicode / SF
+    "Noto Sans Armenian",
+    "SF Armenian",
     # Arabic / Persian / Pashto (Noto first when installed; macOS fallbacks after)
     "Noto Sans Arabic",
     "Noto Naskh Arabic",
