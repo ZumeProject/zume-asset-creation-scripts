@@ -1,6 +1,7 @@
 import json
 
 from zume_assets.book_assembler import (
+    _listof100_mark_labels,
     _typst_lang_region,
     assemble_book,
     congratulations_block,
@@ -14,6 +15,80 @@ def test_format_duration_omits_zero():
     assert format_duration(5) == "5 min"
     assert format_duration(0) is None
     assert format_duration(None) is None
+
+
+def test_listof100_mark_labels_from_ui_messages():
+    # Labels come from pages.specialActivities.listOf100 UI export — not
+    # instruction-sentence punctuation / "or" tokens.
+    en = {
+        "messages": {
+            "pages": {
+                "specialActivities": {
+                    "listOf100": {
+                        "columnDisciple": "Disciple",
+                        "columnUnbeliever": "Unbeliever",
+                        "columnUnknown": "Unknown",
+                    }
+                }
+            }
+        }
+    }
+    assert _listof100_mark_labels(messages=en) == [
+        "Disciple",
+        "Unbeliever",
+        "Unknown",
+    ]
+
+    de = {
+        "pages": {
+            "specialActivities": {
+                "listOf100": {
+                    "columnDisciple": "Jünger",
+                    "columnUnbeliever": "Ungläubiger",
+                    "columnUnknown": "Unbekannt",
+                }
+            }
+        }
+    }
+    assert _listof100_mark_labels(messages=de) == [
+        "Jünger",
+        "Ungläubiger",
+        "Unbekannt",
+    ]
+
+    am = {
+        "pages": {
+            "specialActivities": {
+                "listOf100": {
+                    "columnDisciple": "ደቀ መዝሙር",
+                    "columnUnbeliever": "የማያምን",
+                    "columnUnknown": "የማይታወቅ",
+                }
+            }
+        }
+    }
+    assert _listof100_mark_labels(messages=am) == [
+        "ደቀ መዝሙር",
+        "የማያምን",
+        "የማይታወቅ",
+    ]
+
+
+def test_listof100_mark_labels_missing_returns_none():
+    assert _listof100_mark_labels(messages=None) is None
+    assert _listof100_mark_labels(messages={}) is None
+    assert (
+        _listof100_mark_labels(
+            messages={
+                "pages": {
+                    "specialActivities": {
+                        "listOf100": {"columnDisciple": "Disciple"}
+                    }
+                }
+            }
+        )
+        is None
+    )
 
 
 def test_typst_lang_region():
@@ -102,6 +177,23 @@ def _stub_fetches(monkeypatch, locale: str):
         lambda activity_key, language_id="en", render_shortcodes=True: {
             "title": "Do this",
             "content": "<p>Body</p><script>skip()</script>",
+        },
+    )
+    monkeypatch.setattr(
+        "zume_assets.book_assembler.fetch_ui_export",
+        lambda locale="en", namespace=None: {
+            "locale": locale,
+            "messages": {
+                "pages": {
+                    "specialActivities": {
+                        "listOf100": {
+                            "columnDisciple": "Disciple",
+                            "columnUnbeliever": "Unbeliever",
+                            "columnUnknown": "Unknown",
+                        }
+                    }
+                }
+            },
         },
     )
     monkeypatch.setattr("zume_assets.images.urlopen", fake_urlopen)

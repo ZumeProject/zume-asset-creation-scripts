@@ -12,6 +12,7 @@ from .api import (
     fetch_activity,
     fetch_presenter_content,
     fetch_script_by_video,
+    fetch_ui_export,
     load_repo_root,
 )
 from .html_text import (
@@ -115,29 +116,39 @@ def _listof100_worksheet_title(presenter: dict[str, Any], activity: dict[str, An
     return title or "List of 100"
 
 
-def _listof100_mark_labels(instruction: str) -> list[str]:
-    """Parse Disciple / Unbeliever / Unknown labels from the localized mark instruction."""
-    defaults = ["Disciple", "Unbeliever", "Unknown"]
-    text = (instruction or "").strip()
-    if not text:
-        return defaults
-    if "：" in text:
-        tail = text.rsplit("：", 1)[-1]
-    elif ":" in text:
-        tail = text.rsplit(":", 1)[-1]
-    else:
-        tail = text
-    tail = tail.strip().rstrip(".。")
-    for sep in ("، أو ", " أو ", ", or ", " or ", "、", "或", "، ", ", "):
-        tail = tail.replace(sep, "|")
-    parts = [p.strip().strip("«»\"“”「」") for p in tail.split("|") if p.strip()]
-    if len(parts) >= 3:
-        parts = parts[:3]
-        # Title-case Latin labels (instruction text is often lowercase).
-        if all(p.isascii() for p in parts):
-            parts = [p[:1].upper() + p[1:] for p in parts]
-        return parts
-    return defaults
+# Live List of 100 print page column headers (pages.specialActivities.listOf100).
+# Worksheet marks must come from these UI translations — never from parsing the
+# session instruction sentence (locale punctuation / "or" words vary endlessly).
+LISTOF100_UI_NAMESPACE = "pages.specialActivities.listOf100"
+LISTOF100_COLUMN_KEYS = ("columnDisciple", "columnUnbeliever", "columnUnknown")
+
+
+def _nested_ui_node(messages: dict[str, Any], dotted: str) -> Any:
+    """Walk a nested next-intl messages tree (or a full export payload)."""
+    node: Any = messages
+    if isinstance(node, dict) and "messages" in node and isinstance(node["messages"], dict):
+        node = node["messages"]
+    for part in dotted.split("."):
+        if not isinstance(node, dict):
+            return None
+        node = node.get(part)
+    return node
+
+
+def _listof100_mark_labels(*, messages: dict[str, Any] | None = None) -> list[str] | None:
+    """Return Disciple / Unbeliever / Unknown labels from UI export messages.
+
+    Source of truth is ``pages.specialActivities.listOf100.column*`` — the same
+    strings the web printable worksheet uses. Returns None when any column is
+    missing so callers can hard-fail instead of inventing English defaults.
+    """
+    node = _nested_ui_node(messages or {}, LISTOF100_UI_NAMESPACE)
+    if not isinstance(node, dict):
+        return None
+    labels = [str(node.get(key) or "").strip() for key in LISTOF100_COLUMN_KEYS]
+    if not all(labels):
+        return None
+    return labels
 
 
 def _repo() -> Path:
@@ -366,6 +377,7 @@ def assemble_session_blocks(
     activity_cache: dict[str, dict[str, Any] | None],
     text_direction: str = "ltr",
     missing_images: list[str] | None = None,
+    listof100_ui: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     ui: dict[str, str] = presenter.get("ui") or {}
     videos: dict[str, Any] = presenter.get("videos") or {}
@@ -558,13 +570,27 @@ def assemble_session_blocks(
                         (
                             s
                             for s in instructions
-                            if "disciple" in s.lower() or "تلميذ" in s or "門徒" in s
+                            if (
+                                "disciple" in s.lower()
+                                or "تلميذ" in s
+                                or "門徒" in s
+                                or "ደቀ" in s  # Amharic disciple
+                            )
                         ),
                         instructions[-1] if instructions else "",
                     )
                 )
                 block["worksheet_hint"] = mark_src or "Write names below. Mark Disciple / Unbeliever / Unknown."
-                block["worksheet_marks"] = _listof100_mark_labels(mark_src)
+                # Column checkboxes must match the live printable worksheet UI
+                # strings — not a brittle parse of instruction.2 punctuation.
+                marks = _listof100_mark_labels(messages=listof100_ui)
+                if not marks:
+                    raise RuntimeError(
+                        "Missing UI translations for "
+                        f"{LISTOF100_UI_NAMESPACE} column labels "
+                        f"(locale={locale}). Refusing English worksheet defaults."
+                    )
+                block["worksheet_marks"] = marks
             blocks.append(block)
             continue
 
@@ -672,6 +698,11 @@ def assemble_book(
     script_cache: dict[str, dict[str, Any] | None] = {}
     activity_cache: dict[str, dict[str, Any] | None] = {}
     locale = str(presenter.get("locale") or lang or "en")
+    # Same columnDisciple / columnUnbeliever / columnUnknown strings as
+    # /{locale}/activities/listof100 — locale-agnostic, no instruction parsing.
+    listof100_ui = fetch_ui_export(locale, namespace=LISTOF100_UI_NAMESPACE)
+    if cache_api:
+        cache_json(listof100_ui, build_dir / "cache" / "listof100_ui.json")
     # Known RTL locale codes on zume6 (site display_code). Typst mirrors the
     # two-column guidebook chrome when direction is rtl (QR/rail on the right).
     rtl_locales = {
@@ -709,6 +740,7 @@ def assemble_book(
             activity_cache=activity_cache,
             text_direction=text_direction,
             missing_images=missing_images,
+            listof100_ui=listof100_ui,
         )
         sessions_out.append(
             {

@@ -53,6 +53,23 @@ def fetch_activity(
         return None
 
 
+def fetch_ui_export(
+    locale: str = "en",
+    *,
+    namespace: str | None = None,
+) -> dict[str, Any]:
+    """Public next-intl message export for a locale (optional namespace filter).
+
+    Returns ``{"locale": ..., "messages": {...}}``. Untranslated keys fall back
+    to English on the server — the same strings the live List of 100 page uses.
+    """
+    q = urlencode({"namespace": namespace}) if namespace else ""
+    url = f"{API_BASE}/translations/ui/export/{locale}"
+    if q:
+        url = f"{url}?{q}"
+    return _get_json(url)
+
+
 def cache_json(data: Any, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
