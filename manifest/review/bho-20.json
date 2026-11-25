@@ -1,0 +1,607 @@
+{
+  "lang": "bho",
+  "type": "20",
+  "locale": "bho",
+  "fetched_at": "2026-11-25T19:41:48Z",
+  "api_base": "https://api.zume.training/api/v1",
+  "site_base": "https://zume.training",
+  "manifest": "twenty_session.json",
+  "follow_redirects": false,
+  "checkins": [
+    {
+      "session": 1,
+      "code": "3354",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=3354",
+      "expected_redirect": "/checkin?code=3354",
+      "png_stem": "checkin-3354"
+    },
+    {
+      "session": 2,
+      "code": "4568",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=4568",
+      "expected_redirect": "/checkin?code=4568",
+      "png_stem": "checkin-4568"
+    },
+    {
+      "session": 3,
+      "code": "8767",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=8767",
+      "expected_redirect": "/checkin?code=8767",
+      "png_stem": "checkin-8767"
+    },
+    {
+      "session": 4,
+      "code": "6787",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=6787",
+      "expected_redirect": "/checkin?code=6787",
+      "png_stem": "checkin-6787"
+    },
+    {
+      "session": 5,
+      "code": "3450",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=3450",
+      "expected_redirect": "/checkin?code=3450",
+      "png_stem": "checkin-3450"
+    },
+    {
+      "session": 6,
+      "code": "2344",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=2344",
+      "expected_redirect": "/checkin?code=2344",
+      "png_stem": "checkin-2344"
+    },
+    {
+      "session": 7,
+      "code": "1116",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=1116",
+      "expected_redirect": "/checkin?code=1116",
+      "png_stem": "checkin-1116"
+    },
+    {
+      "session": 8,
+      "code": "5431",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=5431",
+      "expected_redirect": "/checkin?code=5431",
+      "png_stem": "checkin-5431"
+    },
+    {
+      "session": 9,
+      "code": "8768",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=8768",
+      "expected_redirect": "/checkin?code=8768",
+      "png_stem": "checkin-8768"
+    },
+    {
+      "session": 10,
+      "code": "2347",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=2347",
+      "expected_redirect": "/checkin?code=2347",
+      "png_stem": "checkin-2347"
+    },
+    {
+      "session": 11,
+      "code": "9434",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=9434",
+      "expected_redirect": "/checkin?code=9434",
+      "png_stem": "checkin-9434"
+    },
+    {
+      "session": 12,
+      "code": "2348",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=2348",
+      "expected_redirect": "/checkin?code=2348",
+      "png_stem": "checkin-2348"
+    },
+    {
+      "session": 13,
+      "code": "6785",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=6785",
+      "expected_redirect": "/checkin?code=6785",
+      "png_stem": "checkin-6785"
+    },
+    {
+      "session": 14,
+      "code": "9872",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=9872",
+      "expected_redirect": "/checkin?code=9872",
+      "png_stem": "checkin-9872"
+    },
+    {
+      "session": 15,
+      "code": "4327",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=4327",
+      "expected_redirect": "/checkin?code=4327",
+      "png_stem": "checkin-4327"
+    },
+    {
+      "session": 16,
+      "code": "2871",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=2871",
+      "expected_redirect": "/checkin?code=2871",
+      "png_stem": "checkin-2871"
+    },
+    {
+      "session": 17,
+      "code": "4328",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=4328",
+      "expected_redirect": "/checkin?code=4328",
+      "png_stem": "checkin-4328"
+    },
+    {
+      "session": 18,
+      "code": "6548",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=6548",
+      "expected_redirect": "/checkin?code=6548",
+      "png_stem": "checkin-6548"
+    },
+    {
+      "session": 19,
+      "code": "7657",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=7657",
+      "expected_redirect": "/checkin?code=7657",
+      "png_stem": "checkin-7657"
+    },
+    {
+      "session": 20,
+      "code": "2767",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bho&c=2767",
+      "expected_redirect": "/checkin?code=2767",
+      "png_stem": "checkin-2767"
+    }
+  ],
+  "videos": [
+    {
+      "key": "1",
+      "kind": "v",
+      "title": "परमेश्वर साधारण लोगन के उपयोग करेलें",
+      "vimeoId": "390639418",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=1",
+      "expected_redirect": "/app/video?v=1&l=bho",
+      "png_stem": "video-1"
+    },
+    {
+      "key": "2",
+      "kind": "v",
+      "title": "चेला अउर कलीसिया के सरल परिभाषा",
+      "vimeoId": "390639511",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=2",
+      "expected_redirect": "/app/video?v=2&l=bho",
+      "png_stem": "video-2"
+    },
+    {
+      "key": "3",
+      "kind": "v",
+      "title": "आत्मिक साँस लिहल परमेश्वर के सुनल अउर उनकर आज्ञा मानल बा",
+      "vimeoId": "390639437",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=3",
+      "expected_redirect": "/app/video?v=3&l=bho",
+      "png_stem": "video-3"
+    },
+    {
+      "key": "4",
+      "kind": "v",
+      "title": "एस.ओ.ए.पी.एस. बाइबिल पढ़ल",
+      "vimeoId": "1096320275",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=4",
+      "expected_redirect": "/app/video?v=4&l=bho",
+      "png_stem": "video-4"
+    },
+    {
+      "key": "5",
+      "kind": "v",
+      "title": "उत्तरदायित्व समूह",
+      "vimeoId": "1096320294",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=5",
+      "expected_redirect": "/app/video?v=5&l=bho",
+      "png_stem": "video-5"
+    },
+    {
+      "key": "6",
+      "kind": "v",
+      "title": "उपभोक्ता बनाम उत्पादक के जिनगी के तरीका",
+      "vimeoId": "390639518",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=6",
+      "expected_redirect": "/app/video?v=6&l=bho",
+      "png_stem": "video-6"
+    },
+    {
+      "key": "7",
+      "kind": "v",
+      "title": "एक घंटा प्रार्थना में कइसे बिताईं",
+      "vimeoId": "1096320308",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=7",
+      "expected_redirect": "/app/video?v=7&l=bho",
+      "png_stem": "video-7"
+    },
+    {
+      "key": "8",
+      "kind": "v",
+      "title": "सम्बन्धन के जिम्मेदारी - 100 गो के सूची",
+      "vimeoId": "1096320323",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=8",
+      "expected_redirect": "/app/video?v=8&l=bho",
+      "png_stem": "video-8"
+    },
+    {
+      "key": "9",
+      "kind": "v",
+      "title": "आत्मिक अर्थव्यवस्था",
+      "vimeoId": "390639458",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=9",
+      "expected_redirect": "/app/video?v=9&l=bho",
+      "png_stem": "video-9"
+    },
+    {
+      "key": "10",
+      "kind": "v",
+      "title": "सुसमाचार के कइसे साझा कइल जाव",
+      "vimeoId": "390639466",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=10",
+      "expected_redirect": "/app/video?v=10&l=bho",
+      "png_stem": "video-10"
+    },
+    {
+      "key": "11",
+      "kind": "v",
+      "title": "बपतिस्मा अउर एकरा कइसे करीं",
+      "vimeoId": "1096320335",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=11",
+      "expected_redirect": "/app/video?v=11&l=bho",
+      "png_stem": "video-11"
+    },
+    {
+      "key": "12",
+      "kind": "v",
+      "title": "तीन मिनट के गवाही",
+      "vimeoId": "1096320348",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=12",
+      "expected_redirect": "/app/video?v=12&l=bho",
+      "png_stem": "video-12"
+    },
+    {
+      "key": "13",
+      "kind": "v",
+      "title": "दर्शन साझा कइल सबसे बड़ आशीर्वाद बा",
+      "vimeoId": "390639472",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=13",
+      "expected_redirect": "/app/video?v=13&l=bho",
+      "png_stem": "video-13"
+    },
+    {
+      "key": "14",
+      "kind": "v",
+      "title": "बत्तख के बच्चा के जइसन चेलापन – तुरंत अगुवाई करेला",
+      "vimeoId": "390639542",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=14",
+      "expected_redirect": "/app/video?v=14&l=bho",
+      "png_stem": "video-14"
+    },
+    {
+      "key": "15",
+      "kind": "v",
+      "title": "देखे खातिर आँख हो कि परमेशवर के राज्य कहँवा नइखे",
+      "vimeoId": "390639483",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=15",
+      "expected_redirect": "/app/video?v=15&l=bho",
+      "png_stem": "video-15"
+    },
+    {
+      "key": "16",
+      "kind": "v",
+      "title": "प्रभु भोज अउर एकर अगुवाई कईसे कईल जाला",
+      "vimeoId": "1096320358",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=16",
+      "expected_redirect": "/app/video?v=16&l=bho",
+      "png_stem": "video-16"
+    },
+    {
+      "key": "17",
+      "kind": "v",
+      "title": "प्रेयर वाकिंग अउर ई कईसे कईल जाला",
+      "vimeoId": "1096320368",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=17",
+      "expected_redirect": "/app/video?v=17&l=bho",
+      "png_stem": "video-17"
+    },
+    {
+      "key": "18",
+      "kind": "v",
+      "title": "शांति के आदमी अउर एकरा के कइसे खोजल जाला",
+      "vimeoId": "390639487",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=18",
+      "expected_redirect": "/app/video?v=18&l=bho",
+      "png_stem": "video-18"
+    },
+    {
+      "key": "19",
+      "kind": "v",
+      "title": "विश्वास योग्यता, ज्ञान से बेहतर होला",
+      "vimeoId": "390639565",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=19",
+      "expected_redirect": "/app/video?v=19&l=bho",
+      "png_stem": "video-19"
+    },
+    {
+      "key": "21",
+      "kind": "v",
+      "title": "3/3 ग्रुप मिटिंग पैटर्न (तरीका)",
+      "vimeoId": "390641914",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=21",
+      "expected_redirect": "/app/video?v=21&l=bho",
+      "png_stem": "video-21"
+    },
+    {
+      "key": "22",
+      "kind": "v",
+      "title": "परिपक्व होखे वाला चेलन खातिर प्रशिक्षण प्रक्रिया",
+      "vimeoId": "390641925",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=22",
+      "expected_redirect": "/app/video?v=22&l=bho",
+      "png_stem": "video-22"
+    },
+    {
+      "key": "23",
+      "kind": "v",
+      "title": "समूह के नेतृत्व",
+      "vimeoId": "390641929",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=23",
+      "expected_redirect": "/app/video?v=23&l=bho",
+      "png_stem": "video-23"
+    },
+    {
+      "key": "24",
+      "kind": "v",
+      "title": "असमान रुप से विकास के उम्मीद",
+      "vimeoId": "390641937",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=24",
+      "expected_redirect": "/app/video?v=24&l=bho",
+      "png_stem": "video-24"
+    },
+    {
+      "key": "25",
+      "kind": "v",
+      "title": "बढ़ोतरी के रफ्तार मायने राखेला",
+      "vimeoId": "390641940",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=25",
+      "expected_redirect": "/app/video?v=25&l=bho",
+      "png_stem": "video-25"
+    },
+    {
+      "key": "26",
+      "kind": "v",
+      "title": "हमेशा दू गो कलीसिया के हिस्सा",
+      "vimeoId": "390641947",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=26",
+      "expected_redirect": "/app/video?v=26&l=bho",
+      "png_stem": "video-26"
+    },
+    {
+      "key": "28",
+      "kind": "v",
+      "title": "कोचिंग चेकलिस्ट",
+      "vimeoId": "1096320377",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=28",
+      "expected_redirect": "/app/video?v=28&l=bho",
+      "png_stem": "video-28"
+    },
+    {
+      "key": "29",
+      "kind": "v",
+      "title": "नेटवर्क में नेतृत्व",
+      "vimeoId": "390641958",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=29",
+      "expected_redirect": "/app/video?v=29&l=bho",
+      "png_stem": "video-29"
+    },
+    {
+      "key": "30",
+      "kind": "v",
+      "title": "साथी मार्गदर्शन समूह",
+      "vimeoId": "1096320385",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=30",
+      "expected_redirect": "/app/video?v=30&l=bho",
+      "png_stem": "video-30"
+    },
+    {
+      "key": "33",
+      "kind": "v",
+      "title": "3 सर्कल सुसमाचार के प्रस्तुति के बा",
+      "vimeoId": "1096320259",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&v=33",
+      "expected_redirect": "/app/video?v=33&l=bho",
+      "png_stem": "video-33"
+    }
+  ],
+  "activities": [
+    {
+      "key": "33group",
+      "kind": "a",
+      "title": "3/3 समूह के बइठक",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=33group",
+      "expected_redirect": "/activities/33group",
+      "png_stem": "activity-33group"
+    },
+    {
+      "key": "3monthplan",
+      "kind": "a",
+      "title": "Three Month Plan",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=3monthplan",
+      "expected_redirect": "/auth/login",
+      "png_stem": "activity-3monthplan"
+    },
+    {
+      "key": "4fields",
+      "kind": "a",
+      "title": "फोर फिल्ड डाइग्राम",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=4fields",
+      "expected_redirect": "/activities/4fields",
+      "png_stem": "activity-4fields"
+    },
+    {
+      "key": "accountability",
+      "kind": "a",
+      "title": "जवाबदेही समूह",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=accountability",
+      "expected_redirect": "/activities/accountability",
+      "png_stem": "activity-accountability"
+    },
+    {
+      "key": "blessprayer",
+      "kind": "a",
+      "title": "आशीर्वाद के प्रार्थना",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=blessprayer",
+      "expected_redirect": "/activities/blessprayer",
+      "png_stem": "activity-blessprayer"
+    },
+    {
+      "key": "coachingchecklist",
+      "kind": "a",
+      "title": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=coachingchecklist",
+      "expected_redirect": "/activities/coachingchecklist",
+      "png_stem": "activity-coachingchecklist"
+    },
+    {
+      "key": "genmapping",
+      "kind": "a",
+      "title": "पीढ़ीयन के मानचित्र",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=genmapping",
+      "expected_redirect": "/activities/genmapping",
+      "png_stem": "activity-genmapping"
+    },
+    {
+      "key": "getacoach",
+      "kind": "a",
+      "title": null,
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=getacoach",
+      "expected_redirect": "/get-a-coach",
+      "png_stem": "activity-getacoach"
+    },
+    {
+      "key": "join_the_community",
+      "kind": "a",
+      "title": "समुदाय से जुड़ीं",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=join_the_community",
+      "expected_redirect": "/join-the-community",
+      "png_stem": "activity-join_the_community"
+    },
+    {
+      "key": "listof100",
+      "kind": "a",
+      "title": "आपन खुद के 100 गो के सूची बनाईं",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=listof100",
+      "expected_redirect": "/activities/listof100",
+      "png_stem": "activity-listof100"
+    },
+    {
+      "key": "lordssupper",
+      "kind": "a",
+      "title": "प्रभु भोज",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=lordssupper",
+      "expected_redirect": "/activities/lordssupper",
+      "png_stem": "activity-lordssupper"
+    },
+    {
+      "key": "peermentoring",
+      "kind": "a",
+      "title": "पीयर मेंटरिंग समूह",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=peermentoring",
+      "expected_redirect": "/activities/peermentoring",
+      "png_stem": "activity-peermentoring"
+    },
+    {
+      "key": "prayercycle",
+      "kind": "a",
+      "title": "प्रार्थना के प्रक्रिया",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=prayercycle",
+      "expected_redirect": "/activities/prayercycle",
+      "png_stem": "activity-prayercycle"
+    },
+    {
+      "key": "prayerwalking",
+      "kind": "a",
+      "title": "प्रेयर वाकिंग",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=prayerwalking",
+      "expected_redirect": "/activities/prayerwalking",
+      "png_stem": "activity-prayerwalking"
+    },
+    {
+      "key": "sharegospel",
+      "kind": "a",
+      "title": "सुसमाचार के साझा करीं",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=sharegospel",
+      "expected_redirect": "/activities/sharegospel",
+      "png_stem": "activity-sharegospel"
+    },
+    {
+      "key": "sharetestimony",
+      "kind": "a",
+      "title": "तीन मिनट के गवाही",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=sharetestimony",
+      "expected_redirect": "/activities/sharetestimony",
+      "png_stem": "activity-sharetestimony"
+    },
+    {
+      "key": "soaps",
+      "kind": "a",
+      "title": "एस ओ ए पी एस बाइबिल अध्ययन",
+      "qr_url": "https://zume.training/app/qr/?l=bho&a=soaps",
+      "expected_redirect": "/activities/soaps",
+      "png_stem": "activity-soaps"
+    }
+  ],
+  "counts": {
+    "checkins": 20,
+    "videos": 29,
+    "activities": 17
+  }
+}
