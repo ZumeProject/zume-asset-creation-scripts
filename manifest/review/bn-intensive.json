@@ -1,0 +1,495 @@
+{
+  "lang": "bn",
+  "type": "intensive",
+  "locale": "bn",
+  "fetched_at": "2026-11-26T18:17:12Z",
+  "api_base": "https://api.zume.training/api/v1",
+  "site_base": "https://zume.training",
+  "manifest": "intensive_session.json",
+  "follow_redirects": false,
+  "checkins": [
+    {
+      "session": 1,
+      "code": "1397",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bn&c=1397",
+      "expected_redirect": "/checkin?code=1397",
+      "png_stem": "checkin-1397"
+    },
+    {
+      "session": 2,
+      "code": "2341",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bn&c=2341",
+      "expected_redirect": "/checkin?code=2341",
+      "png_stem": "checkin-2341"
+    },
+    {
+      "session": 3,
+      "code": "3455",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bn&c=3455",
+      "expected_redirect": "/checkin?code=3455",
+      "png_stem": "checkin-3455"
+    },
+    {
+      "session": 4,
+      "code": "4329",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bn&c=4329",
+      "expected_redirect": "/checkin?code=4329",
+      "png_stem": "checkin-4329"
+    },
+    {
+      "session": 5,
+      "code": "5451",
+      "kind": "c",
+      "qr_url": "https://zume.training/app/qr/?l=bn&c=5451",
+      "expected_redirect": "/checkin?code=5451",
+      "png_stem": "checkin-5451"
+    }
+  ],
+  "videos": [
+    {
+      "key": "1",
+      "kind": "v",
+      "title": "ঈশ্বর সাধারণ মানুষদের ব্যবহার করেন",
+      "vimeoId": "362811717",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=1",
+      "expected_redirect": "/app/video?v=1&l=bn",
+      "png_stem": "video-1"
+    },
+    {
+      "key": "2",
+      "kind": "v",
+      "title": "শিষ্য এবং মণ্ডলীর সহজ সংজ্ঞা",
+      "vimeoId": "362811766",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=2",
+      "expected_redirect": "/app/video?v=2&l=bn",
+      "png_stem": "video-2"
+    },
+    {
+      "key": "3",
+      "kind": "v",
+      "title": "আত্মিক শ্বাসপ্রশ্বাস হল ঈশ্বরের কথা শোনা এবং বাধ্য হওয়া",
+      "vimeoId": "362811828",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=3",
+      "expected_redirect": "/app/video?v=3&l=bn",
+      "png_stem": "video-3"
+    },
+    {
+      "key": "4",
+      "kind": "v",
+      "title": "এস ও এ পি এস বাইবেল পড়া",
+      "vimeoId": "982283078",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=4",
+      "expected_redirect": "/app/video?v=4&l=bn",
+      "png_stem": "video-4"
+    },
+    {
+      "key": "5",
+      "kind": "v",
+      "title": "বাধ্যবাধকতা পালনের দায়িত্বের দলগুলি",
+      "vimeoId": "982283096",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=5",
+      "expected_redirect": "/app/video?v=5&l=bn",
+      "png_stem": "video-5"
+    },
+    {
+      "key": "6",
+      "kind": "v",
+      "title": "ভোক্তা এবং উৎপাদনকারীর জীবনধারা",
+      "vimeoId": "362811882",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=6",
+      "expected_redirect": "/app/video?v=6&l=bn",
+      "png_stem": "video-6"
+    },
+    {
+      "key": "7",
+      "kind": "v",
+      "title": "কীভাবে এক ঘণ্টা প্রার্থনায় কাটাবেন",
+      "vimeoId": "982283116",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=7",
+      "expected_redirect": "/app/video?v=7&l=bn",
+      "png_stem": "video-7"
+    },
+    {
+      "key": "8",
+      "kind": "v",
+      "title": "সম্বন্ধযুক্ত ধনাধ্যক্ষতা – ১০০ জনের তালিকা",
+      "vimeoId": "982283146",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=8",
+      "expected_redirect": "/app/video?v=8&l=bn",
+      "png_stem": "video-8"
+    },
+    {
+      "key": "9",
+      "kind": "v",
+      "title": "রাজ্যের অর্থনীতি",
+      "vimeoId": "362811931",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=9",
+      "expected_redirect": "/app/video?v=9&l=bn",
+      "png_stem": "video-9"
+    },
+    {
+      "key": "10",
+      "kind": "v",
+      "title": "সুসমাচার এবং এটি কীভাবে বলতে হবে",
+      "vimeoId": "362812000",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=10",
+      "expected_redirect": "/app/video?v=10&l=bn",
+      "png_stem": "video-10"
+    },
+    {
+      "key": "11",
+      "kind": "v",
+      "title": "বাপ্তিস্ম এবং কীভাবে এটা করতে হয়",
+      "vimeoId": "982283168",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=11",
+      "expected_redirect": "/app/video?v=11&l=bn",
+      "png_stem": "video-11"
+    },
+    {
+      "key": "12",
+      "kind": "v",
+      "title": "আপনার ৩ মিনিটের সাক্ষ্য প্রস্তুত করুন",
+      "vimeoId": "982283184",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=12",
+      "expected_redirect": "/app/video?v=12&l=bn",
+      "png_stem": "video-12"
+    },
+    {
+      "key": "13",
+      "kind": "v",
+      "title": "দর্শন জ্ঞাত করা এবং সর্বশ্রেষ্ঠ আশীর্বাদ",
+      "vimeoId": "362812055",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=13",
+      "expected_redirect": "/app/video?v=13&l=bn",
+      "png_stem": "video-13"
+    },
+    {
+      "key": "14",
+      "kind": "v",
+      "title": "হাঁসের বাচ্চার শিষ্যত্ব – অবিলম্বে নেতৃত্বদান",
+      "vimeoId": "362812114",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=14",
+      "expected_redirect": "/app/video?v=14&l=bn",
+      "png_stem": "video-14"
+    },
+    {
+      "key": "15",
+      "kind": "v",
+      "title": "রাজ্য কোথায় নেই তা দেখার জন্য চোখ",
+      "vimeoId": "362812157",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=15",
+      "expected_redirect": "/app/video?v=15&l=bn",
+      "png_stem": "video-15"
+    },
+    {
+      "key": "16",
+      "kind": "v",
+      "title": "প্রভুর ভোজ এবং কীভাবে এটি পরিচালনা করতে হয়",
+      "vimeoId": "982283193",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=16",
+      "expected_redirect": "/app/video?v=16&l=bn",
+      "png_stem": "video-16"
+    },
+    {
+      "key": "17",
+      "kind": "v",
+      "title": "প্রার্থনা করতে করতে হাঁটা এবং কীভাবে এটা করতে হবে",
+      "vimeoId": "982283214",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=17",
+      "expected_redirect": "/app/video?v=17&l=bn",
+      "png_stem": "video-17"
+    },
+    {
+      "key": "18",
+      "kind": "v",
+      "title": "শান্তির একজন ব্যক্তি এবং এমন একজনকে কীভাবে খুঁজে পাওয়া যায়",
+      "vimeoId": "362812208",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=18",
+      "expected_redirect": "/app/video?v=18&l=bn",
+      "png_stem": "video-18"
+    },
+    {
+      "key": "19",
+      "kind": "v",
+      "title": "বিশ্বস্ততা জ্ঞানের চেয়ে উত্তম",
+      "vimeoId": "362812278",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=19",
+      "expected_redirect": "/app/video?v=19&l=bn",
+      "png_stem": "video-19"
+    },
+    {
+      "key": "21",
+      "kind": "v",
+      "title": "৩/৩ গ্রুপের সভার প্যাটার্ন",
+      "vimeoId": "363347432",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=21",
+      "expected_redirect": "/app/video?v=21&l=bn",
+      "png_stem": "video-21"
+    },
+    {
+      "key": "22",
+      "kind": "v",
+      "title": "পরিপক্ক শিষ্যদের জন্য প্রশিক্ষণ চক্র",
+      "vimeoId": "362812321",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=22",
+      "expected_redirect": "/app/video?v=22&l=bn",
+      "png_stem": "video-22"
+    },
+    {
+      "key": "23",
+      "kind": "v",
+      "title": "নেতৃত্বের দল",
+      "vimeoId": "362812382",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=23",
+      "expected_redirect": "/app/video?v=23&l=bn",
+      "png_stem": "video-23"
+    },
+    {
+      "key": "24",
+      "kind": "v",
+      "title": "অ-অনুক্রমিক বৃদ্ধি আশা করুন",
+      "vimeoId": "362812434",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=24",
+      "expected_redirect": "/app/video?v=24&l=bn",
+      "png_stem": "video-24"
+    },
+    {
+      "key": "25",
+      "kind": "v",
+      "title": "বৃদ্ধির গতি বিবেচ্য",
+      "vimeoId": "362812485",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=25",
+      "expected_redirect": "/app/video?v=25&l=bn",
+      "png_stem": "video-25"
+    },
+    {
+      "key": "26",
+      "kind": "v",
+      "title": "সর্বদা দুটি মণ্ডলীর অংশ",
+      "vimeoId": "362812543",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=26",
+      "expected_redirect": "/app/video?v=26&l=bn",
+      "png_stem": "video-26"
+    },
+    {
+      "key": "28",
+      "kind": "v",
+      "title": "প্রশিক্ষণের তালিকাটির পরীক্ষা",
+      "vimeoId": "982283224",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=28",
+      "expected_redirect": "/app/video?v=28&l=bn",
+      "png_stem": "video-28"
+    },
+    {
+      "key": "29",
+      "kind": "v",
+      "title": "নেটওয়ার্কে নেতৃত্ব",
+      "vimeoId": "362812741",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=29",
+      "expected_redirect": "/app/video?v=29&l=bn",
+      "png_stem": "video-29"
+    },
+    {
+      "key": "30",
+      "kind": "v",
+      "title": "সহকর্মীদের পরামর্শদানকারীর দল",
+      "vimeoId": "982283249",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=30",
+      "expected_redirect": "/app/video?v=30&l=bn",
+      "png_stem": "video-30"
+    },
+    {
+      "key": "33",
+      "kind": "v",
+      "title": "৩টি বৃত্তের সুসমাচার উপস্থাপনা",
+      "vimeoId": "1164352794",
+      "youtubeId": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&v=33",
+      "expected_redirect": "/app/video?v=33&l=bn",
+      "png_stem": "video-33"
+    }
+  ],
+  "activities": [
+    {
+      "key": "33group",
+      "kind": "a",
+      "title": "৩/৩ গ্রুপ মিটিং",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=33group",
+      "expected_redirect": "/activities/33group",
+      "png_stem": "activity-33group"
+    },
+    {
+      "key": "3monthplan",
+      "kind": "a",
+      "title": "Three Month Plan",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=3monthplan",
+      "expected_redirect": "/auth/login",
+      "png_stem": "activity-3monthplan"
+    },
+    {
+      "key": "4fields",
+      "kind": "a",
+      "title": "চার ক্ষেত্রের লক্ষণের রেখাচিত্র",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=4fields",
+      "expected_redirect": "/activities/4fields",
+      "png_stem": "activity-4fields"
+    },
+    {
+      "key": "accountability",
+      "kind": "a",
+      "title": "বাধ্যবাধকতা পালনের দায়িত্বের দল",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=accountability",
+      "expected_redirect": "/activities/accountability",
+      "png_stem": "activity-accountability"
+    },
+    {
+      "key": "blessprayer",
+      "kind": "a",
+      "title": "বি এল ই এস এস (আশীর্বাদ) প্রার্থনা",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=blessprayer",
+      "expected_redirect": "/activities/blessprayer",
+      "png_stem": "activity-blessprayer"
+    },
+    {
+      "key": "coachingchecklist",
+      "kind": "a",
+      "title": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=coachingchecklist",
+      "expected_redirect": "/activities/coachingchecklist",
+      "png_stem": "activity-coachingchecklist"
+    },
+    {
+      "key": "genmapping",
+      "kind": "a",
+      "title": "প্রজন্ম মানচিত্র",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=genmapping",
+      "expected_redirect": "/activities/genmapping",
+      "png_stem": "activity-genmapping"
+    },
+    {
+      "key": "getacoach",
+      "kind": "a",
+      "title": null,
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=getacoach",
+      "expected_redirect": "/get-a-coach",
+      "png_stem": "activity-getacoach"
+    },
+    {
+      "key": "join_the_community",
+      "kind": "a",
+      "title": "সম্প্রদায়ে যোগদান করুন",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=join_the_community",
+      "expected_redirect": "/join-the-community",
+      "png_stem": "activity-join_the_community"
+    },
+    {
+      "key": "listof100",
+      "kind": "a",
+      "title": "১০০ জনের নিজস্ব তালিকা তৈরি করুন",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=listof100",
+      "expected_redirect": "/activities/listof100",
+      "png_stem": "activity-listof100"
+    },
+    {
+      "key": "lordssupper",
+      "kind": "a",
+      "title": "প্রভুর ভোজ",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=lordssupper",
+      "expected_redirect": "/activities/lordssupper",
+      "png_stem": "activity-lordssupper"
+    },
+    {
+      "key": "next_steps",
+      "kind": "a",
+      "title": "সম্প্রদায়ে যোগদান করুন",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=next_steps",
+      "expected_redirect": "/join-the-community",
+      "png_stem": "activity-next_steps"
+    },
+    {
+      "key": "peermentoring",
+      "kind": "a",
+      "title": "সহকর্মী পরামর্শদাতাদের দল",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=peermentoring",
+      "expected_redirect": "/activities/peermentoring",
+      "png_stem": "activity-peermentoring"
+    },
+    {
+      "key": "prayercycle",
+      "kind": "a",
+      "title": "প্রার্থনা চক্র",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=prayercycle",
+      "expected_redirect": "/activities/prayercycle",
+      "png_stem": "activity-prayercycle"
+    },
+    {
+      "key": "prayerwalking",
+      "kind": "a",
+      "title": "প্রার্থনায় এগিয়ে যাওয়া",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=prayerwalking",
+      "expected_redirect": "/activities/prayerwalking",
+      "png_stem": "activity-prayerwalking"
+    },
+    {
+      "key": "sharegospel",
+      "kind": "a",
+      "title": "সুসমাচার ভাগ করে নিন",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=sharegospel",
+      "expected_redirect": "/activities/sharegospel",
+      "png_stem": "activity-sharegospel"
+    },
+    {
+      "key": "sharetestimony",
+      "kind": "a",
+      "title": "তিন মিনিটের সাক্ষ্য",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=sharetestimony",
+      "expected_redirect": "/activities/sharetestimony",
+      "png_stem": "activity-sharetestimony"
+    },
+    {
+      "key": "soaps",
+      "kind": "a",
+      "title": "এস.ও.পি.এস  বাইবেল অধ্যয়ন",
+      "qr_url": "https://zume.training/app/qr/?l=bn&a=soaps",
+      "expected_redirect": "/activities/soaps",
+      "png_stem": "activity-soaps"
+    }
+  ],
+  "counts": {
+    "checkins": 5,
+    "videos": 29,
+    "activities": 18
+  }
+}
