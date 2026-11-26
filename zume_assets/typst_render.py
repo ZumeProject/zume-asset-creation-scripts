@@ -39,6 +39,9 @@ _SCRIPT_FALLBACKS = (
     "Geeza Pro",
     "SF Arabic",
     "Noto Nastaliq Urdu",
+    # Bengali (bn). Must be explicit: system fallback picks Noto Sans Chakma
+    # for U+09E6–U+09EF digits and Takri/Oriya for the danda (U+0964).
+    "Noto Sans Bengali",
     # CJK — Traditional (zhhk / zhtw) then Simplified
     "Noto Sans CJK TC",
     "Noto Sans CJK SC",
